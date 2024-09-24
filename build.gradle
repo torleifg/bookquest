@@ -1,0 +1,101 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.4'
+    id 'io.spring.dependency-management' version '1.1.6'
+    id 'org.unbroken-dome.xjc' version '2.0.0'
+    id 'org.openapi.generator' version '7.6.0'
+}
+
+group = 'com.github.torleifg'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://repo.spring.io/milestone' }
+}
+
+ext {
+    set('springAiVersion', '1.0.0-M2')
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    implementation 'org.springframework.ai:spring-ai-pgvector-store-spring-boot-starter'
+    implementation 'org.springframework.ai:spring-ai-transformers-spring-boot-starter'
+
+    implementation "org.flywaydb:flyway-database-postgresql"
+
+    implementation 'org.webjars.npm:missing.css:1.1.1'
+    implementation 'org.webjars.npm:font-awesome:4.7.0'
+
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'
+    implementation 'com.sun.xml.bind:jaxb-impl:4.0.5'
+
+    implementation 'io.swagger.parser.v3:swagger-parser:2.1.22'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+    testImplementation 'org.testcontainers:postgresql:1.19.8'
+    testImplementation 'org.testcontainers:junit-jupiter'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.ai:spring-ai-bom:${springAiVersion}"
+    }
+}
+
+xjc {
+    xjcVersion = '3.0'
+    srcDirName = 'resources/schema'
+}
+
+openApiGenerate {
+    generatorName = 'java'
+    inputSpec = 'src/main/resources/schema/bibbi/bibbi.json'
+    outputDir = "$buildDir/generated/sources/openapi"
+    modelPackage = 'no.bs.bibliografisk.model'
+    generateModelTests = false
+    configOptions = [
+            'library'               : 'restclient',
+            'useJakartaEe'          : 'true',
+            'openApiNullable'       : 'false',
+            'enumUnknownDefaultCase': 'true'
+    ]
+    globalProperties = [
+            apis  : 'false',
+            models: ''
+    ]
+}
+
+compileJava.dependsOn tasks.openApiGenerate
+
+sourceSets {
+    main {
+        java {
+            srcDir "$buildDir/generated/sources/openapi/src/main/java"
+        }
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

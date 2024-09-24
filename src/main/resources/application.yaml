@@ -1,0 +1,67 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/postgres
+    username: username
+    password: password
+  ai:
+    vectorstore:
+      pgvector:
+        index-type: NONE
+        distance-type: COSINE_DISTANCE
+        dimensions: 384
+    embedding:
+      transformer:
+        metadata-mode: NONE
+        onnx:
+          modelUri: https://huggingface.co/intfloat/multilingual-e5-small/resolve/main/onnx/model.onnx
+        tokenizer:
+          uri: https://huggingface.co/intfloat/multilingual-e5-small/resolve/main/onnx/tokenizer.json
+          options:
+            maxLength: 512
+            padding: true
+            truncation: true
+  threads:
+    virtual:
+      enabled: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          bokbasen:
+            provider: auth0
+            client-id: "<>"
+            client-secret: "<>"
+            authorization-grant-type: client_credentials
+        provider:
+          auth0:
+            token-uri: https://login.dev.bokbasen.io/oauth/token
+
+server:
+  port: 8080
+
+scheduler:
+  enabled: true
+  # gateway: bibbi
+  # gateway: bokbasen
+  gateway: oai-pmh
+  initial-delay: 5
+  fixed-delay: 3600
+
+oai-pmh:
+  service-uri: https://oai.aja.bs.no/mlnb
+  ttl: 5
+  mapper: default
+
+bibbi:
+  service-uri: https://bibliografisk.bs.no/v1/publications/harvest
+  ttl: 5
+  mapper: default
+
+bokbasen:
+  service-uri: http://localhost:8081/onix
+  subscription: extended
+  after: 19700101090000
+  client: bokbasen
+  audience: https://api.dev.bokbasen.io/metadata/
+  mapper: default

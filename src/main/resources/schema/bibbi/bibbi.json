@@ -1,0 +1,2450 @@
+{
+  "components": {
+    "responses": {
+      "ConcurrentLimitExceeded": {
+        "content": {
+          "text/plain": {
+            "schema": {
+              "example": "max connections reached: 10",
+              "type": "string"
+            }
+          }
+        },
+        "description": "Concurrency limit exceeded"
+      }
+    },
+    "schemas": {
+      "DeletedPublication": {
+        "additionalProperties": false,
+        "description": "A deleted publication.\n",
+        "properties": {
+          "deleted": {
+            "description": "Date and time of the deletion.",
+            "format": "date-time",
+            "type": "string"
+          },
+          "id": {
+            "description": "Bibbi ID for the publication",
+            "format": "string",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "deleted"
+        ],
+        "type": "object"
+      },
+      "Publication": {
+        "$defs": {
+          "AudienceGroup": {
+            "additionalProperties": false,
+            "properties": {
+              "group": {
+                "description": "Notation for a group within a target group vocabulary, to be used in filtering or faceting. At the moment this is only used for the [age group](https://schema.nb.no/Bibliographic/ValueSchemes/VS1001Coll1) group within the nortarget vocabulary.\n",
+                "enum": [
+                  "Aldersgruppe",
+                  "Gruppe med spesielle behov"
+                ],
+                "type": "string"
+              },
+              "id": {
+                "description": "Identifier for the audience group in the form of an URL\n",
+                "type": "string"
+              },
+              "name": {
+                "description": "Name of the audience group.\n",
+                "type": "string"
+              },
+              "vocabulary": {
+                "enum": [
+                  "nortarget",
+                  "pegi",
+                  "nma"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "vocabulary",
+              "name",
+              "group"
+            ],
+            "type": "object"
+          },
+          "Genre": {
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "description": "Identifier for the genre from NTSF or Bibbi (see `vocabulary`)",
+                "type": "string"
+              },
+              "name": {
+                "additionalProperties": false,
+                "description": "Name of the genre, as a language map whose keys are ISO 639-2 language codes. Note that this is a deviation from [JSON-LD language maps](https://www.w3.org/TR/json-ld11/#language-maps), which requires BCP47 language tags.\n",
+                "properties": {
+                  "eng": {
+                    "description": "English label for the concept",
+                    "type": "string"
+                  },
+                  "nno": {
+                    "description": "Norwegian Nynorsk label for the concept",
+                    "type": "string"
+                  },
+                  "nob": {
+                    "description": "Norwegian Bokmål label for the concept",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "nob",
+                  "nno"
+                ],
+                "type": "object"
+              },
+              "vocabulary": {
+                "description": "Identifier for the vocabulary used. [Norwegian thesaurus on genre and form (NTSF)](https://www.nb.no/nbvok/ntsf/) is used where possible, [BIBBI](https://vokabular.bs.no/bibbi/) is only used for areas where NTSF do not yet provide terms, such as video games.\n",
+                "enum": [
+                  "bibbi",
+                  "ntsf"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "type": "object"
+          },
+          "Series": {
+            "additionalProperties": false,
+            "examples": [
+              {
+                "creator": {
+                  "id": 154124,
+                  "name": "Hunter, Erin",
+                  "norafId": 13057559
+                },
+                "id": 1421159,
+                "name": "Elv",
+                "originalPartNumber": 8,
+                "originalPartTitle": "A starless clan",
+                "originalTitle": "Warriors",
+                "partNumber": "Serie 8",
+                "partTitle": "En himmel uten stjerner",
+                "title": "Kattekrigerne",
+                "volume": "Bok 1"
+              },
+              {
+                "creator": {
+                  "bareId": 1009016,
+                  "id": 1259662,
+                  "name": "Dahlgren, Helena"
+                },
+                "id": 1416515,
+                "originalTitle": "Ödesryttarna",
+                "title": "Skjebnerytterne",
+                "volume": 3
+              },
+              {
+                "id": 1403685,
+                "partTitle": "Brown book band",
+                "title": "Bloomsbury readers"
+              }
+            ],
+            "properties": {
+              "@type": {
+                "const": "BookSeries"
+              },
+              "creator": {
+                "additionalProperties": false,
+                "description": "Main creator (author or artist) of the series; defined for series where one or more creators are jointly responsible for each of the works that constitute the series (example: *[A Song of Ice and Fire](https://bibliografisk.bs.no/v1/publications?query=series%3A%22A+Song+of+Ice+and+Fire%22)*). The field is not defined for series that collect works by different creators, often created by publishers (example: *[Manga Classics](https://bibliografisk.bs.no/v1/publications?query=series%3A%22Manga%20Classics%22)*).\n",
+                "properties": {
+                  "id": {
+                    "description": "Bibbi ID of the person.",
+                    "type": "string"
+                  },
+                  "name": {
+                    "description": "Name of the person",
+                    "type": "string"
+                  },
+                  "norafId": {
+                    "description": "Noraf ID of the person.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "id"
+                ],
+                "type": "object"
+              },
+              "id": {
+                "description": "Local identifier for the series. Not defined for preliminary records (`bibliographicRecordMetadata.level=preliminary`)",
+                "type": "string"
+              },
+              "name": {
+                "description": "Title of the series.\n",
+                "type": "string"
+              },
+              "originalName": {
+                "description": "Original title of the series, if translated.\n",
+                "type": "string"
+              },
+              "originalPartName": {
+                "description": "For a translated series that is divided into multiple subseries, this field contains the original title of the subseries the publication is part of.\n",
+                "type": "string"
+              },
+              "originalPartNumber": {
+                "description": "For a translated series that is divided into multiple subseries ([example](https://bibliografisk.bs.no/v1/publications?query=series:Kattekrigerne)), this field contains the original number designation for the subseries that the publication is part of.\n",
+                "type": "string"
+              },
+              "partName": {
+                "description": "If the series is divided into multiple subseries, this field contains the title of the subseries the publication is part of.\n",
+                "type": "string"
+              },
+              "partNumber": {
+                "description": "If the series is divided into multiple subseries ([example](https://bibliografisk.bs.no/v1/publications?query=series:Kattekrigerne)), this field contains the number designation for the subseries that the publication is part of. Note that the value is not necessarily numeric; \"Serie 8\" is a valid value. Also note that subseries may be un-numbered, in which case `partTitle` can have a value while `partNumber` is not defined ([example](https://bibliografisk.bs.no/v1/publications?query=9781472989703)).\n",
+                "type": "string"
+              },
+              "volume": {
+                "description": "Volume designation for the publication in this series or subseries.\n",
+                "type": "string"
+              }
+            },
+            "required": [
+              "@type",
+              "name"
+            ],
+            "type": "object"
+          },
+          "Subject": {
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "description": "Unique identifier for the concept within the controlled vocabulary specified in `vocabulary`.",
+                "type": "string"
+              },
+              "name": {
+                "additionalProperties": false,
+                "description": "Name of the subject, as a language map whose keys are ISO 639-2 language codes. Note that this is a deviation from [JSON-LD language maps](https://www.w3.org/TR/json-ld11/#language-maps), which requires BCP47 language tags.\n",
+                "properties": {
+                  "nno": {
+                    "description": "Label in Norwegian Nynorsk",
+                    "type": "string"
+                  },
+                  "nob": {
+                    "description": "Label in Norwegian Bokmål",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "nob"
+                ],
+                "type": "object"
+              },
+              "vocabulary": {
+                "description": "Identifier for the controlled vocabulary the entity is part of: `bibbi`, if the subject is from Bibbi authorities, or `bare` if it's from [Norwegian Authority File: Persons and Corporate Bodies (NORAF)](https://bibliotekutvikling.no/kunnskapsorganisering/vokabularer-utkast/felles-autoritetsregister-for-personer-og-korporasjoner/).\n",
+                "enum": [
+                  "bibbi",
+                  "bare"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "id",
+              "vocabulary"
+            ],
+            "type": "object"
+          },
+          "Work": {
+            "additionalProperties": false,
+            "description": "An abstract work that this publication is a particular manifestation of. See also `worksContained`.\n",
+            "properties": {
+              "alternateName": {
+                "items": {
+                  "description": "List of alternate titles for the work.",
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "creator": {
+                "description": "List of the primary creators (authors or artists) of the work. This list usually contains only one or two persons.\n",
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "description": "Bibbi ID of the person or organization",
+                      "type": "string"
+                    },
+                    "name": {
+                      "description": "Name of the person or organization",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "id"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "formOfWork": {
+                "description": "Used as a distinguishing characteristic to\ndifferentiate two works with the same author and title.\n",
+                "examples": [
+                  "Novellesamling",
+                  "Novelle"
+                ],
+                "type": "string"
+              },
+              "id": {
+                "description": "Bibbi work ID.",
+                "type": "string"
+              },
+              "name": {
+                "description": "The preferred title of the work as a string. See also `nameParts`",
+                "type": "string"
+              },
+              "nameParts": {
+                "additionalProperties": false,
+                "description": "Preferred title for the Work. For translated works this will generally be the title of the work in its original language.\nWe do not yet have a preferred title per language.\nSee also the `name` property, which contains a pre-formatted version of this property.\n",
+                "properties": {
+                  "partNumber": {
+                    "description": "Number designation for a part/section of a series.\nNote: Not necessary a numeric value, valid values include \"Part 1\", \"Part I, Volume 3\", \"Andre bok\" etc.\n",
+                    "type": "string"
+                  },
+                  "partTitle": {
+                    "description": "Title specific to a part/section of a series, whose parts share a common `title`.\n",
+                    "type": "string"
+                  },
+                  "title": {
+                    "description": "The title for the work or, for series, the series title (like \"Min kamp\").\n",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "originalLanguage": {
+                "description": "ISO 639-2 language code for the language the Work was originally published in.\n",
+                "pattern": "[a-z]{3}",
+                "type": "string"
+              },
+              "originalYear": {
+                "description": "The year the Work was first published.",
+                "type": "string"
+              },
+              "translatedName": {
+                "properties": {
+                  "nob": {
+                    "description": "Label in Norwegian Bokmål",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "workTypes": {
+                "items": {
+                  "additionalProperties": false,
+                  "description": "Work type from the National Library of Norway's [Vocabulary of work types](https://www.nb.no/nbvok/vtp/).\n",
+                  "properties": {
+                    "label": {
+                      "description": "Label",
+                      "type": "string"
+                    },
+                    "uri": {
+                      "description": "URI",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "label",
+                    "uri"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "type": "object"
+          },
+          "bibliographicRecordMetadata": {
+            "additionalProperties": false,
+            "description": "Metadata for the bibliographic record describing the publication.\n",
+            "properties": {
+              "approved": {
+                "description": "Date when the bibliographic record was first approved as a full level record.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "level": {
+                "description": "Whether the publication is preliminary or fully catalogued. Records are normally upgraded from `preliminary` to `full` at latest a few days after publication.\n",
+                "enum": [
+                  "full",
+                  "preliminary"
+                ],
+                "type": "string"
+              },
+              "modified": {
+                "description": "Modification date of the record.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "url": {
+                "description": "URL of a JSON version of the record.",
+                "format": "uri",
+                "type": "string"
+              }
+            },
+            "required": [
+              "url",
+              "modified",
+              "approved"
+            ],
+            "type": "object"
+          },
+          "creator": {
+            "additionalProperties": false,
+            "properties": {
+              "@type": {
+                "description": "Type of agent, either `Person` or `Organization`, per [schema:creator](https://schema.org/creator). Note that Organization also includes temporary organizations such as festivals and exhibitions.\n",
+                "enum": [
+                  "Person",
+                  "Organization"
+                ],
+                "type": "string"
+              },
+              "birthDate": {
+                "description": "Birth year for person ([schema:birthDate](https://schema.org/birthDate)).\n",
+                "pattern": "\\d{4}",
+                "type": "string"
+              },
+              "deathDate": {
+                "description": "Death year for person ([schema:deathDate](https://schema.org/deathDate)).\n",
+                "pattern": "\\d{4}",
+                "type": "string"
+              },
+              "id": {
+                "description": "Identifier for the creator from [Norwegian Authority File: Persons and Corporate Bodies (NORAF)](https://bibliotekutvikling.no/kunnskapsorganisering/vokabularer-utkast/felles-autoritetsregister-for-personer-og-korporasjoner/). Note that `id` is undefined for a small number of agent types that have not yet been linked to NORAF ([example](https://bibliografisk.bs.no/publications/v1/?query=9788269246308)).\n",
+                "type": "string"
+              },
+              "name": {
+                "description": "Full name of the agent according to current cataloguing standards. Typically in inverted form with surname first, but exceptions apply.\n",
+                "type": "string"
+              },
+              "role": {
+                "description": "Role from [MARC Code List for Relators](https://www.loc.gov/marc/relators/relaterm.html). Norwegian translations can be found at <https://rdakatalogisering.unit.no/relasjonskoder-veiledning/>. Can be undefined for older publications.\n",
+                "enum": [
+                  "act",
+                  "ant",
+                  "arr",
+                  "art",
+                  "aus",
+                  "aut",
+                  "bjd",
+                  "bkd",
+                  "ccp",
+                  "clr",
+                  "cmm",
+                  "cmp",
+                  "cnd",
+                  "com",
+                  "cph",
+                  "csl",
+                  "ctb",
+                  "cur",
+                  "dgg",
+                  "drt",
+                  "dsr",
+                  "edc",
+                  "edt",
+                  "enj",
+                  "hnr",
+                  "ill",
+                  "itr",
+                  "ive",
+                  "ivr",
+                  "lbt",
+                  "led",
+                  "lyr",
+                  "nrt",
+                  "oth",
+                  "pbl",
+                  "pdr",
+                  "pht",
+                  "prf",
+                  "sng",
+                  "trl"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "@type"
+            ],
+            "type": "object"
+          },
+          "image": {
+            "additionalProperties": false,
+            "description": "Cover image.",
+            "properties": {
+              "@type": {
+                "const": "ImageObject"
+              },
+              "thumbnailUrl": {
+                "description": "URL of thumbnail version of cover image (max 600 pixels height)",
+                "format": "uri",
+                "type": "string"
+              },
+              "url": {
+                "description": "URL of original version of cover image. Note that dimensions will vary a lot.",
+                "format": "uri",
+                "type": "string"
+              }
+            },
+            "required": [
+              "thumbnailUrl",
+              "url",
+              "@type"
+            ],
+            "type": "object"
+          }
+        },
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "additionalProperties": false,
+        "description": "A book, movie, video game or other type of publication (= [LRM Manifestation](http://iflastandards.info/ns/lrm/lrmer/E4)). The schema is based on the Schema.org class\n<https://schema.org/CreativeWork> and its subclasses <https://schema.org/Book>,\n<https://schema.org/Audiobook>, <https://schema.org/VideoGame> and <https://schema.org/Movie>,\nand extended with additional properties where needed.\n\n⚠️ Note on terminology: While the schema is based on the <https://schema.org/CreativeWork> class,\nthe objects represent *manifestations*, not *works*, in the LRM/FRBR sense.\n\n## Relations between publications and works\n\n* Through the `work` property, each publication is normally linked to a [Work](/schemas/Work) entity, which is an abstraction for the creative work contained in the publication.\n  Different translations and different formats (hardcover, paperback, e-book, etc.) will have their own publication records, but will all be linked to the same work.\n\n* Publications that contain *multiple works* will have a list of Work records in the `worksContained` property.\n  In some cases, the collection is considered to be a work on its own, in which case it will also have a `work` property linking to that work.\n  In other cases, `work` will not be defined, only `worksContained`.\n\nNote: In the long term future, our plan is to add a new `Expression` entity, which will group publications by translation and\nmedium of expression, e.g. text/audio, so that publications will be linked to works through expressions.\n\n## Data quality\n\nThe `bibliographicRecordMetadata.level` property can have two values:\n\n* `preliminary`: Preliminary metadata from import or automatic generation. Values may be missing or not quality controlled.\n*  `full`: The publication has been fully catalogued.\n",
+        "examples": [
+          {
+            "@type": "Book",
+            "about": [],
+            "abstract": "Tre klassiske Albert Åberg-historier samlet i ett bind: Du er en luring, Albert Åberg; Knyt i vei, Albrt Åberg og Hurra for pappa Åberg. Denne gangen er temaet lekens magi. Billedbøker for førskolebarn/småskoletrinnet. Omtalen er utarbeidet av BS.",
+            "audience": [
+              {
+                "group": "Aldersgruppe",
+                "id": "https://schema.nb.no/Bibliographic/Values/TG1001",
+                "name": "3-5 år",
+                "vocabulary": "nortarget"
+              }
+            ],
+            "bibliographicRecord": {
+              "approved": "2021-08-30T11:00:45Z",
+              "level": "full",
+              "modified": "2022-10-22T00:04:38Z",
+              "url": "https://oai.aja.bs.no/mlnb?verb=GetRecord&metadataPrefix=marc21&identifier=oai:bibbi.bs.no:0616828"
+            },
+            "bookFormat": "Hardcover",
+            "creator": [
+              {
+                "@type": "Person",
+                "birthDate": "1942",
+                "deathDate": "2021",
+                "id": "(NO-TrBIB)90057960",
+                "name": "Bergström, Gunilla",
+                "role": "art"
+              },
+              {
+                "@type": "Person",
+                "birthDate": "1939",
+                "id": "(NO-TrBIB)90058926",
+                "name": "Bringsværd, Tor Åge",
+                "role": "trl"
+              }
+            ],
+            "datePublished": "2021",
+            "description": "Tre klassiske Albert Åberg-historier samlet i ett bind: Du er en luring, Albert Åberg; Knyt i vei, Albrt Åberg og Hurra for pappa Åberg. Denne gangen er temaet lekens magi. Billedbøker for førskolebarn/småskoletrinnet. Omtalen er utarbeidet av BS.",
+            "dewey": [
+              "839.7374"
+            ],
+            "genre": [
+              {
+                "id": "https://id.nb.no/vocabulary/ntsf/33",
+                "name": {
+                  "nno": "Biletbøker",
+                  "nob": "Bildebøker"
+                },
+                "vocabulary": "ntsf"
+              }
+            ],
+            "gtin13": "9788202708795",
+            "id": "0616828",
+            "image": {
+              "@type": "ImageObject",
+              "thumbnailUrl": "https://media.aja.bs.no/39b64504-e7b8-489b-970a-14d3f8afabea/cover/thumbnail.jpg",
+              "url": "https://media.aja.bs.no/39b64504-e7b8-489b-970a-14d3f8afabea/cover/original.jpg"
+            },
+            "inLanguage": "nob",
+            "isPartOf": [],
+            "isbn": "9788202708795",
+            "literaryForm": "fiction",
+            "name": "Mye moro, Albert Åberg! : tre historier",
+            "nameParts": {
+              "remainderOfTitle": "tre historier",
+              "title": "Mye moro, Albert Åberg!"
+            },
+            "numberOfPages": 88,
+            "placeOfPublication": "Oslo",
+            "preferredTitle": {
+              "remainderOfTitle": "tre historier",
+              "title": "Mye moro, Albert Åberg!"
+            },
+            "publisher": "Cappelen Damm",
+            "subject": [],
+            "work": {
+              "alternateName": [],
+              "creator": [
+                {
+                  "id": "https://id.bs.no/bibbi/4256",
+                  "name": "Bergström, Gunilla"
+                }
+              ],
+              "id": "1264581",
+              "name": "Mera bus med Alfons Åberg",
+              "nameParts": {
+                "title": "Mera bus med Alfons Åberg"
+              },
+              "originalLanguage": "swe",
+              "workTypes": [
+                {
+                  "label": "Språkbasert verk",
+                  "uri": "https://schema.nb.no/Bibliographic/Values/V1000"
+                }
+              ]
+            },
+            "worksContained": [
+              {
+                "alternateName": [],
+                "creator": [
+                  {
+                    "id": "https://id.bs.no/bibbi/4256",
+                    "name": "Bergström, Gunilla"
+                  }
+                ],
+                "id": "1264563",
+                "name": "Aja baja, Alfons Åberg",
+                "nameParts": {
+                  "title": "Aja baja, Alfons Åberg"
+                },
+                "originalLanguage": "swe",
+                "originalYear": "1973",
+                "translatedName": {
+                  "nob": "Du er en luring, Albert Åberg"
+                },
+                "workTypes": [
+                  {
+                    "label": "Språkbasert verk",
+                    "uri": "https://schema.nb.no/Bibliographic/Values/V1000"
+                  },
+                  {
+                    "label": "Bildeverk",
+                    "uri": "https://schema.nb.no/Bibliographic/Values/V1003"
+                  }
+                ]
+              },
+              {
+                "alternateName": [],
+                "creator": [
+                  {
+                    "id": "https://id.bs.no/bibbi/4256",
+                    "name": "Bergström, Gunilla"
+                  }
+                ],
+                "id": "1264573",
+                "name": "Bara knyt, Alfons",
+                "nameParts": {
+                  "title": "Bara knyt, Alfons"
+                },
+                "originalLanguage": "swe",
+                "originalYear": "1988",
+                "translatedName": {
+                  "nob": "Knyt i vei, Albert Åberg!"
+                },
+                "workTypes": [
+                  {
+                    "label": "Språkbasert verk",
+                    "uri": "https://schema.nb.no/Bibliographic/Values/V1000"
+                  },
+                  {
+                    "label": "Bildeverk",
+                    "uri": "https://schema.nb.no/Bibliographic/Values/V1003"
+                  }
+                ]
+              },
+              {
+                "alternateName": [],
+                "creator": [
+                  {
+                    "id": "https://id.bs.no/bibbi/4256",
+                    "name": "Bergström, Gunilla"
+                  }
+                ],
+                "id": "1264577",
+                "name": "Hurra för pappa Åberg!",
+                "nameParts": {
+                  "title": "Hurra för pappa Åberg!"
+                },
+                "originalLanguage": "swe",
+                "originalYear": "1993",
+                "translatedName": {
+                  "nob": "Hurra for pappa Åberg!"
+                },
+                "workTypes": [
+                  {
+                    "label": "Språkbasert verk",
+                    "uri": "https://schema.nb.no/Bibliographic/Values/V1000"
+                  },
+                  {
+                    "label": "Bildeverk",
+                    "uri": "https://schema.nb.no/Bibliographic/Values/V1003"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "properties": {
+          "@type": {
+            "description": "Subtype of [CreativeWork](https://schema.org/CreativeWork)\n",
+            "enum": [
+              "Audiobook",
+              "Book",
+              "VideoGame",
+              "Movie"
+            ],
+            "type": "string"
+          },
+          "about": {
+            "description": "Primary subject matter of the creative work ([schema:about](https://schema.org/about)), using values from our controlled vocabulary [Bibbi authorities](https://vokabular.bs.no/bibbi/). Values from [Norwegian Authority File: Persons and Corporate Bodies (NORAF)](https://bibliotekutvikling.no/kunnskapsorganisering/vokabularer-utkast/felles-autoritetsregister-for-personer-og-korporasjoner/) are used when the subject is a person or organization.\n",
+            "items": {
+              "$ref": "#/components/schemas/Publication/$defs/Subject"
+            },
+            "type": "array"
+          },
+          "abstract": {
+            "deprecated": true,
+            "description": "A short summary of the content written or edited by Biblioteksentralen. *DEPRECATED*, please use `description` instead.",
+            "type": "string"
+          },
+          "audience": {
+            "description": "Intended audience for the work ([schema:Audience](https://schema.org/Audience)), using values from the external vocabularies [`nortarget`](https://www.nb.no/nbvok/tg/) (target groups for literature, includes age groups), [`pegi`](https://www.nb.no/nbvok/pegi/) (age ratings for computer and video games) and [`nma`](https://www.nb.no/nbvok/nma/) (age ratings for movies).\n",
+            "items": {
+              "$ref": "#/components/schemas/Publication/$defs/AudienceGroup"
+            },
+            "type": "array"
+          },
+          "bibliographicRecord": {
+            "$ref": "#/components/schemas/Publication/$defs/bibliographicRecordMetadata"
+          },
+          "bookFormat": {
+            "description": "Values from [schema:BookFormatType](https://schema.org/BookFormatType). Null for non-books.\n",
+            "enum": [
+              "AudiobookFormat",
+              "EBook",
+              "GraphicNovel",
+              "Hardcover",
+              "Paperback"
+            ],
+            "type": "string"
+          },
+          "creator": {
+            "description": "List of authors and other creators of the publication, both persons and collective agents.\nIn many cases you may want to filter the list by `role=aut OR role=edt` in your application to only show authors and editors, and optionally include other roles when the result is empty.\n",
+            "items": {
+              "$ref": "#/components/schemas/Publication/$defs/creator"
+            },
+            "type": "array"
+          },
+          "datePublished": {
+            "description": "Publication year ([schema:datePublished](https://schema.org/datePublished)).\n",
+            "pattern": "[0-9u]{4}",
+            "type": "string"
+          },
+          "description": {
+            "description": "A short summary of the content written or edited by Biblioteksentralen.",
+            "type": "string"
+          },
+          "dewey": {
+            "description": "List of [Norwegian WebDewey](https://bibliotekutvikling.no/kunnskapsorganisering/norsk-webdewey/) classification numbers assigned to the publication.\n",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "genre": {
+            "description": "Genre/form of the creative work, described using values from the [Norwegian thesaurus on genre and form (NTSF)](https://www.nb.no/nbvok/ntsf/) for all resource types supported by NTSF. As of July 2022, video games are still not supported by NTSF and thus described using [our local controlled vocabulary](https://id.bs.no/bibbi/group/a3ac9412-c520-4b1e-b393-ab9b0fc690b7) instead.\n",
+            "items": {
+              "$ref": "#/components/schemas/Publication/$defs/Genre"
+            },
+            "type": "array"
+          },
+          "gtin13": {
+            "description": "The Global Trade Identifier (GTIN) of a publication, also known as EAN. For books, the ISBN is used as GTIN, so the fields `isbn` and `gtin13` will contain the same value, but other media types will generally have a GTIN, but not an ISBN.\n",
+            "type": "string"
+          },
+          "id": {
+            "description": "Bibbi publication ID",
+            "type": "string"
+          },
+          "image": {
+            "description": "An image of the item in the form of an [schema:ImageObject](https://schema.org/ImageObject). For books, this will be an image of the front cover.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Publication/$defs/image"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "inLanguage": {
+            "description": "ISO 639-2 language code for the main content language. The value \"mul\" is used for multiple languages.\n",
+            "pattern": "[a-z]{3}",
+            "type": "string"
+          },
+          "isPartOf": {
+            "description": "List of series the publication is part of. Each publication in a *series* is generally a self-contained work. If the publication is not self-contained, it's considered part of a *multi-part work*, in which case the part number and title are found under `nameParts`.\n",
+            "items": {
+              "$ref": "#/components/schemas/Publication/$defs/Series"
+            },
+            "type": "array"
+          },
+          "isbn": {
+            "description": "The ISBN of the publication. Null for non-books. See also `gtin13`, which is defined for more resource types.\n",
+            "type": "string"
+          },
+          "literaryForm": {
+            "description": "Whether the publication is catalogued as fiction or non-fiction.",
+            "enum": [
+              "fiction",
+              "non-fiction"
+            ],
+            "type": "string"
+          },
+          "name": {
+            "description": "[ISBD](https://www.ifla.org/g/isbd-rg/international-standard-bibliographic-description/)-formatted publication title.\nIf you need more fine-grained access to the components that make up the title, e.g. to present them different visually, see `nameParts`.\n",
+            "type": "string"
+          },
+          "nameParts": {
+            "additionalProperties": false,
+            "description": "Object containing the components that make up the publication title (`name`).\n",
+            "examples": [
+              {
+                "remainderOfTitle": "en historie om frigjøring",
+                "title": "Min skyld"
+              },
+              {
+                "partNumber": "6",
+                "partTitle": "Krigerens hjemkomst",
+                "title": "En sjøens helt"
+              },
+              {
+                "partNumber": "Sjette bok",
+                "title": "Min kamp"
+              }
+            ],
+            "properties": {
+              "partNumber": {
+                "description": "Number designation for a part/section of a multi-part work.\nNote: Not necessary a numeric value, valid values include \"Part 1\", \"Part I, Volume 3\", \"Andre bok\" etc.\n",
+                "type": "string"
+              },
+              "partTitle": {
+                "description": "Title specific to a part/section of a multi-part work.\n",
+                "type": "string"
+              },
+              "remainderOfTitle": {
+                "description": "Sub-titles and other additional title information appearing in conjunction with, and subordinate to,\nthe title proper of the publication.\n",
+                "type": "string"
+              },
+              "title": {
+                "description": "The title proper, i.e. the title of a publication in the form in which it appears on the title-page.\nFor publications containing a multi-part work, the title shared by all parts of the work.\n",
+                "type": "string"
+              }
+            },
+            "required": [
+              "title"
+            ],
+            "type": "object"
+          },
+          "numberOfPages": {
+            "description": "The number of pages in the book ([schema:numberOfPages](https://schema.org/numberOfPages)), or null for non-books. A single number is always returned; no attempt is made to represent multipart publications, etc.\n",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "placeOfPublication": {
+            "description": "City is used where known, otherwise country.\n",
+            "type": "string"
+          },
+          "preferredTitle": {
+            "additionalProperties": false,
+            "deprecated": true,
+            "properties": {
+              "partNumber": {
+                "type": "string"
+              },
+              "partTitle": {
+                "type": "string"
+              },
+              "remainderOfTitle": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "publisher": {
+            "description": "The publisher of the creative work.\n",
+            "type": "string"
+          },
+          "subject": {
+            "deprecated": true,
+            "description": "*DEPRECATED*, replaced by `about` for schema.org compatibility.\n",
+            "items": {
+              "$ref": "#/components/schemas/Publication/$defs/Subject"
+            },
+            "type": "array"
+          },
+          "work": {
+            "$ref": "#/components/schemas/Publication/$defs/Work"
+          },
+          "worksContained": {
+            "description": "List of abstracts works thare are contained in this publication. See also `work`.\n",
+            "items": {
+              "$ref": "#/components/schemas/Publication/$defs/Work"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "@type",
+          "name",
+          "nameParts",
+          "bibliographicRecord",
+          "genre",
+          "about",
+          "audience",
+          "creator",
+          "dewey",
+          "worksContained"
+        ],
+        "title": "Publication",
+        "type": "object"
+      },
+      "Work": {
+        "$defs": {
+          "AudienceGroup": {
+            "additionalProperties": false,
+            "properties": {
+              "group": {
+                "description": "Notation for a group within a target group vocabulary, to be used in filtering or faceting. At the moment this is only used for the [age group](https://schema.nb.no/Bibliographic/ValueSchemes/VS1001Coll1) group within the nortarget vocabulary.\n",
+                "enum": [
+                  "Aldersgruppe",
+                  "Gruppe med spesielle behov"
+                ],
+                "type": "string"
+              },
+              "id": {
+                "description": "Identifier for the audience group in the form of an URL\n",
+                "type": "string"
+              },
+              "name": {
+                "description": "Name of the audience group.\n",
+                "type": "string"
+              },
+              "vocabulary": {
+                "enum": [
+                  "nortarget",
+                  "pegi",
+                  "nma"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "vocabulary",
+              "name",
+              "group"
+            ],
+            "type": "object"
+          },
+          "BriefPublication": {
+            "additionalProperties": false,
+            "properties": {
+              "@type": {
+                "description": "Subtype of [CreativeWork](https://schema.org/CreativeWork)\n",
+                "enum": [
+                  "Audiobook",
+                  "Book",
+                  "VideoGame",
+                  "Movie"
+                ],
+                "type": "string"
+              },
+              "about": {
+                "description": "Primary subject matter of the creative work ([schema:about](https://schema.org/about)), using values from our controlled vocabulary [Bibbi authorities](https://vokabular.bs.no/bibbi/). Values from [Norwegian Authority File: Persons and Corporate Bodies (NORAF)](https://bibliotekutvikling.no/kunnskapsorganisering/vokabularer-utkast/felles-autoritetsregister-for-personer-og-korporasjoner/) are used when the subject is a person or organization.\n",
+                "items": {
+                  "$ref": "#/components/schemas/Work/$defs/Subject"
+                },
+                "type": "array"
+              },
+              "audience": {
+                "description": "Intended audience for the publication, using values from the external vocabularies [`nortarget`](https://www.nb.no/nbvok/tg/) (target groups for literature, includes age groups), [`pegi`](https://www.nb.no/nbvok/pegi/) (age ratings for computer and video games) and [`nma`](https://www.nb.no/nbvok/nma/) (age ratings for movies).\n",
+                "items": {
+                  "$ref": "#/components/schemas/Work/$defs/AudienceGroup"
+                },
+                "type": "array"
+              },
+              "bookFormat": {
+                "description": "Values from [schema:BookFormatType](https://schema.org/BookFormatType). Null for non-books.\n",
+                "enum": [
+                  "AudiobookFormat",
+                  "EBook",
+                  "GraphicNovel",
+                  "Hardcover",
+                  "Paperback"
+                ],
+                "type": "string"
+              },
+              "datePublished": {
+                "description": "Publication year ([schema:datePublished](https://schema.org/datePublished)).\n",
+                "type": "string"
+              },
+              "description": {
+                "description": "A short summary of the content written or edited by Biblioteksentralen.",
+                "type": "string"
+              },
+              "genre": {
+                "description": "Genre/form of the creative work, described using values from the [Norwegian thesaurus on genre and form (NTSF)](https://www.nb.no/nbvok/ntsf/) for all resource types supported by NTSF. As of July 2022, video games are still not supported by NTSF and thus described using [our local controlled vocabulary](https://id.bs.no/bibbi/group/a3ac9412-c520-4b1e-b393-ab9b0fc690b7) instead.\n",
+                "items": {
+                  "$ref": "#/components/schemas/Work/$defs/Genre"
+                },
+                "type": "array"
+              },
+              "id": {
+                "description": "Bibbi ID of the publication",
+                "type": "string"
+              },
+              "image": {
+                "description": "URL to cover image",
+                "format": "uri",
+                "type": "string"
+              },
+              "isbn": {
+                "description": "ISBN of the publication, if it has one.",
+                "type": "string"
+              },
+              "language": {
+                "description": "ISO 639-2 language code for the main content language.\n",
+                "pattern": "[a-z]{3}",
+                "type": "string"
+              },
+              "name": {
+                "description": "ISBD-formatted publication title.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name"
+            ],
+            "type": "object"
+          },
+          "Genre": {
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "description": "Identifier for the genre from NTSF or Bibbi (see `vocabulary`)",
+                "type": "string"
+              },
+              "name": {
+                "additionalProperties": false,
+                "description": "Name of the genre, as a language map whose keys are ISO 639-2 language codes. Note that this is a deviation from [JSON-LD language maps](https://www.w3.org/TR/json-ld11/#language-maps), which requires BCP47 language tags.\n",
+                "properties": {
+                  "eng": {
+                    "description": "English label for the concept",
+                    "type": "string"
+                  },
+                  "nno": {
+                    "description": "Norwegian Nynorsk label for the concept",
+                    "type": "string"
+                  },
+                  "nob": {
+                    "description": "Norwegian Bokmål label for the concept",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "nob",
+                  "nno"
+                ],
+                "type": "object"
+              },
+              "vocabulary": {
+                "description": "Identifier for the vocabulary used. [Norwegian thesaurus on genre and form (NTSF)](https://www.nb.no/nbvok/ntsf/) is used where possible, [BIBBI](https://vokabular.bs.no/bibbi/) is only used for areas where NTSF do not yet provide terms, such as video games.\n",
+                "enum": [
+                  "bibbi",
+                  "ntsf"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "type": "object"
+          },
+          "Subject": {
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "description": "Unique identifier for the concept within the controlled vocabulary specified in `vocabulary`.",
+                "type": "string"
+              },
+              "name": {
+                "additionalProperties": false,
+                "description": "Name of the subject, as a language map whose keys are ISO 639-2 language codes. Note that this is a deviation from [JSON-LD language maps](https://www.w3.org/TR/json-ld11/#language-maps), which requires BCP47 language tags.\n",
+                "properties": {
+                  "nno": {
+                    "description": "Label in Norwegian Nynorsk",
+                    "type": "string"
+                  },
+                  "nob": {
+                    "description": "Label in Norwegian Bokmål",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "nob"
+                ],
+                "type": "object"
+              },
+              "vocabulary": {
+                "description": "Identifier for the controlled vocabulary the entity is part of: `bibbi`, if the subject is from Bibbi authorities, or `bare` if it's from [Norwegian Authority File: Persons and Corporate Bodies (NORAF)](https://bibliotekutvikling.no/kunnskapsorganisering/vokabularer-utkast/felles-autoritetsregister-for-personer-og-korporasjoner/).\n",
+                "enum": [
+                  "bibbi",
+                  "bare"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "id",
+              "vocabulary"
+            ],
+            "type": "object"
+          }
+        },
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "additionalProperties": false,
+        "description": "An abstract creative work (= [LRM Work](http://iflastandards.info/ns/lrm/lrmer/E2)) that has been published in one or\nmore [publications](/schemas/Publication).\n\n## About work titles\n\nEach work has a preferred title in the `nameParts` property.\n\nFor translated works the preferred title will typically be the title\nof the work in its *original language, transcribed in Latin script*.\nOur data model does not currently include preferred titles for different languages.\nIf you know the preferred language(s) of the user, it is often a good idea to present a title in one of those languages instead.\nTo do that, you currently have to loop through the `publications` list and select a title yourself.\nHere is a code example in JavaScript:\n\n```javascript\n// List of user's languages ordered by preference\nconst userLanguages = [\"nob\", \"nno\", \"eng\"];\n\n// Function that returns a publication that best matches the list of preferred languages\nfunction findRepresentativePublication(publications) {\n  for (const language of userLanguages) {\n    for (const publication of publications) {\n      if (publication.language == language) {\n        return publication;\n      }\n    }\n  }\n  // No publication in any of the preferred languages was found, just return the first one.\n  if (publications.length) {\n    return publications[0];\n  }\n}\nconst works = (await fetch('https://bibliografisk.bs.no/works/v0/?query=bovary').then(data => data.json())).results;\nfor (const work of works) {\n  const representativePublication = findRepresentativePublication(work.publications);\n  console.log('Representative title: ' + representativePublication?.name);\n}\n```\n",
+        "examples": [
+          {
+            "@type": "Work",
+            "alternateName": [],
+            "creator": [
+              {
+                "id": "https://id.bs.no/bibbi/4256",
+                "name": "Bergström, Gunilla"
+              }
+            ],
+            "id": "1264563",
+            "name": "Aja baja, Alfons Åberg",
+            "nameParts": {
+              "title": "Aja baja, Alfons Åberg"
+            },
+            "originalLanguage": "swe",
+            "originalYear": "1973",
+            "partOfPublications": [
+              {
+                "@type": "Book",
+                "about": [
+                  {
+                    "id": "(NO-OsBA)1287215",
+                    "name": {
+                      "nno": "Åberg, Albert (fiktiv person)",
+                      "nob": "Åberg, Albert (fiktiv person)"
+                    },
+                    "vocabulary": "bibbi"
+                  }
+                ],
+                "audience": [
+                  {
+                    "group": "Aldersgruppe",
+                    "id": "https://schema.nb.no/Bibliographic/Values/TG1001",
+                    "name": "3-5 år",
+                    "vocabulary": "nortarget"
+                  },
+                  {
+                    "group": "Aldersgruppe",
+                    "id": "https://schema.nb.no/Bibliographic/Values/TG1002",
+                    "name": "6-8 år",
+                    "vocabulary": "nortarget"
+                  }
+                ],
+                "bookFormat": "Hardcover",
+                "datePublished": "1981",
+                "genre": [
+                  {
+                    "id": "https://id.nb.no/vocabulary/ntsf/33",
+                    "name": {
+                      "nno": "Biletbøker",
+                      "nob": "Bildebøker"
+                    },
+                    "vocabulary": "ntsf"
+                  }
+                ],
+                "id": "0000569",
+                "isbn": "9788252508536",
+                "language": "nob",
+                "name": "Du er en luring & Heng i, Albert Åberg"
+              },
+              {
+                "@type": "Book",
+                "about": [],
+                "audience": [
+                  {
+                    "group": "Aldersgruppe",
+                    "id": "https://schema.nb.no/Bibliographic/Values/TG1001",
+                    "name": "3-5 år",
+                    "vocabulary": "nortarget"
+                  }
+                ],
+                "bookFormat": "Hardcover",
+                "datePublished": "2021",
+                "description": "Tre klassiske Albert Åberg-historier samlet i ett bind: Du er en luring, Albert Åberg; Knyt i vei, Albrt Åberg og Hurra for pappa Åberg. Denne gangen er temaet lekens magi. Billedbøker for førskolebarn/småskoletrinnet. Omtalen er utarbeidet av BS.",
+                "genre": [
+                  {
+                    "id": "https://id.nb.no/vocabulary/ntsf/33",
+                    "name": {
+                      "nno": "Biletbøker",
+                      "nob": "Bildebøker"
+                    },
+                    "vocabulary": "ntsf"
+                  }
+                ],
+                "id": "0616828",
+                "image": "https://media.aja.bs.no/39b64504-e7b8-489b-970a-14d3f8afabea/cover/original.jpg",
+                "isbn": "9788202708795",
+                "language": "nob",
+                "name": "Mye moro, Albert Åberg! : tre historier"
+              }
+            ],
+            "publications": [
+              {
+                "@type": "Book",
+                "about": [
+                  {
+                    "id": "(NO-OsBA)1113073",
+                    "name": {
+                      "nno": "Fedrar og søner",
+                      "nob": "Fedre og sønner"
+                    },
+                    "vocabulary": "bibbi"
+                  },
+                  {
+                    "id": "(NO-OsBA)1141078",
+                    "name": {
+                      "nno": "Søvn - Barn",
+                      "nob": "Søvn - Barn"
+                    },
+                    "vocabulary": "bibbi"
+                  }
+                ],
+                "audience": [
+                  {
+                    "group": "Aldersgruppe",
+                    "id": "https://schema.nb.no/Bibliographic/Values/TG1001",
+                    "name": "3-5 år",
+                    "vocabulary": "nortarget"
+                  },
+                  {
+                    "group": "Aldersgruppe",
+                    "id": "https://schema.nb.no/Bibliographic/Values/TG1002",
+                    "name": "6-8 år",
+                    "vocabulary": "nortarget"
+                  }
+                ],
+                "bookFormat": "Hardcover",
+                "datePublished": "1985",
+                "description": "Albert er 4 år og får ikke sove. Han kommer på alt mulig rart for å utsette leggetida når han vet at pappa sitter i stua og sover foran TV. Først må han ha noe å drikke, så må han selvfølgelig på do, og så må tennene pusses. Deretter ser han et monster under senga, men når pappa kommer med lommelykta er monsteret plutselig borte. Pappa begynner å bli lei etter en stund, og mens han leter etter Alberts kosedyr under senga ender det med at han sovner og det er Albert som må bre et teppe over pappa. Illustrasjonene er lett naivistiske med mye humor og varme. Billedbok for førskolebarn/småskoletrinnet.",
+                "genre": [
+                  {
+                    "id": "https://id.nb.no/vocabulary/ntsf/33",
+                    "name": {
+                      "nno": "Biletbøker",
+                      "nob": "Bildebøker"
+                    },
+                    "vocabulary": "ntsf"
+                  }
+                ],
+                "id": "0058011",
+                "image": "https://media.aja.bs.no/ea2a6f67-4a5a-4470-87a7-ad778deb435d/cover/original.jpg",
+                "isbn": "9788202035723",
+                "language": "nob",
+                "name": "God natt, Albert Åberg"
+              },
+              {
+                "@type": "Book",
+                "about": [],
+                "audience": [
+                  {
+                    "group": "Aldersgruppe",
+                    "id": "https://schema.nb.no/Bibliographic/Values/TG1002",
+                    "name": "6-8 år",
+                    "vocabulary": "nortarget"
+                  }
+                ],
+                "bookFormat": "Hardcover",
+                "datePublished": "1976",
+                "description": "En fortelling om Albert Åberg, 5 år. Det beste han vet er å leke med Pappa, men Pappa har nesten aldri tid. Det nest beste er verktøyskassen, men den får han aldri leke med. Utenom da Pappa vil ha fred. Illustrasjonene er i kjent tegne- og collagestil. Billedbok for førskolebarn/småskoletrinnet.",
+                "genre": [
+                  {
+                    "id": "https://id.nb.no/vocabulary/ntsf/33",
+                    "name": {
+                      "nno": "Biletbøker",
+                      "nob": "Bildebøker"
+                    },
+                    "vocabulary": "ntsf"
+                  }
+                ],
+                "id": "0060333",
+                "image": "https://media.aja.bs.no/99de9d1f-35c9-4d7c-9c6a-ae0c784a7f4d/original.jpg",
+                "isbn": "9788202035730",
+                "language": "nob",
+                "name": "Du er en luring, Albert Åberg"
+              },
+              {
+                "@type": "Book",
+                "about": [
+                  {
+                    "id": "(NO-OsBA)1113073",
+                    "name": {
+                      "nno": "Fedrar og søner",
+                      "nob": "Fedre og sønner"
+                    },
+                    "vocabulary": "bibbi"
+                  }
+                ],
+                "audience": [
+                  {
+                    "group": "Aldersgruppe",
+                    "id": "https://schema.nb.no/Bibliographic/Values/TG1001",
+                    "name": "3-5 år",
+                    "vocabulary": "nortarget"
+                  },
+                  {
+                    "group": "Aldersgruppe",
+                    "id": "https://schema.nb.no/Bibliographic/Values/TG1002",
+                    "name": "6-8 år",
+                    "vocabulary": "nortarget"
+                  }
+                ],
+                "bookFormat": "Hardcover",
+                "datePublished": "1985",
+                "description": "En fortelling om Albert Åberg, 5 år. Det beste han vet er å leke med Pappa, men Pappa har nesten aldri tid. Det nest beste er verktøyskassen, men den får han aldri leke med. Utenom da Pappa vil ha fred. Illustrasjonene er i kjent tegne- og collagestil. Billedbok for førskolebarn/småskoletrinnet.",
+                "genre": [
+                  {
+                    "id": "https://id.nb.no/vocabulary/ntsf/33",
+                    "name": {
+                      "nno": "Biletbøker",
+                      "nob": "Bildebøker"
+                    },
+                    "vocabulary": "ntsf"
+                  }
+                ],
+                "id": "0039933",
+                "isbn": "9788202035730",
+                "language": "nob",
+                "name": "Du er en luring, Albert Åberg"
+              },
+              {
+                "@type": "Book",
+                "about": [
+                  {
+                    "id": "(NO-OsBA)1287215",
+                    "name": {
+                      "nno": "Åberg, Albert (fiktiv person)",
+                      "nob": "Åberg, Albert (fiktiv person)"
+                    },
+                    "vocabulary": "bibbi"
+                  }
+                ],
+                "audience": [
+                  {
+                    "group": "Aldersgruppe",
+                    "id": "https://schema.nb.no/Bibliographic/Values/TG1001",
+                    "name": "3-5 år",
+                    "vocabulary": "nortarget"
+                  },
+                  {
+                    "group": "Aldersgruppe",
+                    "id": "https://schema.nb.no/Bibliographic/Values/TG1002",
+                    "name": "6-8 år",
+                    "vocabulary": "nortarget"
+                  }
+                ],
+                "bookFormat": "Hardcover",
+                "datePublished": "1980",
+                "genre": [
+                  {
+                    "id": "https://id.nb.no/vocabulary/ntsf/33",
+                    "name": {
+                      "nno": "Biletbøker",
+                      "nob": "Bildebøker"
+                    },
+                    "vocabulary": "ntsf"
+                  }
+                ],
+                "id": "0033907",
+                "isbn": "9788202035730",
+                "language": "nob",
+                "name": "Du er en luring, Albert Åberg"
+              },
+              {
+                "@type": "Book",
+                "about": [
+                  {
+                    "id": "(NO-OsBA)1119282",
+                    "name": {
+                      "nno": "Leik",
+                      "nob": "Lek"
+                    },
+                    "vocabulary": "bibbi"
+                  }
+                ],
+                "audience": [
+                  {
+                    "group": "Aldersgruppe",
+                    "id": "https://schema.nb.no/Bibliographic/Values/TG1001",
+                    "name": "3-5 år",
+                    "vocabulary": "nortarget"
+                  },
+                  {
+                    "group": "Aldersgruppe",
+                    "id": "https://schema.nb.no/Bibliographic/Values/TG1002",
+                    "name": "6-8 år",
+                    "vocabulary": "nortarget"
+                  },
+                  {
+                    "group": "Gruppe med spesielle behov",
+                    "id": "https://schema.nb.no/Bibliographic/Values/TG1009",
+                    "name": "Leselig skrift",
+                    "vocabulary": "nortarget"
+                  }
+                ],
+                "bookFormat": "Hardcover",
+                "datePublished": "2005",
+                "genre": [
+                  {
+                    "id": "https://id.nb.no/vocabulary/ntsf/33",
+                    "name": {
+                      "nno": "Biletbøker",
+                      "nob": "Bildebøker"
+                    },
+                    "vocabulary": "ntsf"
+                  }
+                ],
+                "id": "0176926",
+                "isbn": "9789129661521",
+                "language": "eng",
+                "name": "Very tricky, Alfie Atkins"
+              }
+            ],
+            "workTypes": [
+              {
+                "label": "Språkbasert verk",
+                "uri": "https://schema.nb.no/Bibliographic/Values/V1000"
+              },
+              {
+                "label": "Bildeverk",
+                "uri": "https://schema.nb.no/Bibliographic/Values/V1003"
+              }
+            ]
+          }
+        ],
+        "title": "Work",
+        "type": "object",
+        "properties": {
+          "@type": {
+            "const": "Work",
+            "type": "string"
+          },
+          "alternateName": {
+            "description": "List of alternate titles for the work.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "creator": {
+            "description": "List of the primary creators (authors or artists) of the work.\nThis list usually contains only one or two persons.\n",
+            "type": "array",
+            "items": {
+              "additionalProperties": false,
+              "type": "object",
+              "properties": {
+                "id": {
+                  "description": "Bibbi ID of the creator.",
+                  "type": "string"
+                },
+                "name": {
+                  "description": "Name of the creator.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name"
+              ]
+            }
+          },
+          "formOfWork": {
+            "description": "Used as a distinguishing characteristic to\ndifferentiate two works with the same author and title.\n",
+            "examples": [
+              "Novellesamling",
+              "Novelle"
+            ],
+            "type": "string"
+          },
+          "id": {
+            "description": "Bibbi work ID",
+            "type": "string"
+          },
+          "name": {
+            "description": "The preferred title as an ISBD formatted string. See the note \"About work titles\" above. See also the `nameParts` property, which contains the components of the title.",
+            "type": "string"
+          },
+          "nameParts": {
+            "additionalProperties": false,
+            "description": "Preferred title for the work. See the note \"About work titles\" above.\nSee also the `name` property, which contains a pre-formatted versions of this property.\n",
+            "examples": [
+              {
+                "partNumber": "6",
+                "partTitle": "Krigerens hjemkomst",
+                "title": "En sjøens helt"
+              },
+              {
+                "partNumber": "Andre bok",
+                "title": "Min kamp"
+              },
+              {
+                "title": "Noruwei no mori"
+              }
+            ],
+            "type": "object",
+            "properties": {
+              "partNumber": {
+                "description": "Number designation for a part/section of a multi-part work.\nNote: Not necessarily a numeric value, valid values include \"Part 1\", \"Part I\", \"Andre bok\", etc.\n",
+                "type": "string"
+              },
+              "partTitle": {
+                "description": "Title specific to a part/section of a multi-part work.\n",
+                "type": "string"
+              },
+              "title": {
+                "description": "The title for the work. For multi-part works, the title shared by all parts of the work.\n",
+                "type": "string"
+              }
+            }
+          },
+          "originalLanguage": {
+            "description": "ISO 639-2 language code for the language the work was originally published in.\n",
+            "pattern": "[a-z]{3}",
+            "type": "string"
+          },
+          "originalYear": {
+            "description": "The year the work was first published.",
+            "type": "string"
+          },
+          "partOfPublications": {
+            "description": "List of publications that contains this work as well as one or more other works. A basic subset of metadata is included for each publication; additional data can be retrieved from the\n[publications endpoints](/operations/get-publications).\n",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Work/$defs/BriefPublication"
+            }
+          },
+          "publications": {
+            "description": "List of publications that this work is embodied in. A basic subset of metadata is included for each publication; additional data can be retrieved from the\n[publications endpoints](/operations/get-publications).\n",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Work/$defs/BriefPublication"
+            }
+          },
+          "translatedName": {
+            "additionalProperties": false,
+            "description": "Preferred work title in other languages than the original.\n",
+            "type": "object",
+            "properties": {
+              "nno": {
+                "description": "Translated name in Norwegian Nynorsk",
+                "type": "string"
+              },
+              "nob": {
+                "description": "Translated name in Norwegian Bokmål",
+                "type": "string"
+              }
+            },
+            "required": [
+              "nob"
+            ]
+          },
+          "workTypes": {
+            "type": "array",
+            "description": "List of work types from [Vocabulary of work types](https://www.nb.no/nbvok/vtp/en/)",
+            "items": {
+              "additionalProperties": false,
+              "description": "Work type from the National Library of Norway's [Vocabulary of work types](https://www.nb.no/nbvok/vtp/).\n",
+              "type": "object",
+              "properties": {
+                "label": {
+                  "description": "Label",
+                  "type": "string"
+                },
+                "uri": {
+                  "description": "URI",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "label",
+                "uri"
+              ]
+            }
+          }
+        },
+        "required": [
+          "id"
+        ]
+      }
+    }
+  },
+  "info": {
+    "contact": {
+      "name": "Biblioteksentralen",
+      "url": "https://www.bibsent.no/kundesenter"
+    },
+    "description": "The Bibbi Metadata REST API provides programmatic read access to bibliographic data from Biblioteksentralen.\n\n## Introduction\n\n### Scope\n\nThe API provides open access to a subset of data elements for all resources (books, movies, video games etc.) catalogued by Biblioteksentralen, using a simple JSON schema based on [Schema.org](https://schema.org) and extended with additional properties as needed.\n\nThe intention behind the API has been to make the most common bibliographic data elements easily available to developers with a well documented schema without the complexity and guesswork often involved in parsing MARC.\nIf you need full MARC records, please see <https://doc.aja.bs.no/hente/bibliografiske-data/> for our other APIs.\n\n### Terms of use and stability\n\n<!--\n  Licensing is not 100 % settled yet, we aim for either a CC-0 or a CC-BY-SA 4.0 license.\n  Data from the API is available under the CC0 1.0 Universal (CC0 1.0) Public Domain Dedication license\n  to avoid hindering re-use of the data, but we appreciate an attribution like \"Data from Biblioteksentalen\" when it's feasible to include one.\n-->\n\nThe API can be used freely without authorization.\nWe appreciate if you include an attribution like \"Data from Biblioteksentalen\" when using data from the API.\n\nWe try to keep the API available and we do [use it in our own products](https://en.wikipedia.org/wiki/Eating_your_own_dog_food), but we don't provide any uptime guarantees.\nUpgrades generally result in short downtimes (typically < 1 min, but can be longer).\nUnexpected events can result in longer downtimes.\n\nThe API is not versioned yet.\nBreaking changes will generally be announced ahead of time, please subscribe to the bs-metadata-api mailing list to be notified about changes.\nContact us if you have specific requirements you would like to discuss.\n\n### User Agent policy\n\nClients should use an informative User-Agent string with contact information, or they may be blocked without notice.\n`X-User-Agent` can be used in place of `User-Agent` in situations where `User-Agent` cannot be supplied\n(e.g. in browsers due to https://bugs.chromium.org/p/chromium/issues/detail?id=571722).\n\nExample: `User-Agent: Elvesund bibliotek (kontakt@elvesund.no)`\n\n### Usage limits\n\nThe API has a limit of 10 simultaneous connections.\nIt responds with HTTP 429 Too Many Requests if there are already that many requests in progress.\n\n### Contact\n\nIf you have questions about the API, please contact kundeservice@bibsent.no\n\n## Changelog\n\n### 2022-12-14\n\n#### Breaking changes\n\n* `/v1/works`:\n  * Changed the `id` field format from `https://id.bs.no/work/{id}` to `{id}`.\n\n* `/v1/publications`:\n  * Changed the `id` field format from `https://id.bs.no/publication/{id}` to `{id}`.\n  * Removed the deprecated `work_id` field, please use the equivalent property `work.id` instead.\n\n### 2022-11-17\n\n#### Additions\n\n* `/v1/works`:\n  * Added field to each publication: `audience`.\n\n#### Breaking changes\n\n* `/v1/publications`:\n  * Removed the deprecated property `audience[].value`\n\n### 2022-09-26\n\n#### Changes\n\n* Removed the `mode` parameter from `/v1/publications`. Instead of using the mode parameter to switch between different modes,\n  a search strategy will automatically be inferred from the query in a backwards-compatible manner, so this change should be\n  non-breaking. If the `mode` argument is still supplied, it will be simply be ignored.\n* Added a new endpoint `/v1/publications/harvest` for harvesting publication metadata.\n\n#### Breaking changes\n\n* CQL search mode is no longer supported in the REST API, only in the SRU API.\n\n### 2022-09-16\n\n#### Additions\n\n* `/v1/works`:\n  * Added field to each publication: `datePublished`.\n  * Added field `translatedName`.\n\n#### Changes\n\n* `/v1/works`:\n  * Renamed field `preferredTitle` -> `nameParts`\n\n* `/v1/publications`:\n  * Renamed field `preferredTitle` -> `nameParts`\n  * Deprecated `preferredTitle`.\n\n### 2022-09-08\n\n#### Additions\n\n* `/v1/works`:\n  * Added more metadata to each publication: `@type`, `bookFormat`, `description`, `about` (subjects) and `genre`.\n\n#### Breaking changes\n\n* `/v1/works`:\n  * Split `publications` into `publications` (publications that contain a single work)\n    and `partOfPublications` (publications that contain multiple works).\n  * Renamed `records` to `works`.\n* `/v1/publications`:\n  * Renamed `abstract` to `description` for improved schema.org compatibility and marked `abstract` as deprecated.\n\n### 2022-08-22\n\n#### Additions\n\n* Added `isPartOf` (series) to the [Publication](/schemas/Publication) model.\n\n### 2022-08-09\n\n#### Breaking changes\n\n* The property `bibbiId` was removed from publications, works and creators; please use the `id` property instead.\n  Since the property was added recently, it was removed without a deprecation period.\n\n### 2022-07-21\n\n#### Deprecations and breaking changes\n\n* Endpoint `/publications/v1/` has moved to `/v1/publications`. Requests to the old URL are redirected.\n * To upgrade: Migrate to use the new URL to avoid the extra redirect request.\n* Endpoint `/publications/v1/{bibbiId}` has been removed.\n * To upgrade: Replace `/publications/v1/{bibbiId}` with `/v1/publications?query=id:{bibbiId}`\n* Changes to [Publication](/schemas/Publication):\n  * `work_id` has been superseeded by a new `work` object. The `work_id` property is now deprecated.\n    * To upgrade: Replace `work_id` with the equivalent property `work.id`.\n  * `subject` has been superseeded by an equivalent property `about` for Schema.org compatibility.\n    * To upgrade: Replace `subject` with the equivalent property `about`.\n  * `audience[].value` has been superseded by `audience[].name` for Schema.org compatibility..\n    * To upgrade: Replace `audience[].value` with the equivalent property `audience[].name`.\n  * Properties that would previously be explicitly `null` are now undefined instead.\n    * To upgrade: Make sure you don't rely on properties being explicitly `null`.\n\n#### Additions\n\n* New endpoint `/v1/works`\n* Additions to [Publication](/schemas/Publication):\n  * `nameParts`: object which contains the various title components that make up `name`.\n  * `work`: object which contain the ID and basic metadata about the work the publication is a manifestation of.\n  * `worksContained`: object which contain the ID and basic metadata about works the publication contains.\n",
+    "title": "Bibbi Metadata REST API",
+    "version": "v1",
+    "x-logo": {
+      "url": "https://pim.bibsent.no/nedlastinger/logo-og-profil/Biblioteksentralen_symbol.png"
+    }
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/v1/publications": {
+      "get": {
+        "description": "Search all [publications](/schemas/Publication) catalogued by Biblioteksentralen.\n\n### Simple search\n\nIf no search field is specified, common identifying fields like isbn, title and author will be queried.\n\nExamples:\n\n* Author + title: [nesbø politi](https://bibliografisk.bs.no/v1/publications?query=nesbø%20politi)\n* Title of multi volume work + part title: [sjøens helt skogsmatrosen](https://bibliografisk.bs.no/v1/publications?query=sjøens%20helt%20skogsmatrosen)\n* ISBN with or without hyphens: [9788203358814](https://bibliografisk.bs.no/v1/publications?query=9788203358814)\n* Work ID (must be quoted): [\"https://id.bs.no/work/1264563\"](https://bibliografisk.bs.no/v1/publications?query=%22https://id.bs.no/work/1264563%22)\n\n### Advanced search\n\n[Elasticsearch query string DSL](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax)\ncan be used for more advanced queries, to search specific fields, combine queries with boolean operators (`AND`, `OR`, `NOT`) etc.\nA query must start with a field name or `NOT` to be interpreted as a query string query.\nAn error is returned if the query cannot be parsed, for instance if the query contains unclosed quotes.\n\nExample: [`subject:(+knut +hamsun) NOT creator:(+knut +hamsun)`](https://bibliografisk.bs.no/v1/publications?query=subject%3A%28%2Bknut%20%2Bhamsun%29%20NOT%20creator%3A%28%2Bknut%20%2Bhamsun%29) will match publications having Knut Hamsun as subject (e.g. biographies), but not as a creator.\nIn this example, `+` was used to only find publications that match *all* the words, but not necessarily as a phrase – if Hamsun had a middlename, this query would still match.\nOn the other hand, the query `subject:(knut hamsun)` would match any publications having \"knut\" OR \"hamsun\" as subject – but publications having both words would still be ranked highest,\nand the query `subject:\"knut hamsun\"` would match the exact phrase, which would also work in this case.\n\n| Field | Description | Examples |\n|-|-|-|\n| `audience` | Target group, values from https://www.nb.no/nbvok/tg/ | [audience:\"11-12 år\"](https://bibliografisk.bs.no/v1/publications?query=audience%3A%2211-12%20%C3%A5r%22) |\n| `datePublished` | Year of publication. [Ranges](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#_ranges) are supported. | [datePublished:>=2021](https://bibliografisk.bs.no/v1/publications?query=datePublished%3A%3E%3D2021) |\n| `type` | Resource type (`book`, `audiobook`, `videogame`, `video`, `other`). Can be combined with `electronic:false` or `electronic:true` to only return physical or electronic resources (e-books, e-audiobooks), respectively | [type:audiobook AND electronic:false](https://bibliografisk.bs.no/v1/publications?query=type%3Aaudiobook%20AND%20electronic%3Afalse) |\n| `level` | Description level can be either `full` (fully catalogued) or `preliminary` (preliminary records, for which metadata quality may vary) | [level:full](https://bibliografisk.bs.no/v1/publications?query=level%3Afull) |\n| `literaryForm` | Either `fiction` or `non-fiction` | [literaryForm:fiction](https://bibliografisk.bs.no/v1/publications?query=literaryForm%3Afiction) |\n| `electronic` | Whether a resource is an e-book or e-audiobook or not. | [type:book AND electronic:true](https://bibliografisk.bs.no/v1/publications?query=type%3Abook%20AND%20electronic%3Atrue) |\n| `modified` | Modification timestamp of metadata (GMT). [Ranges](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#_ranges) are supported. | Inclusive date range: [modified:\\[2022-08-04 TO 2022-08-05\\]](https://bibliografisk.bs.no/v1/publications?query=modified:%5B2022-08-04%20TO%202022-08-05%5D) <br>Time range: [modified:\\[2022-08-05T08:00:00.000Z TO 2022-08-05T10:00:00.000Z\\]](https://bibliografisk.bs.no/v1/publications?query=modified:%5B2022-08-05T08:00:00.000Z%20TO%202022-08-05T10:00:00.000Z%5D) |\n| `genre` | Form/genre from [NTSF](https://www.nb.no/nbvok/ntsf/), search by term or URI. | [genre:\"Kokebøker\"](https://bibliografisk.bs.no/v1/publications?query=genre%3A%22Kokeb%C3%B8ker%22) |\n| `creator` | Name or ID of author or other creator. | [creator:\"Anna Fiske\"](https://bibliografisk.bs.no/v1/publications?query=creator%3A%22Anna%20Fiske%22)\n| `subject` | Name or ID of a subject from [Bibbi authorities](https://vokabular.bs.no/bibbi/)  | [subject:Fiske](https://bibliografisk.bs.no/v1/publications?query=creator%3AFiske)\n| `series` | Name or ID of a series the publication is part of  | [series:\"Detektivbyrå nr. 2\"](https://bibliografisk.bs.no/v1/publications?query=series%3A\"Detektivbyrå+nr.+2\")\n| ...(work in progress) |\n\n### Retrieving newly updated records\n\nThe `modified` index contains the GMT timestamp for the last modification to a bibliographic metadata record, so it can be used to find newly updated records or records updated in a given [date range](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#_ranges). Example queries:\n\n* Find records updated since a given timestamp: [modified:\\[2022-08-05T12:00:00.000Z TO *\\]](modified:%5B2022-08-05T08:00:00.000Z%20TO%202022-08-05T10:00:00.000Z%5D)\n* Find records updated on a given date: [modified:\\[2022-08-05 TO 2022-08-05\\]](https://bibliografisk.bs.no/v1/publications?query=modified:%5B2022-08-05%20TO%202022-08-05%5D)\n\nIn the response model, the modification date is found under `bibliographicRecord.modified`.\n",
+        "operationId": "get-publications",
+        "parameters": [
+          {
+            "description": "Query string to use for search.\n",
+            "examples": {
+              "AuthorTitle": {
+                "value": "nesbø politi"
+              },
+              "ISBN": {
+                "value": "9788202691820"
+              }
+            },
+            "in": "query",
+            "name": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "A filter used to filter the search results, using the advanced query syntax.\n",
+            "examples": {
+              "Creator": {
+                "value": "creator:(+Knut +Hamsun)"
+              },
+              "Genre": {
+                "value": "genre:\"Grafiske romaner\""
+              }
+            },
+            "in": "query",
+            "name": "filter",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The max number of results to be returned.\n",
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 10,
+              "maximum": 500,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The index of the first record in the result set to be returned, used for pagination.\n",
+            "in": "query",
+            "name": "start",
+            "schema": {
+              "default": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "PublicationContainingMultipleWorks": {
+                    "value": {
+                      "records": [
+                        {
+                          "@type": "Book",
+                          "about": [],
+                          "abstract": "Tre klassiske Albert Åberg-historier samlet i ett bind: Du er en luring, Albert Åberg; Knyt i vei, Albrt Åberg og Hurra for pappa Åberg. Denne gangen er temaet lekens magi. Billedbøker for førskolebarn/småskoletrinnet. Omtalen er utarbeidet av BS.",
+                          "audience": [
+                            {
+                              "group": "Aldersgruppe",
+                              "id": "https://schema.nb.no/Bibliographic/Values/TG1001",
+                              "name": "3-5 år",
+                              "vocabulary": "nortarget"
+                            }
+                          ],
+                          "bibliographicRecord": {
+                            "approved": "2021-08-30T11:00:45Z",
+                            "level": "full",
+                            "modified": "2022-10-22T00:04:38Z",
+                            "url": "https://oai.aja.bs.no/mlnb?verb=GetRecord&metadataPrefix=marc21&identifier=oai:bibbi.bs.no:0616828"
+                          },
+                          "bookFormat": "Hardcover",
+                          "creator": [
+                            {
+                              "@type": "Person",
+                              "birthDate": "1942",
+                              "deathDate": "2021",
+                              "id": "(NO-TrBIB)90057960",
+                              "name": "Bergström, Gunilla",
+                              "role": "art"
+                            },
+                            {
+                              "@type": "Person",
+                              "birthDate": "1939",
+                              "id": "(NO-TrBIB)90058926",
+                              "name": "Bringsværd, Tor Åge",
+                              "role": "trl"
+                            }
+                          ],
+                          "datePublished": "2021",
+                          "description": "Tre klassiske Albert Åberg-historier samlet i ett bind: Du er en luring, Albert Åberg; Knyt i vei, Albrt Åberg og Hurra for pappa Åberg. Denne gangen er temaet lekens magi. Billedbøker for førskolebarn/småskoletrinnet. Omtalen er utarbeidet av BS.",
+                          "dewey": [
+                            "839.7374"
+                          ],
+                          "genre": [
+                            {
+                              "id": "https://id.nb.no/vocabulary/ntsf/33",
+                              "name": {
+                                "nno": "Biletbøker",
+                                "nob": "Bildebøker"
+                              },
+                              "vocabulary": "ntsf"
+                            }
+                          ],
+                          "gtin13": "9788202708795",
+                          "id": "0616828",
+                          "image": {
+                            "@type": "ImageObject",
+                            "thumbnailUrl": "https://media.aja.bs.no/39b64504-e7b8-489b-970a-14d3f8afabea/cover/thumbnail.jpg",
+                            "url": "https://media.aja.bs.no/39b64504-e7b8-489b-970a-14d3f8afabea/cover/original.jpg"
+                          },
+                          "inLanguage": "nob",
+                          "isPartOf": [],
+                          "isbn": "9788202708795",
+                          "literaryForm": "fiction",
+                          "name": "Mye moro, Albert Åberg! : tre historier",
+                          "nameParts": {
+                            "remainderOfTitle": "tre historier",
+                            "title": "Mye moro, Albert Åberg!"
+                          },
+                          "numberOfPages": 88,
+                          "placeOfPublication": "Oslo",
+                          "preferredTitle": {
+                            "remainderOfTitle": "tre historier",
+                            "title": "Mye moro, Albert Åberg!"
+                          },
+                          "publisher": "Cappelen Damm",
+                          "subject": [],
+                          "work": {
+                            "alternateName": [],
+                            "creator": [
+                              {
+                                "id": "https://id.bs.no/bibbi/4256",
+                                "name": "Bergström, Gunilla"
+                              }
+                            ],
+                            "id": "1264581",
+                            "name": "Mera bus med Alfons Åberg",
+                            "nameParts": {
+                              "title": "Mera bus med Alfons Åberg"
+                            },
+                            "originalLanguage": "swe",
+                            "workTypes": [
+                              {
+                                "label": "Språkbasert verk",
+                                "uri": "https://schema.nb.no/Bibliographic/Values/V1000"
+                              }
+                            ]
+                          },
+                          "worksContained": [
+                            {
+                              "alternateName": [],
+                              "creator": [
+                                {
+                                  "id": "https://id.bs.no/bibbi/4256",
+                                  "name": "Bergström, Gunilla"
+                                }
+                              ],
+                              "id": "1264563",
+                              "name": "Aja baja, Alfons Åberg",
+                              "nameParts": {
+                                "title": "Aja baja, Alfons Åberg"
+                              },
+                              "originalLanguage": "swe",
+                              "originalYear": "1973",
+                              "translatedName": {
+                                "nob": "Du er en luring, Albert Åberg"
+                              },
+                              "workTypes": [
+                                {
+                                  "label": "Språkbasert verk",
+                                  "uri": "https://schema.nb.no/Bibliographic/Values/V1000"
+                                },
+                                {
+                                  "label": "Bildeverk",
+                                  "uri": "https://schema.nb.no/Bibliographic/Values/V1003"
+                                }
+                              ]
+                            },
+                            {
+                              "alternateName": [],
+                              "creator": [
+                                {
+                                  "id": "https://id.bs.no/bibbi/4256",
+                                  "name": "Bergström, Gunilla"
+                                }
+                              ],
+                              "id": "1264573",
+                              "name": "Bara knyt, Alfons",
+                              "nameParts": {
+                                "title": "Bara knyt, Alfons"
+                              },
+                              "originalLanguage": "swe",
+                              "originalYear": "1988",
+                              "translatedName": {
+                                "nob": "Knyt i vei, Albert Åberg!"
+                              },
+                              "workTypes": [
+                                {
+                                  "label": "Språkbasert verk",
+                                  "uri": "https://schema.nb.no/Bibliographic/Values/V1000"
+                                },
+                                {
+                                  "label": "Bildeverk",
+                                  "uri": "https://schema.nb.no/Bibliographic/Values/V1003"
+                                }
+                              ]
+                            },
+                            {
+                              "alternateName": [],
+                              "creator": [
+                                {
+                                  "id": "https://id.bs.no/bibbi/4256",
+                                  "name": "Bergström, Gunilla"
+                                }
+                              ],
+                              "id": "1264577",
+                              "name": "Hurra för pappa Åberg!",
+                              "nameParts": {
+                                "title": "Hurra för pappa Åberg!"
+                              },
+                              "originalLanguage": "swe",
+                              "originalYear": "1993",
+                              "translatedName": {
+                                "nob": "Hurra for pappa Åberg!"
+                              },
+                              "workTypes": [
+                                {
+                                  "label": "Språkbasert verk",
+                                  "uri": "https://schema.nb.no/Bibliographic/Values/V1000"
+                                },
+                                {
+                                  "label": "Bildeverk",
+                                  "uri": "https://schema.nb.no/Bibliographic/Values/V1003"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ],
+                      "total": 1
+                    }
+                  }
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "records": {
+                      "items": {
+                        "$ref": "#/components/schemas/Publication"
+                      },
+                      "type": "array"
+                    },
+                    "total": {
+                      "description": "Total number of results matching the search query.",
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "List of publications"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "details": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "const": "Failed to parse query",
+                      "type": "string"
+                    },
+                    "status": {
+                      "const": "400",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "error"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Invalid advanced query"
+          },
+          "429": {
+            "$ref": "#/components/responses/ConcurrentLimitExceeded"
+          }
+        },
+        "summary": "Search for publications",
+        "tags": [
+          "Publications"
+        ]
+      }
+    },
+    "/v1/publications/harvest": {
+      "get": {
+        "description": "Harvest metadata about [publications](/schemas/Publication) catalogued by Biblioteksentralen.\nThe harvest endpoint differs from the search endpoint in two ways:\n* It includes a `resumption_token` that can be used to paginate through all the results, even if it exceeds 10000 records.\n* It includes deleted records. Deleted records only include minimal metadata – an example is provided in the response example.\n* Results are always sorted by modification date, custom sorting is not supported.\n\n## Usage\n\n1. Make a request to the harvest endpoint, optionally including a `query`, to retrieve the first batch of records: https://bibliografisk.bs.no/v1/publications/harvest?query=level:full\n2. If a `resumption_token` was included in the response, use it to get the next batch: https://bibliografisk.bs.no/v1/publications/harvest?resumption_token=RESUMPTION_TOKEN_HERE\n3. Continue using the `resumption_token` from the last response until you receive a response with no `resumption_token`, which means there are no more results.\n\nResumption tokens are valid for 10 minutes. If a token has expired, the API will return a 400 response.\n\n## Deleted records\n\nPublication records may sometimes be removed from Bibbi if a record was created erroneously or if a publication was retracted.\nIn such cases, a minimal metadata record will be returned, that only contains the Bibbi ID and the date of deletion:\n\n```json\n{\n  \"id\": \"https://id.bs.no/publication/0619490\",\n  \"deleted\": \"2022-09-27T09:34:16Z\",\n}\n```\n",
+        "operationId": "get-v1-publications-harvest",
+        "parameters": [
+          {
+            "description": "Query string to use for search. See the [search endpoint](/operations/get-publications) for more examples.\n",
+            "examples": {
+              "modified": {
+                "value": "modified:>\"2022-09-15T00:00:00Z\" AND level:\"full\""
+              }
+            },
+            "in": "query",
+            "name": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum number of results to be returned in each response.\n",
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 500,
+              "maximum": 500,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Resumption token from previous response, used to get the next batch of records.\n",
+            "in": "query",
+            "name": "resumption_token",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "ExampleWithDeletedRecord": {
+                    "value": {
+                      "publications": [
+                        {
+                          "deleted": "2023-01-10T06:40:33Z",
+                          "id": "0619490"
+                        },
+                        {
+                          "@type": "Book",
+                          "about": [],
+                          "abstract": "Tre klassiske Albert Åberg-historier samlet i ett bind: Du er en luring, Albert Åberg; Knyt i vei, Albrt Åberg og Hurra for pappa Åberg. Denne gangen er temaet lekens magi. Billedbøker for førskolebarn/småskoletrinnet. Omtalen er utarbeidet av BS.",
+                          "audience": [
+                            {
+                              "group": "Aldersgruppe",
+                              "id": "https://schema.nb.no/Bibliographic/Values/TG1001",
+                              "name": "3-5 år",
+                              "vocabulary": "nortarget"
+                            }
+                          ],
+                          "bibliographicRecord": {
+                            "approved": "2021-08-30T11:00:45Z",
+                            "level": "full",
+                            "modified": "2022-10-22T00:04:38Z",
+                            "url": "https://oai.aja.bs.no/mlnb?verb=GetRecord&metadataPrefix=marc21&identifier=oai:bibbi.bs.no:0616828"
+                          },
+                          "bookFormat": "Hardcover",
+                          "creator": [
+                            {
+                              "@type": "Person",
+                              "birthDate": "1942",
+                              "deathDate": "2021",
+                              "id": "(NO-TrBIB)90057960",
+                              "name": "Bergström, Gunilla",
+                              "role": "art"
+                            },
+                            {
+                              "@type": "Person",
+                              "birthDate": "1939",
+                              "id": "(NO-TrBIB)90058926",
+                              "name": "Bringsværd, Tor Åge",
+                              "role": "trl"
+                            }
+                          ],
+                          "datePublished": "2021",
+                          "description": "Tre klassiske Albert Åberg-historier samlet i ett bind: Du er en luring, Albert Åberg; Knyt i vei, Albrt Åberg og Hurra for pappa Åberg. Denne gangen er temaet lekens magi. Billedbøker for førskolebarn/småskoletrinnet. Omtalen er utarbeidet av BS.",
+                          "dewey": [
+                            "839.7374"
+                          ],
+                          "genre": [
+                            {
+                              "id": "https://id.nb.no/vocabulary/ntsf/33",
+                              "name": {
+                                "nno": "Biletbøker",
+                                "nob": "Bildebøker"
+                              },
+                              "vocabulary": "ntsf"
+                            }
+                          ],
+                          "gtin13": "9788202708795",
+                          "id": "0616828",
+                          "image": {
+                            "@type": "ImageObject",
+                            "thumbnailUrl": "https://media.aja.bs.no/39b64504-e7b8-489b-970a-14d3f8afabea/cover/thumbnail.jpg",
+                            "url": "https://media.aja.bs.no/39b64504-e7b8-489b-970a-14d3f8afabea/cover/original.jpg"
+                          },
+                          "inLanguage": "nob",
+                          "isPartOf": [],
+                          "isbn": "9788202708795",
+                          "literaryForm": "fiction",
+                          "name": "Mye moro, Albert Åberg! : tre historier",
+                          "nameParts": {
+                            "remainderOfTitle": "tre historier",
+                            "title": "Mye moro, Albert Åberg!"
+                          },
+                          "numberOfPages": 88,
+                          "placeOfPublication": "Oslo",
+                          "preferredTitle": {
+                            "remainderOfTitle": "tre historier",
+                            "title": "Mye moro, Albert Åberg!"
+                          },
+                          "publisher": "Cappelen Damm",
+                          "subject": [],
+                          "work": {
+                            "alternateName": [],
+                            "creator": [
+                              {
+                                "id": "https://id.bs.no/bibbi/4256",
+                                "name": "Bergström, Gunilla"
+                              }
+                            ],
+                            "id": "1264581",
+                            "name": "Mera bus med Alfons Åberg",
+                            "nameParts": {
+                              "title": "Mera bus med Alfons Åberg"
+                            },
+                            "originalLanguage": "swe",
+                            "workTypes": [
+                              {
+                                "label": "Språkbasert verk",
+                                "uri": "https://schema.nb.no/Bibliographic/Values/V1000"
+                              }
+                            ]
+                          },
+                          "worksContained": [
+                            {
+                              "alternateName": [],
+                              "creator": [
+                                {
+                                  "id": "https://id.bs.no/bibbi/4256",
+                                  "name": "Bergström, Gunilla"
+                                }
+                              ],
+                              "id": "1264563",
+                              "name": "Aja baja, Alfons Åberg",
+                              "nameParts": {
+                                "title": "Aja baja, Alfons Åberg"
+                              },
+                              "originalLanguage": "swe",
+                              "originalYear": "1973",
+                              "translatedName": {
+                                "nob": "Du er en luring, Albert Åberg"
+                              },
+                              "workTypes": [
+                                {
+                                  "label": "Språkbasert verk",
+                                  "uri": "https://schema.nb.no/Bibliographic/Values/V1000"
+                                },
+                                {
+                                  "label": "Bildeverk",
+                                  "uri": "https://schema.nb.no/Bibliographic/Values/V1003"
+                                }
+                              ]
+                            },
+                            {
+                              "alternateName": [],
+                              "creator": [
+                                {
+                                  "id": "https://id.bs.no/bibbi/4256",
+                                  "name": "Bergström, Gunilla"
+                                }
+                              ],
+                              "id": "1264573",
+                              "name": "Bara knyt, Alfons",
+                              "nameParts": {
+                                "title": "Bara knyt, Alfons"
+                              },
+                              "originalLanguage": "swe",
+                              "originalYear": "1988",
+                              "translatedName": {
+                                "nob": "Knyt i vei, Albert Åberg!"
+                              },
+                              "workTypes": [
+                                {
+                                  "label": "Språkbasert verk",
+                                  "uri": "https://schema.nb.no/Bibliographic/Values/V1000"
+                                },
+                                {
+                                  "label": "Bildeverk",
+                                  "uri": "https://schema.nb.no/Bibliographic/Values/V1003"
+                                }
+                              ]
+                            },
+                            {
+                              "alternateName": [],
+                              "creator": [
+                                {
+                                  "id": "https://id.bs.no/bibbi/4256",
+                                  "name": "Bergström, Gunilla"
+                                }
+                              ],
+                              "id": "1264577",
+                              "name": "Hurra för pappa Åberg!",
+                              "nameParts": {
+                                "title": "Hurra för pappa Åberg!"
+                              },
+                              "originalLanguage": "swe",
+                              "originalYear": "1993",
+                              "translatedName": {
+                                "nob": "Hurra for pappa Åberg!"
+                              },
+                              "workTypes": [
+                                {
+                                  "label": "Språkbasert verk",
+                                  "uri": "https://schema.nb.no/Bibliographic/Values/V1000"
+                                },
+                                {
+                                  "label": "Bildeverk",
+                                  "uri": "https://schema.nb.no/Bibliographic/Values/V1003"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ],
+                      "total": 2
+                    }
+                  }
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "publications": {
+                      "items": {
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/Publication"
+                          },
+                          {
+                            "$ref": "#/components/schemas/DeletedPublication"
+                          }
+                        ]
+                      },
+                      "type": "array"
+                    },
+                    "resumption_token": {
+                      "description": "Token that can be used to fetch the next batch of records.",
+                      "type": "string"
+                    },
+                    "total": {
+                      "description": "Total number of results in the result set.",
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "List of publications"
+          },
+          "400": {
+            "$ref": "#/components/responses/ConcurrentLimitExceeded",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "429": null,
+                  "InvalidToken": {
+                    "value": {
+                      "error": "Invalid resumption token",
+                      "status": 400
+                    }
+                  },
+                  "TokenExpired": {
+                    "value": {
+                      "details": "The resumption token has expired, please start a new harvest",
+                      "error": "Resumption token expired",
+                      "status": 400
+                    }
+                  }
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "details": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "const": 400,
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "error"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Invalid query or resumption token"
+          }
+        },
+        "summary": "Harvest publication metadata",
+        "tags": [
+          "Publications"
+        ]
+      }
+    },
+    "/v1/works": {
+      "get": {
+        "description": "Retrieve data about [works](/schemas/Work) matching a query.\n\n## Search examples\n\nThe search index includes data from the publication linked to each work, so you can search for e.g. the ISBN of a publication to find the linked work.\n\n* Title: [madame bovary](https://bibliografisk.bs.no/v1/works?query=sjøens%20helt%20skogsmatrosen)\n* Author + title: [nesbø politi](https://bibliografisk.bs.no/v1/works?query=nesbø%20politi)\n* ISBN: [9788203358814](https://bibliografisk.bs.no/v1/works?query=9788203358814)\n",
+        "operationId": "get-works",
+        "parameters": [
+          {
+            "description": "Query string to use for search. Fields indexed include isbn, author+title etc. of the publications that a work is manifested in.\n",
+            "examples": {
+              "AuthorTitle": {
+                "value": "nesbø politi"
+              },
+              "ISBN": {
+                "value": "9788202691820"
+              }
+            },
+            "in": "query",
+            "name": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The max number of results to be returned.\n",
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 10,
+              "maximum": 500,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The index of the first record in the result set to be returned, used for pagination.\n",
+            "in": "query",
+            "name": "start",
+            "schema": {
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "work.workTypes.uri:\"https://id.bs.no/work/1264563\""
+            },
+            "in": "query",
+            "name": "filter",
+            "description": "Filter the search results using advanced query syntax."
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "ExampleListWorksResponse": {
+                    "value": {
+                      "total": 1,
+                      "works": [
+                        {
+                          "@type": "Work",
+                          "alternateName": [],
+                          "creator": [
+                            {
+                              "id": "https://id.bs.no/bibbi/4256",
+                              "name": "Bergström, Gunilla"
+                            }
+                          ],
+                          "id": "1264581",
+                          "name": "Mera bus med Alfons Åberg",
+                          "nameParts": {
+                            "title": "Mera bus med Alfons Åberg"
+                          },
+                          "originalLanguage": "swe",
+                          "partOfPublications": [],
+                          "publications": [
+                            {
+                              "@type": "Book",
+                              "about": [],
+                              "audience": [
+                                {
+                                  "group": "Aldersgruppe",
+                                  "id": "https://schema.nb.no/Bibliographic/Values/TG1001",
+                                  "name": "3-5 år",
+                                  "vocabulary": "nortarget"
+                                }
+                              ],
+                              "bookFormat": "Hardcover",
+                              "datePublished": "2021",
+                              "description": "Tre klassiske Albert Åberg-historier samlet i ett bind: Du er en luring, Albert Åberg; Knyt i vei, Albrt Åberg og Hurra for pappa Åberg. Denne gangen er temaet lekens magi. Billedbøker for førskolebarn/småskoletrinnet. Omtalen er utarbeidet av BS.",
+                              "genre": [
+                                {
+                                  "id": "https://id.nb.no/vocabulary/ntsf/33",
+                                  "name": {
+                                    "nno": "Biletbøker",
+                                    "nob": "Bildebøker"
+                                  },
+                                  "vocabulary": "ntsf"
+                                }
+                              ],
+                              "id": "0616828",
+                              "image": "https://media.aja.bs.no/39b64504-e7b8-489b-970a-14d3f8afabea/cover/original.jpg",
+                              "isbn": "9788202708795",
+                              "language": "nob",
+                              "name": "Mye moro, Albert Åberg! : tre historier"
+                            }
+                          ],
+                          "workTypes": [
+                            {
+                              "label": "Språkbasert verk",
+                              "uri": "https://schema.nb.no/Bibliographic/Values/V1000"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "query": {
+                      "description": "Expanded query for debugging purposes.",
+                      "type": "string"
+                    },
+                    "total": {
+                      "description": "Total number of results matching the search query.",
+                      "type": "integer"
+                    },
+                    "works": {
+                      "items": {
+                        "$ref": "#/components/schemas/Work"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "List of works"
+          },
+          "429": {
+            "$ref": "#/components/responses/ConcurrentLimitExceeded"
+          }
+        },
+        "summary": "Search for works",
+        "tags": [
+          "Works"
+        ]
+      }
+    }
+  },
+  "security": [],
+  "servers": [
+    {
+      "url": "https://bibliografisk.bs.no"
+    }
+  ],
+  "tags": [
+    {
+      "description": "Get data about publications",
+      "name": "Publications"
+    },
+    {
+      "description": "Get data about works",
+      "name": "Works"
+    }
+  ]
+}
