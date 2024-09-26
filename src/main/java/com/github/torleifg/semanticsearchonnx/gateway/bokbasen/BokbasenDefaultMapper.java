@@ -1,6 +1,6 @@
 package com.github.torleifg.semanticsearchonnx.gateway.bokbasen;
 
-import com.github.torleifg.semanticsearchonnx.book.domain.Book;
+import com.github.torleifg.semanticsearchonnx.book.service.MetadataDTO;
 import org.editeur.ns.onix._3_0.reference.*;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -18,26 +18,26 @@ import java.util.stream.Stream;
 class BokbasenDefaultMapper implements BokbasenMapper {
 
     @Override
-    public Book from(String id) {
-        final Book book = new Book();
-        book.setCode(id);
-        book.setDeleted(true);
+    public MetadataDTO from(String id) {
+        final MetadataDTO metadata = new MetadataDTO();
+        metadata.setExternalId(id);
+        metadata.setDeleted(true);
 
-        return book;
+        return metadata;
     }
 
     @Override
-    public Book from(Product product) {
-        final Book book = new Book();
-        book.setCode(product.getRecordReference().getValue());
-        book.setDeleted(false);
+    public MetadataDTO from(Product product) {
+        final MetadataDTO metadata = new MetadataDTO();
+        metadata.setExternalId(product.getRecordReference().getValue());
+        metadata.setDeleted(false);
 
         product.getProductIdentifier().stream()
                 .filter(productIdentifier -> productIdentifier.getProductIDType().getValue() == List5.fromValue("15"))
                 .map(ProductIdentifier::getIDValue)
                 .map(IDValue::getValue)
                 .findFirst()
-                .ifPresent(book::setIsbn);
+                .ifPresent(metadata::setIsbn);
 
         final DescriptiveDetail descriptiveDetail = product.getDescriptiveDetail();
 
@@ -54,8 +54,8 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                 .findFirst();
 
         if (title.isPresent() && remainderOfTitle.isPresent()) {
-            book.setTitle(title.get() + " : " + remainderOfTitle.get());
-        } else title.ifPresent(book::setTitle);
+            metadata.setTitle(title.get() + " : " + remainderOfTitle.get());
+        } else title.ifPresent(metadata::setTitle);
 
         Stream.ofNullable(descriptiveDetail)
                 .map(DescriptiveDetail::getContributor)
@@ -82,7 +82,7 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                     return null;
                 })
                 .filter(Objects::nonNull)
-                .forEach(book.getAuthors()::add);
+                .forEach(metadata.getAuthors()::add);
 
 
         final List<Subject> subjects = descriptiveDetail.getSubject();
@@ -118,9 +118,9 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                                 final String name = subjectSchemeName.getValue();
 
                                 if (name.equals("Bokbasen_Genre") || name.equals("Bokbasen_Form")) {
-                                    book.getGenreAndForm().add(text);
+                                    metadata.getGenreAndForm().add(text);
                                 } else if (name.equals("Bokbasen_Subject")) {
-                                    book.getAbout().add(text);
+                                    metadata.getAbout().add(text);
                                 }
                             }
                         }
@@ -139,7 +139,7 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                 .map(PublishingDate::getDate)
                 .map(Date::getValue)
                 .findFirst()
-                .ifPresent(book::setPublishedYear);
+                .ifPresent(metadata::setPublishedYear);
 
         final CollateralDetail collateralDetail = product.getCollateralDetail();
 
@@ -154,7 +154,7 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                 .flatMap(Collection::stream)
                 .map(Serializable::toString)
                 .findFirst()
-                .ifPresent(book::setDescription);
+                .ifPresent(metadata::setDescription);
 
         Stream.ofNullable(collateralDetail)
                 .map(CollateralDetail::getSupportingResource)
@@ -174,9 +174,9 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                 .map(ResourceLink::getValue)
                 .map(URI::create)
                 .findFirst()
-                .ifPresent(book::setThumbnailUrl);
+                .ifPresent(metadata::setThumbnailUrl);
 
-        return book;
+        return metadata;
     }
 
     private static boolean isProprietary(SubjectSchemeIdentifier subjectSchemeIdentifier) {

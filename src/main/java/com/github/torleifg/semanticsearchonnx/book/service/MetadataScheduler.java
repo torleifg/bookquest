@@ -17,7 +17,7 @@ public class MetadataScheduler {
         this.bookService = bookService;
     }
 
-    @Scheduled(initialDelayString = "${metadata.initial-delay}", fixedDelayString = "${metadata.fixed-delay}", timeUnit = TimeUnit.SECONDS)
+    @Scheduled(initialDelayString = "${scheduler.initial-delay}", fixedDelayString = "${scheduler.fixed-delay}", timeUnit = TimeUnit.SECONDS)
     public void poll() {
         if (!enabled) {
             return;

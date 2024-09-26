@@ -1,14 +1,18 @@
 package com.github.torleifg.semanticsearchonnx.book.repository;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.torleifg.semanticsearchonnx.book.domain.Book;
+import com.github.torleifg.semanticsearchonnx.book.domain.Metadata;
 import org.postgresql.util.PGobject;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
+import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -16,25 +20,24 @@ import java.util.UUID;
 public class BookRepository {
     private final JdbcClient jdbcClient;
 
-    private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper()
-            .registerModule(new JavaTimeModule());
+    private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper().registerModule(new JavaTimeModule());
 
     public BookRepository(JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
 
-    public Optional<Book> findByCode(String code) {
+    public Optional<Book> findByExternalId(String externalId) {
         return jdbcClient.sql("""
-                        select * from book where code = ?
+                        select * from book where external_id = ?
                         """)
-                .param(code)
-                .query(Book.class)
+                .param(externalId)
+                .query(new BookRowMapper())
                 .optional();
     }
 
-    public Optional<UUID> findVectorStoreIdByCode(String code) {
+    public Optional<UUID> findVectorStoreIdByExternalId(String code) {
         return jdbcClient.sql("""
-                        select vector_store_id from book where code = ?
+                        select vector_store_id from book where external_id = ?
                         """)
                 .param(code)
                 .query(UUID.class)
@@ -43,38 +46,69 @@ public class BookRepository {
 
     public void save(Book book) {
         jdbcClient.sql("""
-                        insert into book(code, payload) values (?, ?)
-                        on conflict (code)
-                        do update set (modified, payload) =
-                        (now(), excluded.payload)
+                        insert into book(external_id, deleted, metadata) values (?, ?, ?)
+                        on conflict (external_id)
+                        do update set (modified, metadata) =
+                        (now(), excluded.metadata)
                         """)
-                .param(book.getCode())
-                .param(getPGobject(book))
+                .param(book.getExternalId())
+                .param(book.isDeleted())
+                .param(toPGobject(book.getMetadata()))
                 .update();
     }
 
     public void save(Book book, UUID vectorStoreId) {
         jdbcClient.sql("""
-                        insert into book(code, payload, vector_store_id) values (?, ?, ?)
-                        on conflict (code)
-                        do update set (modified, payload, vector_store_id) =
-                        (now(), excluded.payload, excluded.vector_store_id)
+                        insert into book(external_id, deleted, metadata, vector_store_id) values (?, ?, ?, ?)
+                        on conflict (external_id)
+                        do update set (modified, metadata, vector_store_id) =
+                        (now(), excluded.metadata, excluded.vector_store_id)
                         """)
-                .param(book.getCode())
-                .param(getPGobject(book))
+                .param(book.getExternalId())
+                .param(book.isDeleted())
+                .param(toPGobject(book.getMetadata()))
                 .param(vectorStoreId)
                 .update();
     }
 
-    public static PGobject getPGobject(Book book) {
+    public List<Book> query(String query, int limit) {
+        return jdbcClient.sql("""
+                        select * from book where to_tsvector('simple', metadata::text) @@ to_tsquery(?) limit ?
+                        """)
+                .param(query)
+                .param(limit)
+                .query(new BookRowMapper())
+                .list();
+    }
+
+    private static class BookRowMapper implements RowMapper<Book> {
+        public Book mapRow(ResultSet rs, int i) throws SQLException {
+            final Book book = new Book();
+            book.setExternalId(rs.getString("external_id"));
+            book.setDeleted(rs.getBoolean("deleted"));
+            book.setMetadata(fromBytes(rs.getBytes("metadata")));
+
+            return book;
+        }
+    }
+
+    public static PGobject toPGobject(Metadata metadata) {
         final PGobject pGobject = new PGobject();
         pGobject.setType("jsonb");
 
         try {
-            pGobject.setValue(OBJECT_MAPPER.writeValueAsString(book));
+            pGobject.setValue(OBJECT_MAPPER.writeValueAsString(metadata));
+        } catch (SQLException | IOException e) {
+            throw new RuntimeException(e);
+        }
 
-            return pGobject;
-        } catch (SQLException | JsonProcessingException e) {
+        return pGobject;
+    }
+
+    public static Metadata fromBytes(byte[] bytes) {
+        try {
+            return OBJECT_MAPPER.readValue(bytes, Metadata.class);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

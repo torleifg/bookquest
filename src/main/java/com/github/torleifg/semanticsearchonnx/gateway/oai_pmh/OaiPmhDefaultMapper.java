@@ -1,6 +1,6 @@
 package com.github.torleifg.semanticsearchonnx.gateway.oai_pmh;
 
-import com.github.torleifg.semanticsearchonnx.book.domain.Book;
+import com.github.torleifg.semanticsearchonnx.book.service.MetadataDTO;
 import info.lc.xmlns.marcxchange_v1.DataFieldType;
 import info.lc.xmlns.marcxchange_v1.RecordType;
 import info.lc.xmlns.marcxchange_v1.SubfieldatafieldType;
@@ -20,26 +20,26 @@ import static java.util.stream.Collectors.groupingBy;
 class OaiPmhDefaultMapper implements OaiPmhMapper {
 
     @Override
-    public Book from(String id) {
-        final Book book = new Book();
-        book.setCode(id);
-        book.setDeleted(true);
+    public MetadataDTO from(String id) {
+        final MetadataDTO metadata = new MetadataDTO();
+        metadata.setExternalId(id);
+        metadata.setDeleted(true);
 
-        return book;
+        return metadata;
     }
 
     @Override
-    public Book from(String id, RecordType record) {
-        final Book book = new Book();
-        book.setCode(id);
-        book.setDeleted(false);
+    public MetadataDTO from(String id, RecordType record) {
+        final MetadataDTO metadata = new MetadataDTO();
+        metadata.setExternalId(id);
+        metadata.setDeleted(false);
 
         final Map<String, List<DataFieldType>> dataFieldsByTag = record.getDatafield().stream()
                 .collect(groupingBy(DataFieldType::getTag));
 
         getSubfieldValue(dataFieldsByTag.getOrDefault("020", List.of()), "a")
                 .findFirst()
-                .ifPresent(book::setIsbn);
+                .ifPresent(metadata::setIsbn);
 
         final Optional<String> title = getSubfieldValue(dataFieldsByTag.getOrDefault("245", List.of()), "a")
                 .findFirst();
@@ -48,31 +48,31 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
                 .findFirst();
 
         if (title.isPresent() && remainderOfTitle.isPresent()) {
-            book.setTitle(title.get() + " : " + remainderOfTitle.get());
-        } else title.ifPresent(book::setTitle);
+            metadata.setTitle(title.get() + " : " + remainderOfTitle.get());
+        } else title.ifPresent(metadata::setTitle);
 
         getSubfieldValue(dataFieldsByTag.getOrDefault("100", List.of()), "a", new Filter("4", "aut"))
-                .forEach(book.getAuthors()::add);
+                .forEach(metadata.getAuthors()::add);
 
         getSubfieldValue(dataFieldsByTag.getOrDefault("264", List.of()), "c")
                 .findFirst()
-                .ifPresent(book::setPublishedYear);
+                .ifPresent(metadata::setPublishedYear);
 
         getSubfieldValue(dataFieldsByTag.getOrDefault("520", List.of()), "a")
                 .findFirst()
-                .ifPresent(book::setDescription);
+                .ifPresent(metadata::setDescription);
 
         getSubfieldValue(dataFieldsByTag.getOrDefault("650", List.of()), "a", new Filter("9", "nob"))
-                .forEach(book.getAbout()::add);
+                .forEach(metadata.getAbout()::add);
 
         getSubfieldValue(dataFieldsByTag.getOrDefault("655", List.of()), "a", new Filter("9", "nob"))
-                .forEach(book.getGenreAndForm()::add);
+                .forEach(metadata.getGenreAndForm()::add);
 
         getSubfieldValue(dataFieldsByTag.getOrDefault("856", List.of()), "u")
                 .map(URI::create)
-                .forEach(book::setThumbnailUrl);
+                .forEach(metadata::setThumbnailUrl);
 
-        return book;
+        return metadata;
     }
 
     private static Stream<String> getSubfieldValue(List<DataFieldType> dataFieldTypes, String subfieldCode) {

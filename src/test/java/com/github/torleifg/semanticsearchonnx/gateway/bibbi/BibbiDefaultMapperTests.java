@@ -50,7 +50,7 @@ class BibbiDefaultMapperTests {
 
         var metadata = mapper.from(publication);
 
-        assertEquals("id", metadata.getCode());
+        assertEquals("id", metadata.getExternalId());
         assertEquals("isbn", metadata.getIsbn());
         assertEquals("title", metadata.getTitle());
         assertEquals(1, metadata.getAuthors().size());

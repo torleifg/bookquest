@@ -8,9 +8,7 @@ import org.springframework.ai.document.Document;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -20,36 +18,38 @@ public class BookService {
     private final BookRepository bookRepository;
     private final VectorRepository vectorRepository;
 
-    private final DocumentMapper documentMapper;
+    private final MetadataMapper metadataMapper;
 
-    public BookService(MetadataGateway metadataGateway, BookRepository bookRepository, VectorRepository vectorRepository, DocumentMapper documentMapper) {
+    public BookService(MetadataGateway metadataGateway, BookRepository bookRepository, VectorRepository vectorRepository, MetadataMapper metadataMapper) {
         this.metadataGateway = metadataGateway;
         this.bookRepository = bookRepository;
         this.vectorRepository = vectorRepository;
-        this.documentMapper = documentMapper;
+        this.metadataMapper = metadataMapper;
     }
 
     @Transactional
     public boolean findAndSave() {
-        final List<Book> books = metadataGateway.find();
+        final List<MetadataDTO> dtos = metadataGateway.find();
 
-        if (books.isEmpty()) {
+        if (dtos.isEmpty()) {
             return false;
         }
 
-        books.forEach(this::save);
+        dtos.stream()
+                .map(metadataMapper::toBook)
+                .forEach(this::save);
 
         return true;
     }
 
     private void save(Book book) {
-        final String code = book.getCode();
+        final String externalId = book.getExternalId();
 
         if (book.isDeleted()) {
-            bookRepository.findByCode(code).ifPresent(existingBook -> {
+            bookRepository.findByExternalId(externalId).ifPresent(existingBook -> {
                 existingBook.setDeleted(true);
 
-                log.trace("Setting book as deleted for: {}", code);
+                log.trace("Setting book as deleted for: {}", externalId);
 
                 bookRepository.save(existingBook);
             });
@@ -57,26 +57,38 @@ public class BookService {
             return;
         }
 
-        final Optional<UUID> existingVector = bookRepository.findVectorStoreIdByCode(code);
+        final Optional<UUID> existingVector = bookRepository.findVectorStoreIdByExternalId(externalId);
 
-        final Document document = documentMapper.from(book);
+        final Document document = metadataMapper.toDocument(book);
         final UUID newVector = UUID.fromString(document.getId());
 
         vectorRepository.save(document);
         bookRepository.save(book, newVector);
 
         existingVector.ifPresent(vector -> {
-            log.trace("Replacing vector for: {}", code);
+            log.trace("Replacing vector for: {}", externalId);
 
             vectorRepository.delete(vector);
         });
     }
 
-    public List<Document> search(String query) {
+    public List<Document> semanticSearch(String query) {
         return vectorRepository.query(query, 10);
     }
 
     public List<Document> passage() {
         return vectorRepository.passage(10);
+    }
+
+    public List<Map<String, Object>> fulltextSearch(String query) {
+        final List<Book> books = bookRepository.query(query, 10);
+
+        final List<Map<String, Object>> metadata = new ArrayList<>();
+
+        for (final Book book : books) {
+            metadata.add(metadataMapper.toMap(book));
+        }
+
+        return metadata;
     }
 }

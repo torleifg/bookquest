@@ -1,6 +1,6 @@
 package com.github.torleifg.semanticsearchonnx.gateway.bibbi;
 
-import com.github.torleifg.semanticsearchonnx.book.domain.Book;
+import com.github.torleifg.semanticsearchonnx.book.service.MetadataDTO;
 import no.bs.bibliografisk.model.*;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -16,58 +16,58 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 class BibbiDefaultMapper implements BibbiMapper {
 
     @Override
-    public Book from(String id) {
-        final Book book = new Book();
-        book.setCode(id);
-        book.setDeleted(true);
+    public MetadataDTO from(String id) {
+        final MetadataDTO metadata = new MetadataDTO();
+        metadata.setExternalId(id);
+        metadata.setDeleted(true);
 
-        return book;
+        return metadata;
     }
 
     @Override
-    public Book from(GetV1PublicationsHarvest200ResponsePublicationsInner publication) {
-        final Book book = new Book();
-        book.setCode(publication.getId());
-        book.setDeleted(false);
+    public MetadataDTO from(GetV1PublicationsHarvest200ResponsePublicationsInner publication) {
+        final MetadataDTO metadata = new MetadataDTO();
+        metadata.setExternalId(publication.getId());
+        metadata.setDeleted(false);
 
         if (isNotBlank(publication.getIsbn())) {
-            book.setIsbn(publication.getIsbn());
+            metadata.setIsbn(publication.getIsbn());
         }
 
         if (isNotBlank(publication.getName())) {
-            book.setTitle(publication.getName());
+            metadata.setTitle(publication.getName());
         }
 
         Stream.ofNullable(publication.getCreator())
                 .flatMap(List::stream)
                 .filter(creator -> creator.getRole() == Creator.RoleEnum.AUT)
                 .map(Creator::getName)
-                .forEach(book.getAuthors()::add);
+                .forEach(metadata.getAuthors()::add);
 
         if (isNotBlank(publication.getDatePublished())) {
-            book.setPublishedYear(publication.getDatePublished());
+            metadata.setPublishedYear(publication.getDatePublished());
         }
 
         if (isNotBlank(publication.getDescription())) {
-            book.setDescription(publication.getDescription());
+            metadata.setDescription(publication.getDescription());
         }
 
         Stream.ofNullable(publication.getGenre())
                 .flatMap(List::stream)
                 .map(Genre::getName)
                 .map(GenreName::getNob)
-                .forEach(book.getGenreAndForm()::add);
+                .forEach(metadata.getGenreAndForm()::add);
 
         Stream.ofNullable(publication.getAbout())
                 .flatMap(List::stream)
                 .map(Subject::getName)
                 .map(SubjectName::getNob)
-                .forEach(book.getAbout()::add);
+                .forEach(metadata.getAbout()::add);
 
         Optional.ofNullable(publication.getImage())
                 .map(PublicationImage::getThumbnailUrl)
-                .ifPresent(book::setThumbnailUrl);
+                .ifPresent(metadata::setThumbnailUrl);
 
-        return book;
+        return metadata;
     }
 }

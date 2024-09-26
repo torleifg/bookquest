@@ -1,6 +1,6 @@
 package com.github.torleifg.semanticsearchonnx.gateway.bokbasen;
 
-import com.github.torleifg.semanticsearchonnx.book.domain.Book;
+import com.github.torleifg.semanticsearchonnx.book.service.MetadataDTO;
 import com.github.torleifg.semanticsearchonnx.book.service.MetadataGateway;
 import com.github.torleifg.semanticsearchonnx.gateway.repository.ResumptionTokenRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 
 @Slf4j
 @Component
-@ConditionalOnProperty(prefix = "metadata", name = "gateway", havingValue = "bokbasen")
+@ConditionalOnProperty(prefix = "scheduler", name = "gateway", havingValue = "bokbasen")
 class BokbasenGateway implements MetadataGateway {
     private final BokbasenClient bokbasenClient;
     private final BokbasenMapper bokbasenMapper;
@@ -36,7 +36,7 @@ class BokbasenGateway implements MetadataGateway {
     }
 
     @Override
-    public List<Book> find() {
+    public List<MetadataDTO> find() {
         final String serviceUri = bokbasenProperties.getServiceUri();
         final String requestUri = createRequestUri(serviceUri);
 
@@ -60,7 +60,7 @@ class BokbasenGateway implements MetadataGateway {
 
         log.info("Received {} product(s) from {}", products.size(), requestUri);
 
-        final List<Book> metadata = new ArrayList<>();
+        final List<MetadataDTO> metadata = new ArrayList<>();
 
         for (final var product : products) {
             final DescriptiveDetail descriptiveDetail = product.getDescriptiveDetail();

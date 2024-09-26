@@ -22,18 +22,18 @@ public class SearchController {
         this.bookService = bookService;
     }
 
-    @GetMapping(path = "/")
-    public String search() {
-        return "index";
+    @GetMapping(path = "/semantic")
+    public String semanticSearch() {
+        return "semantic";
     }
 
-    @PostMapping(path = "/")
-    public String searchRequest(Model model, @RequestParam(required = false) String query) {
+    @PostMapping(path = "/semantic")
+    public String semanticSearch(Model model, @RequestParam(required = false) String query) {
         final List<Document> documents;
 
         if (isNotBlank(query)) {
             model.addAttribute("query", query);
-            documents = bookService.search(query);
+            documents = bookService.semanticSearch(query);
         } else {
             documents = bookService.passage();
         }
@@ -46,6 +46,27 @@ public class SearchController {
 
         model.addAttribute("results", results);
 
-        return "index";
+        return "semantic";
+    }
+
+    @GetMapping(path = "/fulltext")
+    public String fulltextSearch() {
+        return "fulltext";
+    }
+
+    @PostMapping(path = "/fulltext")
+    public String fulltextSearch(Model model, @RequestParam(required = false) String query) {
+        final List<Map<String, Object>> results;
+
+        if (isNotBlank(query)) {
+            model.addAttribute("query", query);
+            results = bookService.fulltextSearch(query);
+        } else {
+            results = new ArrayList<>();
+        }
+
+        model.addAttribute("results", results);
+
+        return "fulltext";
     }
 }

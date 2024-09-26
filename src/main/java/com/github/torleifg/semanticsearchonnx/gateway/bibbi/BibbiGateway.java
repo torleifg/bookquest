@@ -1,6 +1,6 @@
 package com.github.torleifg.semanticsearchonnx.gateway.bibbi;
 
-import com.github.torleifg.semanticsearchonnx.book.domain.Book;
+import com.github.torleifg.semanticsearchonnx.book.service.MetadataDTO;
 import com.github.torleifg.semanticsearchonnx.book.service.MetadataGateway;
 import com.github.torleifg.semanticsearchonnx.gateway.repository.LastModifiedRepository;
 import com.github.torleifg.semanticsearchonnx.gateway.repository.ResumptionToken;
@@ -23,7 +23,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Slf4j
 @Component
-@ConditionalOnProperty(prefix = "metadata", name = "gateway", havingValue = "bibbi")
+@ConditionalOnProperty(prefix = "scheduler", name = "gateway", havingValue = "bibbi")
 class BibbiGateway implements MetadataGateway {
     private final BibbiClient bibbiClient;
     private final BibbiMapper bibbiMapper;
@@ -42,7 +42,7 @@ class BibbiGateway implements MetadataGateway {
     }
 
     @Override
-    public List<Book> find() {
+    public List<MetadataDTO> find() {
         final String serviceUri = bibbiProperties.getServiceUri();
         final String requestUri = createRequestUri(serviceUri);
 
@@ -69,7 +69,7 @@ class BibbiGateway implements MetadataGateway {
 
         log.info("Received {} publications from {}", publications.size(), requestUri);
 
-        final List<Book> books = new ArrayList<>();
+        final List<MetadataDTO> metadata = new ArrayList<>();
 
         for (final var publication : publications) {
             if (isBlank(publication.getId())) {
@@ -77,9 +77,9 @@ class BibbiGateway implements MetadataGateway {
             }
 
             if (publication.getDeleted() != null) {
-                books.add(bibbiMapper.from(publication.getId()));
+                metadata.add(bibbiMapper.from(publication.getId()));
             } else {
-                books.add(bibbiMapper.from(publication));
+                metadata.add(bibbiMapper.from(publication));
             }
         }
 
@@ -89,7 +89,7 @@ class BibbiGateway implements MetadataGateway {
                 .map(OffsetDateTime::toInstant)
                 .ifPresent(lastModified -> lastModifiedRepository.save(serviceUri, lastModified.plusSeconds(1L)));
 
-        return books;
+        return metadata;
     }
 
     private String createRequestUri(String serviceUri) {
