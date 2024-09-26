@@ -60,7 +60,7 @@ class OaiPmhDefaultMapperTests {
 
         assertFalse(metadata.isDeleted());
 
-        assertEquals("id", metadata.getCode());
+        assertEquals("id", metadata.getExternalId());
         assertEquals("isbn", metadata.getIsbn());
         assertEquals("title : remainder of title", metadata.getTitle());
         assertEquals(1, metadata.getAuthors().size());

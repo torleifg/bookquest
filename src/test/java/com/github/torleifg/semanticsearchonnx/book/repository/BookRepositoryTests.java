@@ -2,6 +2,7 @@ package com.github.torleifg.semanticsearchonnx.book.repository;
 
 import com.github.torleifg.semanticsearchonnx.TestcontainersConfig;
 import com.github.torleifg.semanticsearchonnx.book.domain.Book;
+import com.github.torleifg.semanticsearchonnx.book.domain.Metadata;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,30 +33,34 @@ class BookRepositoryTests {
     }
 
     @Test
-    void findByCodeTest() {
+    void findByExternalIdTest() {
         var book = createBook();
 
-        client.sql("insert into book (code) values (?)")
-                .param(book.getCode())
+        client.sql("insert into book (external_id, deleted, metadata) values (?, ?, ?)")
+                .param(book.getExternalId())
+                .param(book.isDeleted())
+                .param(BookRepository.toPGobject(book.getMetadata()))
                 .update();
 
-        assertTrue(repository.findByCode("code").isPresent());
+        var optionalBook = repository.findByExternalId("externalId");
+        assertTrue(optionalBook.isPresent());
+        assertEquals(book, optionalBook.get());
     }
 
     @Test
-    void findVectorStoreIdByCodeTest() {
+    void findVectorStoreIdByExternalIdTest() {
         var book = createBook();
 
         var vectorStoreId = client.sql("insert into vector_store (content) values ('content') returning id")
                 .query(UUID.class)
                 .single();
 
-        client.sql("insert into book (code, vector_store_id) values (?, ?)")
-                .param(book.getCode())
+        client.sql("insert into book (external_id, vector_store_id) values (?, ?)")
+                .param(book.getExternalId())
                 .param(vectorStoreId)
                 .update();
 
-        assertTrue(repository.findVectorStoreIdByCode("code").isPresent());
+        assertTrue(repository.findVectorStoreIdByExternalId("externalId").isPresent());
     }
 
     @Test
@@ -76,20 +81,20 @@ class BookRepositoryTests {
     void updateBookTest() {
         var book = createBook();
 
-        client.sql("insert into book (code, payload) values (?, ?)")
-                .param(book.getCode())
-                .param(BookRepository.getPGobject(book))
+        client.sql("insert into book (external_id, metadata) values (?, ?)")
+                .param(book.getExternalId())
+                .param(BookRepository.toPGobject(book.getMetadata()))
                 .update();
 
-        book.setTitle("new title");
+        book.getMetadata().setTitle("new title");
         repository.save(book);
 
-        var payload = client.sql("select payload->>'title' from book where code = ?")
-                .param(book.getCode())
+        var title = client.sql("select metadata->>'title' from book where external_id = ?")
+                .param(book.getExternalId())
                 .query(String.class)
                 .single();
 
-        assertEquals("new title", payload);
+        assertEquals("new title", title);
     }
 
     @Test
@@ -102,8 +107,8 @@ class BookRepositoryTests {
 
         repository.save(book, vectorStoreId);
 
-        var id = client.sql("select vector_store_id from book where code = ?")
-                .param(book.getCode())
+        var id = client.sql("select vector_store_id from book where external_id = ?")
+                .param(book.getExternalId())
                 .query(UUID.class)
                 .optional();
 
@@ -119,8 +124,8 @@ class BookRepositoryTests {
                 .query(UUID.class)
                 .single();
 
-        client.sql("insert into book (code, vector_store_id) values (?, ?)")
-                .param(book.getCode())
+        client.sql("insert into book (external_id, vector_store_id) values (?, ?)")
+                .param(book.getExternalId())
                 .param(vectorStoreId)
                 .update();
 
@@ -130,8 +135,8 @@ class BookRepositoryTests {
 
         repository.save(book, newVectorStoreId);
 
-        var id = client.sql("select vector_store_id from book where code = ?")
-                .param(book.getCode())
+        var id = client.sql("select vector_store_id from book where external_id = ?")
+                .param(book.getExternalId())
                 .query(UUID.class)
                 .optional();
 
@@ -139,13 +144,33 @@ class BookRepositoryTests {
         assertEquals(newVectorStoreId, id.get());
     }
 
+    @Test
+    void queryTest() {
+        var book = createBook();
+
+        client.sql("insert into book (external_id, metadata) values (?, ?)")
+                .param(book.getExternalId())
+                .param(BookRepository.toPGobject(book.getMetadata()))
+                .update();
+
+        var books = repository.query("isbn", 10);
+        assertEquals(1, books.size());
+        assertEquals(books.getFirst().getExternalId(), book.getExternalId());
+        assertEquals(books.getFirst().getMetadata(), book.getMetadata());
+    }
+
     Book createBook() {
         var book = new Book();
-        book.setCode("code");
-        book.setIsbn("isbn");
-        book.setTitle("title");
-        book.setDescription("description");
-        book.setAbout(Set.of("about"));
+        book.setExternalId("externalId");
+        book.setDeleted(false);
+
+        var metadata = new Metadata();
+        metadata.setIsbn("isbn");
+        metadata.setTitle("title");
+        metadata.setDescription("description");
+        metadata.setAbout(Set.of("about"));
+
+        book.setMetadata(metadata);
 
         return book;
     }

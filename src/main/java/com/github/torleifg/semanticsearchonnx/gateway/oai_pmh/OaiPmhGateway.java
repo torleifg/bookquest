@@ -1,6 +1,6 @@
 package com.github.torleifg.semanticsearchonnx.gateway.oai_pmh;
 
-import com.github.torleifg.semanticsearchonnx.book.domain.Book;
+import com.github.torleifg.semanticsearchonnx.book.service.MetadataDTO;
 import com.github.torleifg.semanticsearchonnx.book.service.MetadataGateway;
 import com.github.torleifg.semanticsearchonnx.gateway.repository.LastModifiedRepository;
 import com.github.torleifg.semanticsearchonnx.gateway.repository.ResumptionToken;
@@ -27,7 +27,7 @@ import static java.time.format.DateTimeFormatter.ISO_INSTANT;
 
 @Slf4j
 @Component
-@ConditionalOnProperty(prefix = "metadata", name = "gateway", havingValue = "oai-pmh")
+@ConditionalOnProperty(prefix = "scheduler", name = "gateway", havingValue = "oai-pmh")
 class OaiPmhGateway implements MetadataGateway {
     private final OaiPmhClient oaiPmhClient;
     private final OaiPmhMapper oaiPmhMapper;
@@ -56,7 +56,7 @@ class OaiPmhGateway implements MetadataGateway {
     }
 
     @Override
-    public List<Book> find() {
+    public List<MetadataDTO> find() {
         final String serviceUri = oaiPmhProperties.getServiceUri();
         final String requestUri = createRequestUri(serviceUri);
 
@@ -94,9 +94,9 @@ class OaiPmhGateway implements MetadataGateway {
 
         response.getResumptionToken().ifPresent(token -> resumptionTokenRepository.save(serviceUri, token));
 
-        final var records = response.getRecords();
+        final var oaiPmhrecords = response.getRecords();
 
-        log.info("Received {} record(s) from {}", records.size(), requestUri);
+        log.info("Received {} record(s) from {}", oaiPmhrecords.size(), requestUri);
 
         final Unmarshaller unmarshaller;
         try {
@@ -105,38 +105,38 @@ class OaiPmhGateway implements MetadataGateway {
             throw new OaiPmhException(e);
         }
 
-        final List<Book> books = new ArrayList<>();
+        final List<MetadataDTO> metadata = new ArrayList<>();
 
-        for (final var record : records) {
-            final String identifier = record.getHeader().getIdentifier();
+        for (final var oaiPmhrecord : oaiPmhrecords) {
+            final String identifier = oaiPmhrecord.getHeader().getIdentifier();
 
-            if (record.getHeader().getStatus() == StatusType.DELETED) {
-                books.add(oaiPmhMapper.from(identifier));
+            if (oaiPmhrecord.getHeader().getStatus() == StatusType.DELETED) {
+                metadata.add(oaiPmhMapper.from(identifier));
 
                 continue;
             }
 
-            if (!(record.getMetadata().getAny() instanceof Element element)) {
+            if (!(oaiPmhrecord.getMetadata().getAny() instanceof Element element)) {
                 continue;
             }
 
-            final RecordType metadata;
+            final RecordType marcRecord;
             try {
-                metadata = unmarshaller.unmarshal(element, RecordType.class).getValue();
+                marcRecord = unmarshaller.unmarshal(element, RecordType.class).getValue();
             } catch (JAXBException e) {
                 throw new OaiPmhException(e);
             }
 
-            books.add(oaiPmhMapper.from(identifier, metadata));
+            metadata.add(oaiPmhMapper.from(identifier, marcRecord));
         }
 
-        Optional.of(records.getLast())
+        Optional.of(oaiPmhrecords.getLast())
                 .map(org.openarchives.oai._2.RecordType::getHeader)
                 .map(HeaderType::getDatestamp)
                 .map(Instant::parse)
                 .ifPresent(lastModified -> lastModifiedRepository.save(serviceUri, lastModified.plusSeconds(1L)));
 
-        return books;
+        return metadata;
     }
 
     private String createRequestUri(String serviceUri) {

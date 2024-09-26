@@ -1,6 +1,7 @@
 package com.github.torleifg.semanticsearchonnx.book.service;
 
 import com.github.torleifg.semanticsearchonnx.book.domain.Book;
+import com.github.torleifg.semanticsearchonnx.book.domain.Metadata;
 import com.github.torleifg.semanticsearchonnx.book.repository.BookRepository;
 import com.github.torleifg.semanticsearchonnx.book.repository.VectorRepository;
 import org.junit.jupiter.api.Test;
@@ -29,24 +30,33 @@ class BookServiceTests {
     VectorRepository vectorRepository;
 
     @Mock
-    DocumentMapper documentMapper;
+    MetadataMapper metadataMapper;
 
     @InjectMocks
     BookService bookService;
 
     @Test
     void findAndSaveBookAndVectorTest() {
+        var dto = new MetadataDTO();
+        dto.setExternalId("externalId");
+        dto.setDescription("description");
+
         var book = new Book();
-        book.setCode("code");
-        book.setDescription("description");
+        book.setExternalId("externalId");
 
-        when(metadataGateway.find()).thenReturn(List.of(book));
+        var metadata = new Metadata();
+        metadata.setDescription("description");
 
-        when(bookRepository.findVectorStoreIdByCode(book.getCode())).thenReturn(Optional.empty());
+        book.setMetadata(metadata);
 
-        var document = new Document(book.getDescription());
+        when(metadataGateway.find()).thenReturn(List.of(dto));
 
-        when(documentMapper.from(book)).thenReturn(document);
+        when(bookRepository.findVectorStoreIdByExternalId("externalId")).thenReturn(Optional.empty());
+
+        var document = new Document(dto.getDescription());
+
+        when(metadataMapper.toBook(dto)).thenReturn(book);
+        when(metadataMapper.toDocument(book)).thenReturn(document);
 
         bookService.findAndSave();
 
@@ -56,19 +66,28 @@ class BookServiceTests {
 
     @Test
     void findAndSaveBookAndReplaceVectorTest() {
-        var book = new Book();
-        book.setCode("code");
-        book.setDescription("description");
+        var dto = new MetadataDTO();
+        dto.setExternalId("externalId");
+        dto.setDescription("description");
 
-        when(metadataGateway.find()).thenReturn(List.of(book));
+        var book = new Book();
+        book.setExternalId("externalId");
+
+        var metadata = new Metadata();
+        metadata.setDescription("description");
+
+        book.setMetadata(metadata);
+
+        when(metadataGateway.find()).thenReturn(List.of(dto));
 
         var oldVectorId = UUID.randomUUID();
 
-        when(bookRepository.findVectorStoreIdByCode(book.getCode())).thenReturn(Optional.of(oldVectorId));
+        when(bookRepository.findVectorStoreIdByExternalId("externalId")).thenReturn(Optional.of(oldVectorId));
 
-        var document = new Document(book.getDescription());
+        var document = new Document(book.getMetadata().getDescription());
 
-        when(documentMapper.from(book)).thenReturn(document);
+        when(metadataMapper.toBook(dto)).thenReturn(book);
+        when(metadataMapper.toDocument(book)).thenReturn(document);
 
         bookService.findAndSave();
 
