@@ -1,8 +1,8 @@
 # Semantic Search on Book Reviews
 
-This repository contains code and resources to run a semantic search engine specifically designed for book reviews.
-It enables efficient searching by utilizing text embeddings and supports harvesting book metadata from various sources,
-using international standards like MARC21 and ONIX.
+This repository contains code and resources to run a semantic (and fulltext) search engine specifically designed for
+book reviews. It enables efficient searching by utilizing text embeddings and supports harvesting book metadata from
+various sources, using international standards like MARC21 and ONIX.
 
 The application leverages **Multilingual-E5-small** for generating text embeddings and **PostgreSQL** with **pgvector**
 as vector store. This combination provides multilingual semantic search capabilities.
@@ -49,9 +49,15 @@ application will be ready for use.
 
 ### 4. Use the search engine
 
-Visit ```http://localhost:8080``` in the browser and watch the results as the metadata harvesting progresses. Enter a
-search query or leave it blank for a random choice (the first search hit will be the random choice and the rest will
-be semantically similar books).
+#### Semantic search
+
+Visit ```http://localhost:8080/semantic``` in the browser and watch the results as the metadata harvesting progresses.
+Enter a search query or leave it blank for a random choice (the first search hit will be the random choice and the rest
+will be semantically similar books).
+
+#### Fulltext search
+
+Visit ```http://localhost:8080/fulltext``` in the browser and watch the results as the metadata harvesting progresses.
 
 ## Gateway Configuration
 
