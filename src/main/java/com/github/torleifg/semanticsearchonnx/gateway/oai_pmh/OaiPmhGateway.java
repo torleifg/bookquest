@@ -86,13 +86,21 @@ class OaiPmhGateway implements MetadataGateway {
             throw new OaiPmhException(response.errorsToString());
         }
 
+        final Optional<String> resumptionToken = response.getResumptionToken();
+
+        if (resumptionToken.isPresent()) {
+            resumptionTokenRepository.save(serviceUri, resumptionToken.get());
+        } else {
+            resumptionTokenRepository.get(serviceUri)
+                    .filter(token -> token.isNotExpired(oaiPmhProperties.getTtl()))
+                    .ifPresent(token -> resumptionTokenRepository.save(serviceUri, token.value()));
+        }
+
         if (!response.hasRecords()) {
             log.info("Received 0 record(s) from {}", requestUri);
 
             return List.of();
         }
-
-        response.getResumptionToken().ifPresent(token -> resumptionTokenRepository.save(serviceUri, token));
 
         final var oaiPmhrecords = response.getRecords();
 

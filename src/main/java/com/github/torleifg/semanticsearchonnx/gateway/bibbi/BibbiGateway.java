@@ -57,7 +57,15 @@ class BibbiGateway implements MetadataGateway {
             throw new BibbiException(ex);
         }
 
-        response.getResumptionToken().ifPresent(token -> resumptionTokenRepository.save(serviceUri, token));
+        final Optional<String> resumptionToken = response.getResumptionToken();
+
+        if (resumptionToken.isPresent()) {
+            resumptionTokenRepository.save(serviceUri, resumptionToken.get());
+        } else {
+            resumptionTokenRepository.get(serviceUri)
+                    .filter(token -> token.isNotExpired(bibbiProperties.getTtl()))
+                    .ifPresent(token -> resumptionTokenRepository.save(serviceUri, token.value()));
+        }
 
         if (!response.hasPublications()) {
             log.info("Received 0 publications from {}", requestUri);
@@ -102,6 +110,5 @@ class BibbiGateway implements MetadataGateway {
         return lastModifiedRepository.get(serviceUri)
                 .map(lastModified -> serviceUri + String.format("?query=type:(audiobook OR book) AND modified:[%s TO *]", ISO_INSTANT.format(lastModified)))
                 .orElse(serviceUri + "?query=type:(audiobook OR book)");
-
     }
 }

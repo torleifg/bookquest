@@ -153,7 +153,7 @@ class BookRepositoryTests {
                 .param(BookRepository.toPGobject(book.getMetadata()))
                 .update();
 
-        var books = repository.query("isbn", 10);
+        var books = repository.query("title description", 10);
         assertEquals(1, books.size());
         assertEquals(books.getFirst().getExternalId(), book.getExternalId());
         assertEquals(books.getFirst().getMetadata(), book.getMetadata());
