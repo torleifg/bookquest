@@ -35,11 +35,11 @@ public class BookRepository {
                 .optional();
     }
 
-    public Optional<UUID> findVectorStoreIdByExternalId(String code) {
+    public Optional<UUID> findVectorStoreIdByExternalId(String externalId) {
         return jdbcClient.sql("""
                         select vector_store_id from book where external_id = ?
                         """)
-                .param(code)
+                .param(externalId)
                 .query(UUID.class)
                 .optional();
     }

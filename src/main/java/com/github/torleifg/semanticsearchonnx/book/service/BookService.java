@@ -81,7 +81,7 @@ public class BookService {
     }
 
     public List<Map<String, Object>> fulltextSearch(String query) {
-        final List<Book> books = bookRepository.query(query, 10);
+        final List<Book> books = bookRepository.query(formatQuery(query), 10);
 
         final List<Map<String, Object>> metadata = new ArrayList<>();
 
@@ -90,5 +90,11 @@ public class BookService {
         }
 
         return metadata;
+    }
+
+    private static String formatQuery(String query) {
+        final String[] words = query.trim().split("\\s+");
+
+        return String.join(" & ", words);
     }
 }
