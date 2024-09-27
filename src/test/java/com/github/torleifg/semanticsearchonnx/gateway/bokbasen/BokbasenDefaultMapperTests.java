@@ -79,19 +79,15 @@ class BokbasenDefaultMapperTests {
         genreSubjectHeadingText.setValue("genre");
         genre.getContent().add(genreSubjectHeadingText);
 
-        var form = objectFactory.createSubject();
+        var genreAndForm = objectFactory.createSubject();
 
-        var formSubjectSchemeIdentifier = objectFactory.createSubjectSchemeIdentifier();
-        formSubjectSchemeIdentifier.setValue(List27.fromValue("24"));
-        form.getContent().add(formSubjectSchemeIdentifier);
+        var genreAndFormSubjectSchemeIdentifier = objectFactory.createSubjectSchemeIdentifier();
+        genreAndFormSubjectSchemeIdentifier.setValue(List27.fromValue("C8"));
+        genreAndForm.getContent().add(genreAndFormSubjectSchemeIdentifier);
 
-        var formSubjectSchemeName = objectFactory.createSubjectSchemeName();
-        formSubjectSchemeName.setValue("Bokbasen_Form");
-        form.getContent().add(formSubjectSchemeName);
-
-        var formSubjectHeadingText = objectFactory.createSubjectHeadingText();
-        formSubjectHeadingText.setValue("form");
-        form.getContent().add(formSubjectHeadingText);
+        var genreAndFormSubjectHeadingText = objectFactory.createSubjectHeadingText();
+        genreAndFormSubjectHeadingText.setValue("form");
+        genreAndForm.getContent().add(genreAndFormSubjectHeadingText);
 
         var about = objectFactory.createSubject();
 
@@ -107,7 +103,7 @@ class BokbasenDefaultMapperTests {
         aboutSubjectHeadingText.setValue("about");
         about.getContent().add(aboutSubjectHeadingText);
 
-        descriptiveDetail.getSubject().addAll(List.of(genre, form, about));
+        descriptiveDetail.getSubject().addAll(List.of(genre, genreAndForm, about));
         product.setDescriptiveDetail(descriptiveDetail);
 
         var publishingDetail = objectFactory.createPublishingDetail();
@@ -177,7 +173,7 @@ class BokbasenDefaultMapperTests {
         assertEquals(1, metadata.getAuthors().size());
         assertEquals("1970", metadata.getPublishedYear());
         assertEquals("description", metadata.getDescription());
-        assertEquals(2, metadata.getGenreAndForm().size());
+        assertEquals(1, metadata.getGenreAndForm().size());
         assertEquals(1, metadata.getAbout().size());
         assertEquals("http://thumbnailUrl", metadata.getThumbnailUrl().toString());
     }
