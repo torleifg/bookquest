@@ -112,18 +112,21 @@ class BokbasenDefaultMapper implements BokbasenMapper {
 
                     final String text = subjectHeadingText.getValue();
 
-                    if (subjectSchemeIdentifier != null)
+                    if (subjectSchemeIdentifier != null) {
                         if (isProprietary(subjectSchemeIdentifier)) {
                             if (subjectSchemeName != null) {
                                 final String name = subjectSchemeName.getValue();
 
-                                if (name.equals("Bokbasen_Genre") || name.equals("Bokbasen_Form")) {
-                                    metadata.getGenreAndForm().add(text);
-                                } else if (name.equals("Bokbasen_Subject")) {
+                                if (name.equals("Bokbasen_Subject")) {
                                     metadata.getAbout().add(text);
                                 }
                             }
                         }
+
+                        if (isGenreAndForm(subjectSchemeIdentifier)) {
+                            metadata.getGenreAndForm().add(text);
+                        }
+                    }
                 }
             }
         }
@@ -181,6 +184,10 @@ class BokbasenDefaultMapper implements BokbasenMapper {
 
     private static boolean isProprietary(SubjectSchemeIdentifier subjectSchemeIdentifier) {
         return subjectSchemeIdentifier.getValue() == List27.fromValue("24");
+    }
+
+    private static boolean isGenreAndForm(SubjectSchemeIdentifier subjectSchemeIdentifier) {
+        return subjectSchemeIdentifier.getValue() == List27.fromValue("C8");
     }
 
     private static Stream<Object> getTitleContent(DescriptiveDetail descriptiveDetail) {
