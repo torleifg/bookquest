@@ -22,51 +22,44 @@ public class SearchController {
         this.bookService = bookService;
     }
 
-    @GetMapping(path = "/semantic")
-    public String semanticSearch() {
-        return "semantic";
+    @GetMapping
+    public String search(Model model) {
+        model.addAttribute("searchType", null);
+
+        return "index";
     }
 
-    @PostMapping(path = "/semantic")
-    public String semanticSearch(Model model, @RequestParam(required = false) String query) {
-        final List<Document> documents;
-
-        if (isNotBlank(query)) {
-            model.addAttribute("query", query);
-            documents = bookService.semanticSearch(query);
-        } else {
-            documents = bookService.passage();
-        }
-
-        final List<Map<String, Object>> results = new ArrayList<>();
-
-        for (final Document document : documents) {
-            results.add(document.getMetadata());
-        }
-
-        model.addAttribute("results", results);
-
-        return "semantic";
-    }
-
-    @GetMapping(path = "/fulltext")
-    public String fulltextSearch() {
-        return "fulltext";
-    }
-
-    @PostMapping(path = "/fulltext")
-    public String fulltextSearch(Model model, @RequestParam(required = false) String query) {
+    @PostMapping
+    public String search(Model model, @RequestParam(required = false) String query, @RequestParam String searchType) {
         final List<Map<String, Object>> results;
 
-        if (isNotBlank(query)) {
-            model.addAttribute("query", query);
-            results = bookService.fulltextSearch(query);
+        if ("semantic".equals(searchType)) {
+            final List<Document> documents;
+
+            if (isNotBlank(query)) {
+                model.addAttribute("query", query);
+                documents = bookService.semanticSearch(query);
+            } else {
+                documents = bookService.passage();
+            }
+
+            results = new ArrayList<>(documents.size());
+
+            for (final Document document : documents) {
+                results.add(document.getMetadata());
+            }
         } else {
-            results = new ArrayList<>();
+            if (isNotBlank(query)) {
+                model.addAttribute("query", query);
+                results = bookService.fulltextSearch(query);
+            } else {
+                results = new ArrayList<>();
+            }
         }
 
+        model.addAttribute("searchType", searchType);
         model.addAttribute("results", results);
 
-        return "fulltext";
+        return "index";
     }
 }

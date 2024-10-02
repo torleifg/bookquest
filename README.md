@@ -1,19 +1,19 @@
-# Semantic Search on Book Reviews
+# Semantic & Full-Text Search Engine for Books
 
-This repository contains code and resources to run a semantic (and fulltext) search engine specifically designed for
-book reviews. It enables efficient searching by utilizing text embeddings and supports harvesting book metadata from
-various sources, using international standards like MARC21 and ONIX.
+This repository contains code and resources to run a semantic and full-text search engine for books. It utilizes text
+embeddings and supports harvesting book metadata from various sources, using international standards like MARC21 and
+ONIX 3.
 
 The application leverages **Multilingual-E5-small** for generating text embeddings and **PostgreSQL** with **pgvector**
-as vector store. This combination provides multilingual semantic search capabilities.
+as vector store. This provides multilingual semantic search capabilities.
 
 ## Technologies
 
+- **[Spring Boot 3](https://spring.io/projects/spring-boot)**
 - **[Multilingual-E5-small](https://huggingface.co/intfloat/multilingual-e5-small)**: This pre-trained model is used for
-  generating text embeddings in multiple languages.
+  generating text embeddings.
 - **[pgvector](https://github.com/pgvector/pgvector)**: A PostgreSQL extension for storing and querying vectors, used as
   the vector store in the search engine.
-- **[Spring Boot 3](https://spring.io/projects/spring-boot)**: Application framework.
 
 ## Getting Started
 
@@ -31,8 +31,8 @@ This will start the PostgreSQL database with pgvector enabled.
 
 ### 2. Configure the Gateway
 
-Select and configure the appropriate gateway for harvesting metadata by editing the application.yaml file. Available
-options:
+Select and configure the appropriate gateway and service-uri for harvesting metadata by editing the application.yaml
+file. Available options:
 
 - oai-pmh
 - bibbi
@@ -49,22 +49,16 @@ application will be ready for use.
 
 ### 4. Use the search engine
 
-#### Semantic search
-
-Visit ```http://localhost:8080/semantic``` in the browser and watch the results as the metadata harvesting progresses.
-Enter a search query or leave it blank for a random choice (the first search hit will be the random choice and the rest
-will be semantically similar books).
-
-#### Fulltext search
-
-Visit ```http://localhost:8080/fulltext``` in the browser and watch the results as the metadata harvesting progresses.
+Visit ```http://localhost:8080``` in the browser and watch the results as the metadata harvesting progresses. For
+semantic search enter a search query or leave it blank for a random choice (the first search hit will be the random
+choice and the rest will be semantically similar books). For full-text search enter a search query.
 
 ## Gateway Configuration
 
 The gateway component is responsible for:
 
-- Translation: It translates the metadata from the external service into a format the host application can process.
-- Abstraction: It abstracts away the details of the remote service, handling the transformation of parameters and
+- Translation: It translates metadata from the external service into a common model for the application.
+- Abstraction: It abstracts away the details of the external service, handling the transformation of parameters and
   results.
 
 The application supports three gateways. Custom mappers can be implemented as needed and activated by configuring the
