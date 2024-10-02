@@ -6,7 +6,7 @@ spring:
   ai:
     vectorstore:
       pgvector:
-        index-type: NONE
+        index-type: HNSW
         distance-type: COSINE_DISTANCE
         dimensions: 384
     embedding:

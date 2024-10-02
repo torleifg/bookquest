@@ -1,0 +1,1 @@
+create index on vector_store using hnsw (embedding vector_cosine_ops);

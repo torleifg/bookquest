@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Demo :: a semantic search demonstration</title>
+    <title>Semantic and Full-Text Search Engine for Books</title>
 
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/missing.css/1.1.1/dist/missing.min.css}"/>
     <link th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}" rel="stylesheet">
@@ -47,16 +47,40 @@
             width: 150px;
             height: auto;
         }
+
+        .radio-group {
+            margin-top: 10px;
+        }
+
+        .radio-group label {
+            margin-right: 15px;
+            font-size: 14px;
+        }
+
+        .radio-group input[type="radio"] {
+            margin-right: 5px;
+        }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="search-form">
-        <form th:action="@{/semantic}" method="post">
+        <form th:action="@{/}" method="post">
             <label>
                 <input type="text" name="query" th:value="${query}"/>
             </label>
             <button type="submit" class="refresh-button"><i class="fa fa-search"></i></button>
+            <div class="radio-group">
+                <label>
+                    <input type="radio" name="searchType" value="semantic"
+                           th:checked="${searchType == 'semantic' or searchType == null}"/>
+                    Semantic
+                </label>
+                <label>
+                    <input type="radio" name="searchType" value="full-text" th:checked="${searchType == 'full-text'}"/>
+                    Full-Text
+                </label>
+            </div>
         </form>
     </div>
     <div class="results">
