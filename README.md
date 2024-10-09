@@ -44,7 +44,7 @@ The first run may take some time as it will download the necessary embedding mod
 application will be ready for use.
 
 ```bash
-./mvnw spring-boot:run
+./gradlew bootRun
 ```
 
 ### 4. Use the search engine

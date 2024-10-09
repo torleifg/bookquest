@@ -35,7 +35,7 @@ spring:
             authorization-grant-type: client_credentials
         provider:
           auth0:
-            token-uri: https://login.dev.bokbasen.io/oauth/token
+            token-uri: https://login.bokbasen.io/oauth/token
 
 server:
   port: 8080
@@ -59,9 +59,9 @@ bibbi:
   mapper: default
 
 bokbasen:
-  service-uri: http://localhost:8081/onix
+  service-uri: https://api.bokbasen.io/metadata/export/onix/v1
   subscription: extended
   after: 19700101090000
   client: bokbasen
-  audience: https://api.dev.bokbasen.io/metadata/
+  audience: https://api.bokbasen.io/metadata/
   mapper: default
