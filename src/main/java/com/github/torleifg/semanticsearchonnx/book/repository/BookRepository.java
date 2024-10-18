@@ -73,13 +73,7 @@ public class BookRepository {
 
     public List<Book> query(String query, int limit) {
         return jdbcClient.sql("""
-                        select * from book where to_tsvector('simple',
-                            coalesce(metadata ->> 'title', '') || ' ' ||
-                            coalesce(metadata ->> 'description', '') || ' ' ||
-                            coalesce(jsonb_array_to_text(metadata -> 'authors'), '') || ' ' ||
-                            coalesce(jsonb_array_to_text(metadata -> 'about'), '') || ' ' ||
-                            coalesce(jsonb_array_to_text(metadata -> 'genreAndForm'), ''))
-                        @@ plainto_tsquery('simple', ?) limit ?
+                        select * from search_books(?, ?)
                         """)
                 .param(query)
                 .param(limit)
