@@ -25,11 +25,12 @@ begin
                        plainto_tsquery('simple', search_query)
                ) as rank
         from book b
-        where to_tsvector('simple', coalesce(b.metadata ->> 'title', '')) ||
-              to_tsvector('simple', coalesce(b.metadata ->> 'description', '')) ||
-              to_tsvector('simple', coalesce(jsonb_array_to_text(b.metadata -> 'authors'), '')) ||
-              to_tsvector('simple', coalesce(jsonb_array_to_text(b.metadata -> 'about'), '')) ||
-              to_tsvector('simple', coalesce(jsonb_array_to_text(b.metadata -> 'genreandform'), ''))
+        where to_tsvector('simple',
+                          coalesce(b.metadata ->> 'title', '') || ' ' ||
+                          coalesce(b.metadata ->> 'description', '') || ' ' ||
+                          coalesce(jsonb_array_to_text(b.metadata -> 'authors'), '') || ' ' ||
+                          coalesce(jsonb_array_to_text(b.metadata -> 'about'), '') || ' ' ||
+                          coalesce(jsonb_array_to_text(b.metadata -> 'genreAndForm'), ''))
                   @@ plainto_tsquery('simple', search_query)
         order by rank desc
         limit result_limit;
