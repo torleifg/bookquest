@@ -115,16 +115,16 @@ class OaiPmhGateway implements MetadataGateway {
 
         final List<MetadataDTO> metadata = new ArrayList<>();
 
-        for (final var oaiPmhrecord : oaiPmhrecords) {
-            final String identifier = oaiPmhrecord.getHeader().getIdentifier();
+        for (final var oaiPmhRecord : oaiPmhrecords) {
+            final String identifier = oaiPmhRecord.getHeader().getIdentifier();
 
-            if (oaiPmhrecord.getHeader().getStatus() == StatusType.DELETED) {
+            if (oaiPmhRecord.getHeader().getStatus() == StatusType.DELETED) {
                 metadata.add(oaiPmhMapper.from(identifier));
 
                 continue;
             }
 
-            if (!(oaiPmhrecord.getMetadata().getAny() instanceof Element element)) {
+            if (!(oaiPmhRecord.getMetadata().getAny() instanceof Element element)) {
                 continue;
             }
 
