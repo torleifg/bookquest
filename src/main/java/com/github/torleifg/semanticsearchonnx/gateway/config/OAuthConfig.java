@@ -24,11 +24,11 @@ public class OAuthConfig {
         final OAuth2ClientCredentialsGrantRequestEntityConverter requestEntityConverter = new OAuth2ClientCredentialsGrantRequestEntityConverter();
         requestEntityConverter.addParametersConverter(parametersConverter());
 
-        final DefaultClientCredentialsTokenResponseClient accessTokenResponseClient = new DefaultClientCredentialsTokenResponseClient();
-        accessTokenResponseClient.setRequestEntityConverter(requestEntityConverter);
+        final DefaultClientCredentialsTokenResponseClient tokenResponseClient = new DefaultClientCredentialsTokenResponseClient();
+        tokenResponseClient.setRequestEntityConverter(requestEntityConverter);
 
         final OAuth2AuthorizedClientProvider authorizedClientProvider = OAuth2AuthorizedClientProviderBuilder.builder()
-                .clientCredentials(builder -> builder.accessTokenResponseClient(accessTokenResponseClient))
+                .clientCredentials(builder -> builder.accessTokenResponseClient(tokenResponseClient))
                 .refreshToken()
                 .build();
 

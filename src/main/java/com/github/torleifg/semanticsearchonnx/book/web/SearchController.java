@@ -51,7 +51,7 @@ public class SearchController {
         } else {
             if (isNotBlank(query)) {
                 model.addAttribute("query", query);
-                results = bookService.fulltextSearch(query);
+                results = bookService.fullTextSearch(query);
             } else {
                 results = new ArrayList<>();
             }

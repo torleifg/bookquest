@@ -49,8 +49,6 @@ public class BookService {
             bookRepository.findByExternalId(externalId).ifPresent(existingBook -> {
                 existingBook.setDeleted(true);
 
-                log.trace("Setting book as deleted for: {}", externalId);
-
                 bookRepository.save(existingBook);
             });
 
@@ -65,23 +63,19 @@ public class BookService {
         vectorRepository.save(document);
         bookRepository.save(book, newVector);
 
-        existingVector.ifPresent(vector -> {
-            log.trace("Replacing vector for: {}", externalId);
-
-            vectorRepository.delete(vector);
-        });
+        existingVector.ifPresent(vectorRepository::delete);
     }
 
     public List<Document> semanticSearch(String query) {
-        return vectorRepository.query(query, 10);
+        return vectorRepository.query(query, 15);
     }
 
     public List<Document> passage() {
-        return vectorRepository.passage(10);
+        return vectorRepository.passage(15);
     }
 
-    public List<Map<String, Object>> fulltextSearch(String query) {
-        final List<Book> books = bookRepository.query(query, 10);
+    public List<Map<String, Object>> fullTextSearch(String query) {
+        final List<Book> books = bookRepository.query(query, 15);
 
         final List<Map<String, Object>> metadata = new ArrayList<>();
 
