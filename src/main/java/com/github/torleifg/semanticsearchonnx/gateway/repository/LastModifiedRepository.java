@@ -30,6 +30,7 @@ public class LastModifiedRepository {
                         on conflict (service)
                         do update set (modified, value) =
                         (now(), excluded.value)
+                        where excluded.value > last_modified.value
                         """)
                 .param(serviceUri)
                 .param(Timestamp.from(lastModified))
