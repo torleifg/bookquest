@@ -41,9 +41,9 @@ class BibbiResponse {
     }
 
     private Instant getLastModified(GetV1PublicationsHarvest200ResponsePublicationsInner publication) {
-        return Optional.of(publication.getBibliographicRecord())
+        return Optional.ofNullable(publication.getBibliographicRecord())
                 .map(BibliographicRecordMetadata::getModified)
                 .map(OffsetDateTime::toInstant)
-                .orElseThrow();
+                .orElse(Instant.MIN);
     }
 }

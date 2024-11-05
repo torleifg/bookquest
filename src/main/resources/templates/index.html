@@ -94,6 +94,9 @@
                 <p th:if="${#sets.size(result.authors) > 0}">
                     <span th:text="${#strings.setJoin(result.authors, '; ')}"></span>
                 </p>
+                <p th:if="${result.isbn != null}">
+                    <strong>ISBN</strong> <span th:text="${result.isbn}"></span>
+                </p>
                 <p><span th:text="${result.description}"></span></p>
                 <p>
                     <em>
