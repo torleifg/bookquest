@@ -32,11 +32,6 @@
             outline: none;
         }
 
-        .search-form input[type="text"]::placeholder {
-            font-size: inherit;
-            color: rgba(0, 0, 0, 0.5);
-        }
-
         .search-form button {
             border-radius: 15px;
             padding: 12px;
@@ -60,6 +55,26 @@
         .radio-group input[type="radio"] {
             margin-right: 5px;
         }
+
+        details {
+            background-color: transparent;
+            border: none;
+            margin-left: 0;
+            padding-left: 0;
+        }
+
+        summary {
+            list-style-type: '+ ';
+        }
+
+        details[open] > summary {
+            list-style-type: '- ';
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
     </style>
 </head>
 <body>
@@ -94,20 +109,24 @@
                 <p th:if="${#sets.size(result.authors) > 0}">
                     <span th:text="${#strings.setJoin(result.authors, '; ')}"></span>
                 </p>
-                <p th:if="${result.isbn != null}">
-                    <strong>ISBN</strong> <span th:text="${result.isbn}"></span>
-                </p>
                 <p><span th:text="${result.description}"></span></p>
-                <p>
-                    <em>
-                        <span th:if="${#sets.size(result.genre) > 0 and #sets.size(result.about) > 0}"
-                              th:text="${#strings.setJoin(result.genre, ', ') + ', ' + #strings.setJoin(result.about, ', ')}"></span>
-                        <span th:if="${#sets.size(result.genre) > 0 and #sets.size(result.about) == 0}"
-                              th:text="${#strings.setJoin(result.genre, ', ')}"></span>
-                        <span th:if="${#sets.size(result.about) > 0 and #sets.size(result.genre) == 0}"
-                              th:text="${#strings.setJoin(result.about, ', ')}"></span>
-                    </em>
-                </p>
+                <details>
+                    <summary>Detaljer</summary>
+                    <ul>
+                        <li th:if="${result.isbn != null}">
+                            <strong>ISBN: </strong>
+                            <span th:text="${result.isbn}"></span>
+                        </li>
+                        <li th:if="${#sets.size(result.about) > 0}">
+                            <strong>Emneord: </strong>
+                            <span th:text="${#strings.setJoin(result.about, ', ')}"></span>
+                        </li>
+                        <li th:if="${#sets.size(result.genre) > 0}">
+                            <strong>Sjanger og form: </strong>
+                            <span th:text="${#strings.setJoin(result.genre, ', ')}"></span>
+                        </li>
+                    </ul>
+                </details>
                 <hr/>
             </div>
         </div>
