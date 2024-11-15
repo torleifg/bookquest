@@ -67,15 +67,15 @@ public class BookService {
     }
 
     public List<Document> semanticSearch(String query) {
-        return vectorRepository.query(query, 15);
+        return vectorRepository.query(query, 20);
     }
 
     public List<Document> passage() {
-        return vectorRepository.passage(15);
+        return vectorRepository.passage(20);
     }
 
     public List<Map<String, Object>> fullTextSearch(String query) {
-        final List<Book> books = bookRepository.query(query, 15);
+        final List<Book> books = bookRepository.query(query, 20);
 
         final List<Map<String, Object>> metadata = new ArrayList<>();
 

@@ -47,6 +47,7 @@ public class VectorRepository {
 
         return vectorStore.similaritySearch(SearchRequest.defaults()
                 .withQuery("passage: " + randomDocument.get().getContent())
+                .withSimilarityThreshold(0.8)
                 .withTopK(limit));
     }
 }
