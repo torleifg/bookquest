@@ -59,8 +59,8 @@
         details {
             background-color: transparent;
             border: none;
-            margin-left: 0;
-            padding-left: 0;
+            margin: 0;
+            padding: 0;
         }
 
         summary {
@@ -73,6 +73,8 @@
 
         ul {
             list-style-type: none;
+            margin-left: 0;
+            padding-left: 0;
         }
 
     </style>
@@ -111,18 +113,18 @@
                 </p>
                 <p><span th:text="${result.description}"></span></p>
                 <details>
-                    <summary>Detaljer</summary>
+                    <summary>Details</summary>
                     <ul>
                         <li th:if="${result.isbn != null}">
                             <strong>ISBN: </strong>
                             <span th:text="${result.isbn}"></span>
                         </li>
                         <li th:if="${#sets.size(result.about) > 0}">
-                            <strong>Emneord: </strong>
+                            <strong>About: </strong>
                             <span th:text="${#strings.setJoin(result.about, ', ')}"></span>
                         </li>
                         <li th:if="${#sets.size(result.genre) > 0}">
-                            <strong>Sjanger og form: </strong>
+                            <strong>Genre and form: </strong>
                             <span th:text="${#strings.setJoin(result.genre, ', ')}"></span>
                         </li>
                     </ul>

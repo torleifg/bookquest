@@ -48,8 +48,8 @@ public class BookRepository {
         jdbcClient.sql("""
                         insert into book(external_id, deleted, metadata) values (?, ?, ?)
                         on conflict (external_id)
-                        do update set (modified, metadata) =
-                        (now(), excluded.metadata)
+                        do update set (modified, deleted, metadata) =
+                        (now(), excluded.deleted, excluded.metadata)
                         """)
                 .param(book.getExternalId())
                 .param(book.isDeleted())
@@ -61,8 +61,8 @@ public class BookRepository {
         jdbcClient.sql("""
                         insert into book(external_id, deleted, metadata, vector_store_id) values (?, ?, ?, ?)
                         on conflict (external_id)
-                        do update set (modified, metadata, vector_store_id) =
-                        (now(), excluded.metadata, excluded.vector_store_id)
+                        do update set (modified, deleted, metadata, vector_store_id) =
+                        (now(), excluded.deleted, excluded.metadata, excluded.vector_store_id)
                         """)
                 .param(book.getExternalId())
                 .param(book.isDeleted())
