@@ -14,6 +14,7 @@ public class MetadataDTO {
     private String isbn;
     private String title;
     private Set<String> authors = new HashSet<>();
+    private Set<String> contributors = new HashSet<>();
 
     private String publishedYear;
     private String description;

@@ -22,6 +22,7 @@ public class MetadataMapper {
         metadata.setIsbn(dto.getIsbn());
         metadata.setTitle(dto.getTitle());
         metadata.setAuthors(dto.getAuthors());
+        metadata.setContributors(dto.getContributors());
         metadata.setPublishedYear(dto.getPublishedYear());
         metadata.setDescription(dto.getDescription());
         metadata.setAbout(dto.getAbout());
@@ -60,6 +61,7 @@ public class MetadataMapper {
         metadataMap.put("isbn", metadata.getIsbn());
         metadataMap.put("title", metadata.getTitle());
         metadataMap.put("authors", metadata.getAuthors());
+        metadataMap.put("contributors", metadata.getContributors());
         metadataMap.put("description", metadata.getDescription());
         metadataMap.put("publishedYear", metadata.getPublishedYear());
         metadataMap.put("genre", metadata.getGenreAndForm());

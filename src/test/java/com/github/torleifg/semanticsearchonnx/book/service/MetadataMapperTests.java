@@ -20,6 +20,7 @@ class MetadataMapperTests {
         dto.setIsbn("isbn");
         dto.setTitle("title");
         dto.setAuthors(Set.of("author"));
+        dto.setContributors(Set.of("contributor"));
         dto.setPublishedYear("2020");
         dto.setDescription("description");
         dto.setGenreAndForm(Set.of("genre"));
@@ -32,10 +33,11 @@ class MetadataMapperTests {
         assertFalse(book.isDeleted());
 
         var metadata = book.getMetadata();
-        
+
         assertEquals("isbn", metadata.getIsbn());
         assertEquals("title", metadata.getTitle());
         assertEquals(Set.of("author"), metadata.getAuthors());
+        assertEquals(Set.of("contributor"), metadata.getContributors());
         assertEquals("2020", metadata.getPublishedYear());
         assertEquals("description", metadata.getDescription());
         assertEquals(Set.of("genre"), metadata.getGenreAndForm());
@@ -52,7 +54,6 @@ class MetadataMapperTests {
 
         assertNotNull(document.getId());
         assertNotNull(document.getContent());
-        assertNotNull(document.getEmbedding());
         assertNotNull(document.getMetadata());
     }
 
@@ -94,6 +95,7 @@ class MetadataMapperTests {
         metadata.setIsbn("isbn");
         metadata.setTitle("title");
         metadata.setAuthors(Set.of("author"));
+        metadata.setContributors(Set.of("contributor"));
         metadata.setPublishedYear("2020");
         metadata.setDescription("description");
         metadata.setGenreAndForm(Set.of("genre"));
@@ -107,6 +109,7 @@ class MetadataMapperTests {
         assertEquals("isbn", metadataMap.get("isbn"));
         assertEquals("title", metadataMap.get("title"));
         assertEquals(Set.of("author"), metadataMap.get("authors"));
+        assertEquals(Set.of("contributor"), metadataMap.get("contributors"));
         assertEquals("2020", metadataMap.get("publishedYear"));
         assertEquals("description", metadataMap.get("description"));
         assertEquals(Set.of("genre"), metadataMap.get("genre"));

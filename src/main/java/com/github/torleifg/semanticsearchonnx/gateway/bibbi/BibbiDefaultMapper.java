@@ -44,6 +44,12 @@ class BibbiDefaultMapper implements BibbiMapper {
                 .map(Creator::getName)
                 .forEach(metadata.getAuthors()::add);
 
+        Stream.ofNullable(publication.getCreator())
+                .flatMap(List::stream)
+                .filter(creator -> creator.getRole() != Creator.RoleEnum.AUT)
+                .map(Creator::getName)
+                .forEach(metadata.getContributors()::add);
+
         if (isNotBlank(publication.getDatePublished())) {
             metadata.setPublishedYear(publication.getDatePublished());
         }
