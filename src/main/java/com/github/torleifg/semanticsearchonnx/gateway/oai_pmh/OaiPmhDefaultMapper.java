@@ -51,8 +51,19 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
             metadata.setTitle(title.get() + " : " + remainderOfTitle.get());
         } else title.ifPresent(metadata::setTitle);
 
-        getSubfieldValue(dataFieldsByTag.getOrDefault("100", List.of()), "a", new Filter("4", "aut"))
-                .forEach(metadata.getAuthors()::add);
+        Stream.concat(
+                getSubfieldValue(
+                        dataFieldsByTag.getOrDefault("100", List.of()), "a", new Filter("4", "aut", false)),
+                getSubfieldValue(
+                        dataFieldsByTag.getOrDefault("700", List.of()), "a", new Filter("4", "aut", false))
+        ).forEach(metadata.getAuthors()::add);
+
+        Stream.concat(
+                getSubfieldValue(
+                        dataFieldsByTag.getOrDefault("100", List.of()), "a", new Filter("4", "aut", true)),
+                getSubfieldValue(
+                        dataFieldsByTag.getOrDefault("700", List.of()), "a", new Filter("4", "aut", true))
+        ).forEach(metadata.getContributors()::add);
 
         getSubfieldValue(dataFieldsByTag.getOrDefault("264", List.of()), "c")
                 .findFirst()
@@ -62,10 +73,10 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
                 .findFirst()
                 .ifPresent(metadata::setDescription);
 
-        getSubfieldValue(dataFieldsByTag.getOrDefault("650", List.of()), "a", new Filter("9", "nob"))
+        getSubfieldValue(dataFieldsByTag.getOrDefault("650", List.of()), "a", new Filter("9", "nob", false))
                 .forEach(metadata.getAbout()::add);
 
-        getSubfieldValue(dataFieldsByTag.getOrDefault("655", List.of()), "a", new Filter("9", "nob"))
+        getSubfieldValue(dataFieldsByTag.getOrDefault("655", List.of()), "a", new Filter("9", "nob", false))
                 .forEach(metadata.getGenreAndForm()::add);
 
         getSubfieldValue(dataFieldsByTag.getOrDefault("856", List.of()), "u")
@@ -95,9 +106,9 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
     private static boolean filter(List<SubfieldatafieldType> subfields, Filter filter) {
         return subfields.stream()
                 .filter(subfield -> subfield.getCode().equals(filter.code()))
-                .anyMatch(subfield -> subfield.getValue().equals(filter.value()));
+                .anyMatch(subfield -> filter.exclude() != subfield.getValue().equals(filter.value()));
     }
 
-    record Filter(String code, String value) {
+    record Filter(String code, String value, boolean exclude) {
     }
 }
