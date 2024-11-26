@@ -53,17 +53,17 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
 
         Stream.concat(
                 getSubfieldValue(
-                        dataFieldsByTag.getOrDefault("100", List.of()), "a", new Filter("4", "aut", false)),
+                        dataFieldsByTag.getOrDefault("100", List.of()), "a", new Filter("4", "aut")),
                 getSubfieldValue(
-                        dataFieldsByTag.getOrDefault("700", List.of()), "a", new Filter("4", "aut", false))
+                        dataFieldsByTag.getOrDefault("700", List.of()), "a", new Filter("4", "aut"))
         ).forEach(metadata.getAuthors()::add);
 
         Stream.concat(
                 getSubfieldValue(
-                        dataFieldsByTag.getOrDefault("100", List.of()), "a", new Filter("4", "aut", true)),
+                        dataFieldsByTag.getOrDefault("100", List.of()), "a", new Filter("4", "trl")),
                 getSubfieldValue(
-                        dataFieldsByTag.getOrDefault("700", List.of()), "a", new Filter("4", "aut", true))
-        ).forEach(metadata.getContributors()::add);
+                        dataFieldsByTag.getOrDefault("700", List.of()), "a", new Filter("4", "trl"))
+        ).forEach(metadata.getTranslators()::add);
 
         getSubfieldValue(dataFieldsByTag.getOrDefault("264", List.of()), "c")
                 .findFirst()
@@ -73,10 +73,10 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
                 .findFirst()
                 .ifPresent(metadata::setDescription);
 
-        getSubfieldValue(dataFieldsByTag.getOrDefault("650", List.of()), "a", new Filter("9", "nob", false))
+        getSubfieldValue(dataFieldsByTag.getOrDefault("650", List.of()), "a", new Filter("9", "nob"))
                 .forEach(metadata.getAbout()::add);
 
-        getSubfieldValue(dataFieldsByTag.getOrDefault("655", List.of()), "a", new Filter("9", "nob", false))
+        getSubfieldValue(dataFieldsByTag.getOrDefault("655", List.of()), "a", new Filter("9", "nob"))
                 .forEach(metadata.getGenreAndForm()::add);
 
         getSubfieldValue(dataFieldsByTag.getOrDefault("856", List.of()), "u")
@@ -106,9 +106,9 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
     private static boolean filter(List<SubfieldatafieldType> subfields, Filter filter) {
         return subfields.stream()
                 .filter(subfield -> subfield.getCode().equals(filter.code()))
-                .anyMatch(subfield -> filter.exclude() != subfield.getValue().equals(filter.value()));
+                .anyMatch(subfield -> subfield.getValue().equals(filter.value()));
     }
 
-    record Filter(String code, String value, boolean exclude) {
+    record Filter(String code, String value) {
     }
 }

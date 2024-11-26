@@ -121,9 +121,9 @@
                             <strong>ISBN: </strong>
                             <span th:text="${result.isbn}"></span>
                         </li>
-                        <li th:if="${result['contributors'] != null and #sets.size(result['contributors']) > 0}">
-                            <strong>Contributors: </strong>
-                            <span th:text="${#strings.setJoin(result.contributors, '; ')}"></span>
+                        <li th:if="${result['translators'] != null and #sets.size(result.translators) > 0}">
+                            <strong>Translator(s): </strong>
+                            <span th:text="${#strings.setJoin(result.translators, '; ')}"></span>
                         </li>
                         <li th:if="${result['about'] != null and #sets.size(result.about) > 0}">
                             <strong>About: </strong>

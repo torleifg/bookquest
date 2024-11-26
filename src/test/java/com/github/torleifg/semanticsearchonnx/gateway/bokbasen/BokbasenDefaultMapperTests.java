@@ -53,17 +53,27 @@ class BokbasenDefaultMapperTests {
 
         descriptiveDetail.getTitleDetail().add(title);
 
-        var contributor = objectFactory.createContributor();
+        var author = objectFactory.createContributor();
 
-        var contributorRole = objectFactory.createContributorRole();
-        contributorRole.setValue(List17.fromValue("A01"));
-        contributor.getContent().add(contributorRole);
+        var authorRole = objectFactory.createContributorRole();
+        authorRole.setValue(List17.fromValue("A01"));
+        author.getContent().add(authorRole);
 
-        var personNameInverted = objectFactory.createPersonNameInverted();
-        personNameInverted.setValue("name");
-        contributor.getContent().add(personNameInverted);
+        var authorName = objectFactory.createPersonNameInverted();
+        authorName.setValue("author");
+        author.getContent().add(authorName);
 
-        descriptiveDetail.getContributor().add(contributor);
+        var translator = objectFactory.createContributor();
+
+        var translatorRole = objectFactory.createContributorRole();
+        translatorRole.setValue(List17.fromValue("B06"));
+        translator.getContent().add(translatorRole);
+
+        var translatorName = objectFactory.createPersonNameInverted();
+        translatorName.setValue("translator");
+        translator.getContent().add(translatorName);
+
+        descriptiveDetail.getContributor().addAll(List.of(author, translator));
 
         var genre = objectFactory.createSubject();
 
@@ -171,6 +181,7 @@ class BokbasenDefaultMapperTests {
         assertEquals("isbn", metadata.getIsbn());
         assertEquals("title : remainder of title", metadata.getTitle());
         assertEquals(1, metadata.getAuthors().size());
+        assertEquals(1, metadata.getTranslators().size());
         assertEquals("1970", metadata.getPublishedYear());
         assertEquals("description", metadata.getDescription());
         assertEquals(1, metadata.getGenreAndForm().size());
