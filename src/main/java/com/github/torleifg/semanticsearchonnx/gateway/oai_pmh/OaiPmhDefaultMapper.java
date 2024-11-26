@@ -51,8 +51,19 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
             metadata.setTitle(title.get() + " : " + remainderOfTitle.get());
         } else title.ifPresent(metadata::setTitle);
 
-        getSubfieldValue(dataFieldsByTag.getOrDefault("100", List.of()), "a", new Filter("4", "aut"))
-                .forEach(metadata.getAuthors()::add);
+        Stream.concat(
+                getSubfieldValue(
+                        dataFieldsByTag.getOrDefault("100", List.of()), "a", new Filter("4", "aut")),
+                getSubfieldValue(
+                        dataFieldsByTag.getOrDefault("700", List.of()), "a", new Filter("4", "aut"))
+        ).forEach(metadata.getAuthors()::add);
+
+        Stream.concat(
+                getSubfieldValue(
+                        dataFieldsByTag.getOrDefault("100", List.of()), "a", new Filter("4", "trl")),
+                getSubfieldValue(
+                        dataFieldsByTag.getOrDefault("700", List.of()), "a", new Filter("4", "trl"))
+        ).forEach(metadata.getTranslators()::add);
 
         getSubfieldValue(dataFieldsByTag.getOrDefault("264", List.of()), "c")
                 .findFirst()

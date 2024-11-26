@@ -57,33 +57,11 @@ class BokbasenDefaultMapper implements BokbasenMapper {
             metadata.setTitle(title.get() + " : " + remainderOfTitle.get());
         } else title.ifPresent(metadata::setTitle);
 
-        Stream.ofNullable(descriptiveDetail)
-                .map(DescriptiveDetail::getContributor)
-                .flatMap(Collection::stream)
-                .map(Contributor::getContent)
-                .filter(content -> {
-                    for (final Object object : content) {
-                        if (object instanceof ContributorRole role) {
-                            return role.getValue() == List17.fromValue("A01");
-                        }
-                    }
-
-                    return false;
-                })
-                .map(content -> {
-                    for (final Object object : content) {
-                        if (object instanceof PersonNameInverted name) {
-                            return name.getValue();
-                        } else if (object instanceof PersonName name) {
-                            return name.getValue();
-                        }
-                    }
-
-                    return null;
-                })
-                .filter(Objects::nonNull)
+        getContributor(descriptiveDetail, List17.fromValue("A01"))
                 .forEach(metadata.getAuthors()::add);
 
+        getContributor(descriptiveDetail, List17.fromValue("B06"))
+                .forEach(metadata.getTranslators()::add);
 
         final List<Subject> subjects = descriptiveDetail.getSubject();
 
@@ -180,6 +158,34 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                 .ifPresent(metadata::setThumbnailUrl);
 
         return metadata;
+    }
+
+    private static Stream<String> getContributor(DescriptiveDetail descriptiveDetail, List17 role) {
+        return Stream.ofNullable(descriptiveDetail)
+                .map(DescriptiveDetail::getContributor)
+                .flatMap(Collection::stream)
+                .map(Contributor::getContent)
+                .filter(content -> {
+                    for (final Object object : content) {
+                        if (object instanceof ContributorRole contributorRole) {
+                            return contributorRole.getValue() == role;
+                        }
+                    }
+
+                    return false;
+                })
+                .map(content -> {
+                    for (final Object object : content) {
+                        if (object instanceof PersonNameInverted name) {
+                            return name.getValue();
+                        } else if (object instanceof PersonName name) {
+                            return name.getValue();
+                        }
+                    }
+
+                    return null;
+                })
+                .filter(Objects::nonNull);
     }
 
     private static boolean isProprietary(SubjectSchemeIdentifier subjectSchemeIdentifier) {
