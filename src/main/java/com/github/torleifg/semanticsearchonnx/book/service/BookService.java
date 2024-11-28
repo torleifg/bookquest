@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.function.Function;
+
+import static java.util.stream.Collectors.toMap;
 
 @Slf4j
 @Service
@@ -72,9 +75,7 @@ public class BookService {
                 .map(UUID::fromString)
                 .toList();
 
-        final List<Book> books = bookRepository.findByVectorStoreIdsIn(ids);
-
-        return asMap(books);
+        return asListOfMaps(ids);
     }
 
     public List<Map<String, Object>> passage() {
@@ -83,18 +84,24 @@ public class BookService {
                 .map(UUID::fromString)
                 .toList();
 
-        final List<Book> books = bookRepository.findByVectorStoreIdsIn(ids);
+        return asListOfMaps(ids);
+    }
 
-        return asMap(books);
+    private List<Map<String, Object>> asListOfMaps(List<UUID> ids) {
+        final Map<String, Book> books = bookRepository.findByVectorStoreIdsIn(ids).stream()
+                .collect(toMap(Book::getVectorStoreId, Function.identity()));
+
+        return ids.stream()
+                .map(UUID::toString)
+                .map(books::get)
+                .filter(Objects::nonNull)
+                .map(metadataMapper::toMap)
+                .toList();
     }
 
     public List<Map<String, Object>> fullTextSearch(String query) {
         final List<Book> books = bookRepository.query(query, 20);
 
-        return asMap(books);
-    }
-
-    private List<Map<String, Object>> asMap(List<Book> books) {
         final List<Map<String, Object>> metadata = new ArrayList<>();
 
         for (final Book book : books) {

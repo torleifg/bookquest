@@ -104,6 +104,11 @@ public class BookRepository {
             book.setDeleted(rs.getBoolean("deleted"));
             book.setMetadata(fromBytes(rs.getBytes("metadata")));
 
+            try {
+                book.setVectorStoreId(rs.getString("vector_store_id"));
+            } catch (Exception ignored) {
+            }
+
             return book;
         }
     }
