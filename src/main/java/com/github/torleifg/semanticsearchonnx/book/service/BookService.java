@@ -74,13 +74,7 @@ public class BookService {
 
         final List<Book> books = bookRepository.findByVectorStoreIdsIn(ids);
 
-        final List<Map<String, Object>> metadata = new ArrayList<>();
-
-        for (final Book book : books) {
-            metadata.add(metadataMapper.toMap(book));
-        }
-
-        return metadata;
+        return asMap(books);
     }
 
     public List<Map<String, Object>> passage() {
@@ -91,18 +85,16 @@ public class BookService {
 
         final List<Book> books = bookRepository.findByVectorStoreIdsIn(ids);
 
-        final List<Map<String, Object>> metadata = new ArrayList<>();
-
-        for (final Book book : books) {
-            metadata.add(metadataMapper.toMap(book));
-        }
-
-        return metadata;
+        return asMap(books);
     }
 
     public List<Map<String, Object>> fullTextSearch(String query) {
         final List<Book> books = bookRepository.query(query, 20);
 
+        return asMap(books);
+    }
+
+    private List<Map<String, Object>> asMap(List<Book> books) {
         final List<Map<String, Object>> metadata = new ArrayList<>();
 
         for (final Book book : books) {
