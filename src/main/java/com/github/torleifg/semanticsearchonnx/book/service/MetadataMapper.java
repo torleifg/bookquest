@@ -45,18 +45,22 @@ public class MetadataMapper {
             passage = "passage: " + metadata.getTitle();
         }
 
-        final Map<String, Object> documentMetadata = createMetadataMap(metadata);
+        return new Document(passage);
+    }
 
-        return new Document(passage, documentMetadata);
+    private boolean hasMoreThanTwentyWords(String text) {
+        if (isBlank(text)) {
+            return false;
+        }
+
+        final String[] words = text.trim().split("\\s+");
+
+        return words.length > 20;
     }
 
     public Map<String, Object> toMap(Book book) {
         final Metadata metadata = book.getMetadata();
 
-        return createMetadataMap(metadata);
-    }
-
-    private static Map<String, Object> createMetadataMap(Metadata metadata) {
         final Map<String, Object> metadataMap = new HashMap<>();
         metadataMap.put("isbn", metadata.getIsbn());
         metadataMap.put("title", metadata.getTitle());
@@ -69,15 +73,5 @@ public class MetadataMapper {
         metadataMap.put("thumbnailUrl", metadata.getThumbnailUrl());
 
         return metadataMap;
-    }
-
-    public static boolean hasMoreThanTwentyWords(String text) {
-        if (isBlank(text)) {
-            return false;
-        }
-
-        final String[] words = text.trim().split("\\s+");
-
-        return words.length > 20;
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.simple.JdbcClient;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -61,6 +62,23 @@ class BookRepositoryTests {
                 .update();
 
         assertTrue(repository.findVectorStoreIdByExternalId("externalId").isPresent());
+    }
+
+    @Test
+    void findByVectorStoreIdsInTest() {
+        var book = createBook();
+
+        var vectorStoreId = client.sql("insert into vector_store (content) values ('content') returning id")
+                .query(UUID.class)
+                .single();
+
+        client.sql("insert into book (external_id, vector_store_id, metadata) values (?, ?, ?)")
+                .param(book.getExternalId())
+                .param(vectorStoreId)
+                .param(BookRepository.toPGobject(book.getMetadata()))
+                .update();
+
+        assertEquals(1, repository.findByVectorStoreIdsIn(List.of(vectorStoreId, UUID.randomUUID())).size());
     }
 
     @Test
