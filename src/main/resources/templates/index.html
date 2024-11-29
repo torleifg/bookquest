@@ -16,31 +16,41 @@
             margin-top: 20px;
         }
 
-        hr {
-            border: none;
-            height: 1px;
-            background-color: #bcd1aa;
+        .input-container {
+            position: relative;
+            width: 100%;
+            display: inline-block;
         }
 
-        .search-form input[type="text"] {
+        .input-container input[type="search"] {
             font-size: inherit;
-            width: 90%;
+            width: 100%;
             height: 40px;
             border: 1px solid #bcd1aa;
             border-radius: 15px;
-            padding: 10px;
+            padding: 10px 40px 10px 15px;
             outline: none;
+            box-sizing: border-box;
+            background-color: #fff;
         }
 
-        .search-form button {
-            border-radius: 15px;
-            padding: 12px;
-            background-color: #bcd1aa;
+        .input-container .search-icon-button {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            margin: 0;
+            cursor: pointer;
+            outline: none;
+            box-shadow: none;
+            appearance: none;
         }
 
-        .result-item img {
-            width: 150px;
-            height: auto;
+        .input-container .search-icon-button:focus {
+            outline: none;
         }
 
         .radio-group {
@@ -54,6 +64,17 @@
 
         .radio-group input[type="radio"] {
             margin-right: 5px;
+        }
+
+        hr {
+            border: none;
+            height: 1px;
+            background-color: #bcd1aa;
+        }
+
+        .result-item img {
+            width: 150px;
+            height: auto;
         }
 
         details {
@@ -83,10 +104,14 @@
 <div class="container">
     <div class="search-form">
         <form th:action="@{/}" method="post">
-            <label>
-                <input type="text" name="query" th:value="${query}"/>
-            </label>
-            <button type="submit" class="refresh-button"><i class="fa fa-search"></i></button>
+            <div class="input-container">
+                <label>
+                    <input type="search" name="query" th:value="${query}"/>
+                </label>
+                <button type="submit" class="search-icon-button">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
             <div class="radio-group">
                 <label>
                     <input type="radio" name="searchType" value="semantic"
@@ -120,6 +145,10 @@
                         <li th:if="${metadata.isbn != null}">
                             <strong>ISBN: </strong>
                             <span th:text="${metadata.isbn}"></span>
+                        </li>
+                        <li th:if="${metadata.publisher != null}">
+                            <strong>Publisher: </strong>
+                            <span th:text="${metadata.publisher}"></span>
                         </li>
                         <li th:if="${#sets.size(metadata.translators) > 0}">
                             <strong>Translated by: </strong>

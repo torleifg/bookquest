@@ -18,6 +18,7 @@ class BibbiDefaultMapperTests {
         publication.setId("id");
         publication.setIsbn("isbn");
         publication.setName("title");
+        publication.setPublisher("publisher");
 
         var author = new Creator();
         author.setRole(Creator.RoleEnum.AUT);
@@ -58,6 +59,7 @@ class BibbiDefaultMapperTests {
         assertEquals("id", metadata.getExternalId());
         assertEquals("isbn", metadata.getIsbn());
         assertEquals("title", metadata.getTitle());
+        assertEquals("publisher", metadata.getPublisher());
         assertEquals(1, metadata.getAuthors().size());
         assertEquals(1, metadata.getTranslators().size());
         assertEquals("1970", metadata.getPublishedYear());

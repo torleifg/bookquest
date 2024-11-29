@@ -51,6 +51,10 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
             metadata.setTitle(title.get() + " : " + remainderOfTitle.get());
         } else title.ifPresent(metadata::setTitle);
 
+        getSubfieldValue(dataFieldsByTag.getOrDefault("264", List.of()), "b")
+                .findFirst()
+                .ifPresent(metadata::setPublisher);
+
         Stream.concat(
                 getSubfieldValue(
                         dataFieldsByTag.getOrDefault("100", List.of()), "a", new Filter("4", "aut")),

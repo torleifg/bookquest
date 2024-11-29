@@ -38,6 +38,10 @@ class BibbiDefaultMapper implements BibbiMapper {
             metadata.setTitle(publication.getName());
         }
 
+        if (isNotBlank(publication.getPublisher())) {
+            metadata.setPublisher(publication.getPublisher());
+        }
+
         Stream.ofNullable(publication.getCreator())
                 .flatMap(List::stream)
                 .filter(creator -> creator.getRole() == Creator.RoleEnum.AUT)

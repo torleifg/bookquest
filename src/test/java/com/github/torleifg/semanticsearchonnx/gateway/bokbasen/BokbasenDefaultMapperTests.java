@@ -118,6 +118,13 @@ class BokbasenDefaultMapperTests {
 
         var publishingDetail = objectFactory.createPublishingDetail();
 
+        var publisher = objectFactory.createPublisher();
+
+        var publisherName = objectFactory.createPublisherName();
+        publisherName.setValue("publisher");
+
+        publisher.getContent().add(publisherName);
+
         var publishedYear = objectFactory.createPublishingDate();
 
         var publishingDateRole = objectFactory.createPublishingDateRole();
@@ -128,7 +135,7 @@ class BokbasenDefaultMapperTests {
         date.setValue("1970");
         publishedYear.setDate(date);
 
-        publishingDetail.getContent().add(publishedYear);
+        publishingDetail.getContent().addAll(List.of(publisher, publishedYear));
         product.setPublishingDetail(publishingDetail);
 
         var collateralDetail = objectFactory.createCollateralDetail();
@@ -180,6 +187,7 @@ class BokbasenDefaultMapperTests {
         assertEquals("id", metadata.getExternalId());
         assertEquals("isbn", metadata.getIsbn());
         assertEquals("title : remainder of title", metadata.getTitle());
+        assertEquals("publisher", metadata.getPublisher());
         assertEquals(1, metadata.getAuthors().size());
         assertEquals(1, metadata.getTranslators().size());
         assertEquals("1970", metadata.getPublishedYear());

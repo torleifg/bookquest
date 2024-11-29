@@ -19,6 +19,7 @@ class MetadataMapperTests {
         dto.setDeleted(false);
         dto.setIsbn("isbn");
         dto.setTitle("title");
+        dto.setPublisher("publisher");
         dto.setAuthors(Set.of("author"));
         dto.setTranslators(Set.of("translator"));
         dto.setPublishedYear("2020");
@@ -36,6 +37,7 @@ class MetadataMapperTests {
 
         assertEquals("isbn", metadata.getIsbn());
         assertEquals("title", metadata.getTitle());
+        assertEquals("publisher", metadata.getPublisher());
         assertEquals(Set.of("author"), metadata.getAuthors());
         assertEquals(Set.of("translator"), metadata.getTranslators());
         assertEquals("2020", metadata.getPublishedYear());

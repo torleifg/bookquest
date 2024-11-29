@@ -10,6 +10,7 @@ import java.util.Set;
 public class Metadata {
     private String isbn;
     private String title;
+    private String publisher;
     private Set<String> authors = new HashSet<>();
     private Set<String> translators = new HashSet<>();
 
