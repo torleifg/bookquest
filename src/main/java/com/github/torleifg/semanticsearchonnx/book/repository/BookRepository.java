@@ -101,13 +101,9 @@ public class BookRepository {
         public Book mapRow(ResultSet rs, int i) throws SQLException {
             final Book book = new Book();
             book.setExternalId(rs.getString("external_id"));
+            book.setVectorStoreId(rs.getString("vector_store_id"));
             book.setDeleted(rs.getBoolean("deleted"));
             book.setMetadata(fromBytes(rs.getBytes("metadata")));
-
-            try {
-                book.setVectorStoreId(rs.getString("vector_store_id"));
-            } catch (Exception ignored) {
-            }
 
             return book;
         }

@@ -1,7 +1,10 @@
-create or replace function search_books(search_query text, result_limit int)
+drop function if exists search_books(text, int);
+
+create function search_books(search_query text, result_limit int)
     returns table
             (
                 external_id text,
+                vector_store_id uuid,
                 deleted     boolean,
                 metadata    jsonb,
                 rank        real
@@ -11,6 +14,7 @@ $$
 begin
     return query
         select b.external_id,
+               b.vector_store_id,
                b.deleted,
                b.metadata,
                ts_rank(
