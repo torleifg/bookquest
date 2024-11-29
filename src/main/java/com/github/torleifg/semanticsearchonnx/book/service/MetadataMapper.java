@@ -18,6 +18,7 @@ public class MetadataMapper {
         final Metadata metadata = new Metadata();
         metadata.setIsbn(dto.getIsbn());
         metadata.setTitle(dto.getTitle());
+        metadata.setPublisher(dto.getPublisher());
         metadata.setAuthors(dto.getAuthors());
         metadata.setTranslators(dto.getTranslators());
         metadata.setPublishedYear(dto.getPublishedYear());

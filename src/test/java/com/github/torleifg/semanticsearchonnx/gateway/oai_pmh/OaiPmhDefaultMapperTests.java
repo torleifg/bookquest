@@ -27,6 +27,10 @@ class OaiPmhDefaultMapperTests {
         var remainderOfTitleValue = createSubfield("b", "remainder of title");
         title.getSubfield().addAll(List.of(titleValue, remainderOfTitleValue));
 
+        var publisher = createDataField("264");
+        var publisherValue = createSubfield("b", "publisher");
+        publisher.getSubfield().add(publisherValue);
+
         var author = createDataField("100");
         var authorRole = createSubfield("4", "aut");
         var authorValue = createSubfield("a", "author");
@@ -59,7 +63,7 @@ class OaiPmhDefaultMapperTests {
         var thumbnailUrlValue = createSubfield("u", "http://thumbnailUrl");
         thumbnailUrl.getSubfield().add(thumbnailUrlValue);
 
-        record.getDatafield().addAll(List.of(isbn, genre, title, author, translator, publishedYear, description, about, genre, thumbnailUrl));
+        record.getDatafield().addAll(List.of(isbn, genre, title, publisher, author, translator, publishedYear, description, about, genre, thumbnailUrl));
 
         var metadata = mapper.from("id", record);
 
@@ -68,6 +72,7 @@ class OaiPmhDefaultMapperTests {
         assertEquals("id", metadata.getExternalId());
         assertEquals("isbn", metadata.getIsbn());
         assertEquals("title : remainder of title", metadata.getTitle());
+        assertEquals("publisher", metadata.getPublisher());
         assertEquals(1, metadata.getAuthors().size());
         assertEquals(1, metadata.getTranslators().size());
         assertEquals("1970", metadata.getPublishedYear());
