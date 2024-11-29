@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.function.Function;
+
+import static java.util.stream.Collectors.toMap;
 
 @Slf4j
 @Service
@@ -58,20 +61,42 @@ public class BookService {
         final Optional<UUID> existingVector = bookRepository.findVectorStoreIdByExternalId(externalId);
 
         final Document document = metadataMapper.toDocument(book);
-        final UUID newVector = UUID.fromString(document.getId());
-
         vectorRepository.save(document);
+
+        final UUID newVector = UUID.fromString(document.getId());
         bookRepository.save(book, newVector);
 
         existingVector.ifPresent(vectorRepository::delete);
     }
 
-    public List<Document> semanticSearch(String query) {
-        return vectorRepository.query(query, 20);
+    public List<Map<String, Object>> semanticSearch(String query) {
+        final List<UUID> ids = vectorRepository.query(query, 20).stream()
+                .map(Document::getId)
+                .map(UUID::fromString)
+                .toList();
+
+        return asListOfMaps(ids);
     }
 
-    public List<Document> passage() {
-        return vectorRepository.passage(20);
+    public List<Map<String, Object>> passage() {
+        final List<UUID> ids = vectorRepository.passage(20).stream()
+                .map(Document::getId)
+                .map(UUID::fromString)
+                .toList();
+
+        return asListOfMaps(ids);
+    }
+
+    private List<Map<String, Object>> asListOfMaps(List<UUID> ids) {
+        final Map<String, Book> books = bookRepository.findByVectorStoreIdsIn(ids).stream()
+                .collect(toMap(Book::getVectorStoreId, Function.identity()));
+
+        return ids.stream()
+                .map(UUID::toString)
+                .map(books::get)
+                .filter(Objects::nonNull)
+                .map(metadataMapper::toMap)
+                .toList();
     }
 
     public List<Map<String, Object>> fullTextSearch(String query) {

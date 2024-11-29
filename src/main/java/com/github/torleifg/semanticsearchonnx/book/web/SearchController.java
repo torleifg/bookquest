@@ -1,7 +1,6 @@
 package com.github.torleifg.semanticsearchonnx.book.web;
 
 import com.github.torleifg.semanticsearchonnx.book.service.BookService;
-import org.springframework.ai.document.Document;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,20 +33,13 @@ public class SearchController {
         final List<Map<String, Object>> results;
 
         if ("semantic".equals(searchType)) {
-            final List<Document> documents;
-
             if (isNotBlank(query)) {
                 model.addAttribute("query", query);
-                documents = bookService.semanticSearch(query);
+                results = bookService.semanticSearch(query);
             } else {
-                documents = bookService.passage();
+                results = bookService.passage();
             }
 
-            results = new ArrayList<>(documents.size());
-
-            for (final Document document : documents) {
-                results.add(document.getMetadata());
-            }
         } else {
             if (isNotBlank(query)) {
                 model.addAttribute("query", query);

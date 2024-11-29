@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -42,6 +43,21 @@ public class BookRepository {
                 .param(externalId)
                 .query(UUID.class)
                 .optional();
+    }
+
+    public List<Book> findByVectorStoreIdsIn(List<UUID> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return List.of();
+        }
+
+        final String placeholders = String.join(",", Collections.nCopies(ids.size(), "?"));
+
+        final String query = String.format("select * from book where vector_store_id in (%s)", placeholders);
+
+        return jdbcClient.sql(query)
+                .params(ids.toArray())
+                .query(new BookRowMapper())
+                .list();
     }
 
     public void save(Book book) {
@@ -85,6 +101,7 @@ public class BookRepository {
         public Book mapRow(ResultSet rs, int i) throws SQLException {
             final Book book = new Book();
             book.setExternalId(rs.getString("external_id"));
+            book.setVectorStoreId(rs.getString("vector_store_id"));
             book.setDeleted(rs.getBoolean("deleted"));
             book.setMetadata(fromBytes(rs.getBytes("metadata")));
 
