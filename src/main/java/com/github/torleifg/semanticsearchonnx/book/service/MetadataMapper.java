@@ -5,9 +5,6 @@ import com.github.torleifg.semanticsearchonnx.book.domain.Metadata;
 import org.springframework.ai.document.Document;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Component
@@ -56,22 +53,5 @@ public class MetadataMapper {
         final String[] words = text.trim().split("\\s+");
 
         return words.length > 20;
-    }
-
-    public Map<String, Object> toMap(Book book) {
-        final Metadata metadata = book.getMetadata();
-
-        final Map<String, Object> metadataMap = new HashMap<>();
-        metadataMap.put("isbn", metadata.getIsbn());
-        metadataMap.put("title", metadata.getTitle());
-        metadataMap.put("authors", metadata.getAuthors());
-        metadataMap.put("translators", metadata.getTranslators());
-        metadataMap.put("description", metadata.getDescription());
-        metadataMap.put("publishedYear", metadata.getPublishedYear());
-        metadataMap.put("genre", metadata.getGenreAndForm());
-        metadataMap.put("about", metadata.getAbout());
-        metadataMap.put("thumbnailUrl", metadata.getThumbnailUrl());
-
-        return metadataMap;
     }
 }

@@ -102,36 +102,36 @@
     </div>
     <div class="results">
         <div th:if="${results != null}">
-            <div th:each="result : ${results}" class="result-item">
+            <div th:each="book : ${results}" class="result-item" th:with="metadata=${book.metadata}">
                 <p><strong
-                        th:text="${result['publishedYear'] == null ? result.title : result.title + ' (' + result.publishedYear + ')'}"></strong>
+                        th:text="${metadata.publishedYear == null ? metadata.title : metadata.title + ' (' + metadata.publishedYear + ')'}"></strong>
                 </p>
-                <img th:src="${result['thumbnailUrl'] != null ? result.thumbnailUrl : 'fallback.png'}"
+                <img th:src="${metadata.thumbnailUrl != null ? metadata.thumbnailUrl : 'fallback.png'}"
                      alt=""/>
-                <p th:if="${result['authors'] != null and #sets.size(result.authors) > 0}">
-                    <span th:text="${#strings.setJoin(result.authors, '; ')}"></span>
+                <p th:if="${#sets.size(metadata.authors) > 0}">
+                    <span th:text="${#strings.setJoin(metadata.authors, '; ')}"></span>
                 </p>
-                <p th:if="${result['description'] != null}">
-                    <span th:text="${result.description}"></span>
+                <p th:if="${metadata.description != null}">
+                    <span th:text="${metadata.description}"></span>
                 </p>
                 <details>
                     <summary>Details</summary>
                     <ul>
-                        <li th:if="${result['isbn'] != null}">
+                        <li th:if="${metadata.isbn != null}">
                             <strong>ISBN: </strong>
-                            <span th:text="${result.isbn}"></span>
+                            <span th:text="${metadata.isbn}"></span>
                         </li>
-                        <li th:if="${result['translators'] != null and #sets.size(result.translators) > 0}">
-                            <strong>Translator(s): </strong>
-                            <span th:text="${#strings.setJoin(result.translators, '; ')}"></span>
+                        <li th:if="${#sets.size(metadata.translators) > 0}">
+                            <strong>Translated by: </strong>
+                            <span th:text="${#strings.setJoin(metadata.translators, '; ')}"></span>
                         </li>
-                        <li th:if="${result['about'] != null and #sets.size(result.about) > 0}">
+                        <li th:if="${#sets.size(metadata.about) > 0}">
                             <strong>About: </strong>
-                            <span th:text="${#strings.setJoin(result.about, '; ')}"></span>
+                            <span th:text="${#strings.setJoin(metadata.about, '; ')}"></span>
                         </li>
-                        <li th:if="${result['genre'] != null and #sets.size(result.genre) > 0}">
+                        <li th:if="${#sets.size(metadata.genreAndForm) > 0}">
                             <strong>Genre and form: </strong>
-                            <span th:text="${#strings.setJoin(result.genre, '; ')}"></span>
+                            <span th:text="${#strings.setJoin(metadata.genreAndForm, '; ')}"></span>
                         </li>
                     </ul>
                 </details>

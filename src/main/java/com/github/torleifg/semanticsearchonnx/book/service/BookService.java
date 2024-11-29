@@ -69,25 +69,25 @@ public class BookService {
         existingVector.ifPresent(vectorRepository::delete);
     }
 
-    public List<Map<String, Object>> semanticSearch(String query) {
-        final List<UUID> ids = vectorRepository.query(query, 20).stream()
+    public List<Book> semanticSearch(String query) {
+        final List<UUID> ids = vectorRepository.query(query, 15).stream()
                 .map(Document::getId)
                 .map(UUID::fromString)
                 .toList();
 
-        return asListOfMaps(ids);
+        return asListOfBooks(ids);
     }
 
-    public List<Map<String, Object>> passage() {
-        final List<UUID> ids = vectorRepository.passage(20).stream()
+    public List<Book> passage() {
+        final List<UUID> ids = vectorRepository.passage(15).stream()
                 .map(Document::getId)
                 .map(UUID::fromString)
                 .toList();
 
-        return asListOfMaps(ids);
+        return asListOfBooks(ids);
     }
 
-    private List<Map<String, Object>> asListOfMaps(List<UUID> ids) {
+    private List<Book> asListOfBooks(List<UUID> ids) {
         final Map<String, Book> books = bookRepository.findByVectorStoreIdsIn(ids).stream()
                 .collect(toMap(Book::getVectorStoreId, Function.identity()));
 
@@ -95,19 +95,10 @@ public class BookService {
                 .map(UUID::toString)
                 .map(books::get)
                 .filter(Objects::nonNull)
-                .map(metadataMapper::toMap)
                 .toList();
     }
 
-    public List<Map<String, Object>> fullTextSearch(String query) {
-        final List<Book> books = bookRepository.query(query, 20);
-
-        final List<Map<String, Object>> metadata = new ArrayList<>();
-
-        for (final Book book : books) {
-            metadata.add(metadataMapper.toMap(book));
-        }
-
-        return metadata;
+    public List<Book> fullTextSearch(String query) {
+        return bookRepository.query(query, 20);
     }
 }

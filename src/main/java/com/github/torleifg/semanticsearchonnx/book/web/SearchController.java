@@ -1,5 +1,6 @@
 package com.github.torleifg.semanticsearchonnx.book.web;
 
+import com.github.torleifg.semanticsearchonnx.book.domain.Book;
 import com.github.torleifg.semanticsearchonnx.book.service.BookService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -30,7 +30,7 @@ public class SearchController {
 
     @PostMapping
     public String search(Model model, @RequestParam(required = false) String query, @RequestParam String searchType) {
-        final List<Map<String, Object>> results;
+        final List<Book> results;
 
         if ("semantic".equals(searchType)) {
             if (isNotBlank(query)) {

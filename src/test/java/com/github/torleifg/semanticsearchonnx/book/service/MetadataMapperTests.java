@@ -86,34 +86,4 @@ class MetadataMapperTests {
 
         assertEquals("passage: description a b c d e f g h i j k l m n o p q r s t u u v w x y", document.getContent());
     }
-
-    @Test
-    void mapMetadataTest() {
-        var book = new Book();
-
-        var metadata = new Metadata();
-        metadata.setIsbn("isbn");
-        metadata.setTitle("title");
-        metadata.setAuthors(Set.of("author"));
-        metadata.setTranslators(Set.of("translator"));
-        metadata.setPublishedYear("2020");
-        metadata.setDescription("description");
-        metadata.setGenreAndForm(Set.of("genre"));
-        metadata.setAbout(Set.of("about"));
-        metadata.setThumbnailUrl(URI.create("thumbnailUrl"));
-
-        book.setMetadata(metadata);
-
-        var metadataMap = metadataMapper.toMap(book);
-
-        assertEquals("isbn", metadataMap.get("isbn"));
-        assertEquals("title", metadataMap.get("title"));
-        assertEquals(Set.of("author"), metadataMap.get("authors"));
-        assertEquals(Set.of("translator"), metadataMap.get("translators"));
-        assertEquals("2020", metadataMap.get("publishedYear"));
-        assertEquals("description", metadataMap.get("description"));
-        assertEquals(Set.of("genre"), metadataMap.get("genre"));
-        assertEquals(Set.of("about"), metadataMap.get("about"));
-        assertEquals(URI.create("thumbnailUrl"), metadataMap.get("thumbnailUrl"));
-    }
 }
