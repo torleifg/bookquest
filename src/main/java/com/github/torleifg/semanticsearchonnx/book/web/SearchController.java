@@ -24,6 +24,7 @@ public class SearchController {
     @GetMapping
     public String search(Model model) {
         model.addAttribute("searchType", null);
+        model.addAttribute("results", bookService.passage());
 
         return "index";
     }
