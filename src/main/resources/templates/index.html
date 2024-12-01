@@ -126,7 +126,7 @@
         </form>
     </div>
     <div class="results">
-        <div th:if="${results != null}">
+        <div th:if="${#lists.size(results) > 0}">
             <div th:each="book : ${results}" class="result-item" th:with="metadata=${book.metadata}">
                 <p><strong
                         th:text="${metadata.publishedYear == null ? metadata.title : metadata.title + ' (' + metadata.publishedYear + ')'}"></strong>
@@ -135,6 +135,9 @@
                      alt=""/>
                 <p th:if="${#sets.size(metadata.authors) > 0}">
                     <span th:text="${#strings.setJoin(metadata.authors, '; ')}"></span>
+                </p>
+                <p th:if="${#sets.size(metadata.authors) == 0}">
+                    <span>Author information is missing.</span>
                 </p>
                 <p th:if="${metadata.description != null}">
                     <span th:text="${metadata.description}"></span>
@@ -166,6 +169,9 @@
                 </details>
                 <hr/>
             </div>
+        </div>
+        <div th:if="${#lists.size(results) == 0}">
+            <p>No results found. Please try a different query.</p>
         </div>
     </div>
 </div>
