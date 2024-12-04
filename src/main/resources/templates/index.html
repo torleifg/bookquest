@@ -55,6 +55,7 @@
 
         .radio-group {
             margin-top: 10px;
+            margin-left: 5px;
         }
 
         .radio-group label {
@@ -105,10 +106,8 @@
     <div class="search-form">
         <form th:action="@{/}" method="post">
             <div class="input-container">
-                <label>
-                    <input type="search" name="query" th:value="${query}"/>
-                </label>
-                <button type="submit" class="search-icon-button">
+                <input type="search" name="query" th:value="${query}" aria-label="Enter search query"/>
+                <button type="submit" class="search-icon-button" aria-label="Submit search">
                     <i class="fa fa-search"></i>
                 </button>
             </div>
