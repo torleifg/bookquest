@@ -21,6 +21,7 @@ public class MetadataMapper {
         metadata.setPublisher(dto.getPublisher());
         metadata.setAuthors(dto.getAuthors());
         metadata.setTranslators(dto.getTranslators());
+        metadata.setIllustrators(dto.getIllustrators());
         metadata.setPublishedYear(dto.getPublishedYear());
         metadata.setDescription(dto.getDescription());
         metadata.setAbout(dto.getAbout());

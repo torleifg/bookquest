@@ -21,6 +21,7 @@ class MetadataMapperTests {
         dto.setTitle("title");
         dto.setPublisher("publisher");
         dto.setAuthors(Set.of("author"));
+        dto.setIllustrators(Set.of("illustrator"));
         dto.setTranslators(Set.of("translator"));
         dto.setPublishedYear("2020");
         dto.setDescription("description");
@@ -40,6 +41,7 @@ class MetadataMapperTests {
         assertEquals("publisher", metadata.getPublisher());
         assertEquals(Set.of("author"), metadata.getAuthors());
         assertEquals(Set.of("translator"), metadata.getTranslators());
+        assertEquals(Set.of("illustrator"), metadata.getIllustrators());
         assertEquals("2020", metadata.getPublishedYear());
         assertEquals("description", metadata.getDescription());
         assertEquals(Set.of("genre"), metadata.getGenreAndForm());

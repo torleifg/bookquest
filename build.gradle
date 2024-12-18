@@ -70,8 +70,8 @@ xjc {
 
 openApiGenerate {
     generatorName = 'java'
-    inputSpec = 'src/main/resources/schema/bibbi/bibbi.json'
-    outputDir = "$buildDir/generated/sources/openapi"
+    inputSpec = layout.projectDirectory.file('src/main/resources/schema/bibbi/bibbi.json').asFile.absolutePath
+    outputDir = layout.buildDirectory.dir('generated/sources/openapi').get().asFile.absolutePath
     modelPackage = 'no.bs.bibliografisk.model'
     generateModelTests = false
     configOptions = [

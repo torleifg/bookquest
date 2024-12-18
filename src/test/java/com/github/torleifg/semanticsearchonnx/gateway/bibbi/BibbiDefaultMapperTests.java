@@ -26,9 +26,13 @@ class BibbiDefaultMapperTests {
 
         var translator = new Creator();
         translator.setRole(Creator.RoleEnum.TRL);
-        translator.setName("illustrator");
+        translator.setName("translator");
 
-        publication.setCreator(List.of(author, translator));
+        var illustrator = new Creator();
+        illustrator.setRole(Creator.RoleEnum.ILL);
+        illustrator.setName("illustrator");
+
+        publication.setCreator(List.of(author, translator, illustrator));
 
         publication.setDatePublished("1970");
         publication.setDescription("description");
@@ -62,6 +66,7 @@ class BibbiDefaultMapperTests {
         assertEquals("publisher", metadata.getPublisher());
         assertEquals(1, metadata.getAuthors().size());
         assertEquals(1, metadata.getTranslators().size());
+        assertEquals(1, metadata.getIllustrators().size());
         assertEquals("1970", metadata.getPublishedYear());
         assertEquals("description", metadata.getDescription());
         assertEquals(1, metadata.getGenreAndForm().size());
