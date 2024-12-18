@@ -73,7 +73,17 @@ class BokbasenDefaultMapperTests {
         translatorName.setValue("translator");
         translator.getContent().add(translatorName);
 
-        descriptiveDetail.getContributor().addAll(List.of(author, translator));
+        var illustrator = objectFactory.createContributor();
+
+        var illustratorRole = objectFactory.createContributorRole();
+        illustratorRole.setValue(List17.fromValue("A12"));
+        illustrator.getContent().add(illustratorRole);
+
+        var illustratorName = objectFactory.createPersonNameInverted();
+        illustratorName.setValue("illustrator");
+        illustrator.getContent().add(illustratorName);
+
+        descriptiveDetail.getContributor().addAll(List.of(author, translator, illustrator));
 
         var genre = objectFactory.createSubject();
 
@@ -190,6 +200,7 @@ class BokbasenDefaultMapperTests {
         assertEquals("publisher", metadata.getPublisher());
         assertEquals(1, metadata.getAuthors().size());
         assertEquals(1, metadata.getTranslators().size());
+        assertEquals(1, metadata.getIllustrators().size());
         assertEquals("1970", metadata.getPublishedYear());
         assertEquals("description", metadata.getDescription());
         assertEquals(1, metadata.getGenreAndForm().size());

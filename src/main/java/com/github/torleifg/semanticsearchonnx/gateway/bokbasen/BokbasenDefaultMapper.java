@@ -63,6 +63,9 @@ class BokbasenDefaultMapper implements BokbasenMapper {
         getContributor(descriptiveDetail, List17.fromValue("B06"))
                 .forEach(metadata.getTranslators()::add);
 
+        getContributor(descriptiveDetail, List17.fromValue("A12"))
+                .forEach(metadata.getIllustrators()::add);
+
         final List<Subject> subjects = descriptiveDetail.getSubject();
 
         if (subjects != null && !subjects.isEmpty()) {

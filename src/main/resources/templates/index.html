@@ -156,6 +156,10 @@
                             <strong>Translated by: </strong>
                             <span th:text="${#strings.setJoin(metadata.translators, '; ')}"></span>
                         </li>
+                        <li th:if="${#sets.size(metadata.illustrators) > 0}">
+                            <strong>Illustrated by: </strong>
+                            <span th:text="${#strings.setJoin(metadata.illustrators, '; ')}"></span>
+                        </li>
                         <li th:if="${#sets.size(metadata.about) > 0}">
                             <strong>About: </strong>
                             <span th:text="${#strings.setJoin(metadata.about, '; ')}"></span>

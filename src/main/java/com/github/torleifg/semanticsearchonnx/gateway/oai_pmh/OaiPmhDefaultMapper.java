@@ -69,6 +69,13 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
                         dataFieldsByTag.getOrDefault("700", List.of()), "a", new Filter("4", "trl"))
         ).forEach(metadata.getTranslators()::add);
 
+        Stream.concat(
+                getSubfieldValue(
+                        dataFieldsByTag.getOrDefault("100", List.of()), "a", new Filter("4", "ill")),
+                getSubfieldValue(
+                        dataFieldsByTag.getOrDefault("700", List.of()), "a", new Filter("4", "ill"))
+        ).forEach(metadata.getIllustrators()::add);
+
         getSubfieldValue(dataFieldsByTag.getOrDefault("264", List.of()), "c")
                 .findFirst()
                 .ifPresent(metadata::setPublishedYear);
