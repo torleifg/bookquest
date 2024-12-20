@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "bokbasen")
-public class BokbasenProperties {
+class BokbasenProperties {
     private String serviceUri;
     private String after;
     private String subscription;

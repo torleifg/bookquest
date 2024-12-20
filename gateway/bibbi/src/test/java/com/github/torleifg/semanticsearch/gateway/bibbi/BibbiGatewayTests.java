@@ -1,6 +1,10 @@
 package com.github.torleifg.semanticsearch.gateway.bibbi;
 
-import com.github.torleifg.semanticsearch.gateway.common.*;
+import com.github.torleifg.semanticsearch.gateway.common.client.MetadataClient;
+import com.github.torleifg.semanticsearch.gateway.common.client.MetadataClientResponse;
+import com.github.torleifg.semanticsearch.gateway.common.repository.LastModifiedRepository;
+import com.github.torleifg.semanticsearch.gateway.common.repository.ResumptionToken;
+import com.github.torleifg.semanticsearch.gateway.common.repository.ResumptionTokenRepository;
 import no.bs.bibliografisk.model.GetV1PublicationsHarvest200Response;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,7 +45,7 @@ class BibbiGatewayTests {
         when(bibbiProperties.getServiceUri()).thenReturn("/harvest");
 
         var response = createResponse();
-        when(metadataClient.get("/harvest?query=type:(audiobook OR book)", GetV1PublicationsHarvest200Response.class)).thenReturn(new MetadataClientResponse<>(Optional.empty(), response));
+        when(metadataClient.get("/harvest?query=type:(audiobook OR book)", GetV1PublicationsHarvest200Response.class)).thenReturn(new MetadataClientResponse<>(response));
 
         var metadata = bibbiGateway.find();
         assertEquals(0, metadata.size());
@@ -56,7 +60,7 @@ class BibbiGatewayTests {
         when(resumptionTokenRepository.get("/harvest")).thenReturn(Optional.of(new ResumptionToken(resumptionToken, Instant.now())));
 
         var response = createResponse();
-        when(metadataClient.get("/harvest?resumption_token=" + resumptionToken, GetV1PublicationsHarvest200Response.class)).thenReturn(new MetadataClientResponse<>(Optional.empty(), response));
+        when(metadataClient.get("/harvest?resumption_token=" + resumptionToken, GetV1PublicationsHarvest200Response.class)).thenReturn(new MetadataClientResponse<>(response));
 
         var metadata = bibbiGateway.find();
         assertEquals(0, metadata.size());
@@ -70,7 +74,7 @@ class BibbiGatewayTests {
         when(lastModifiedRepository.get("/harvest")).thenReturn(Optional.of(lastModified));
 
         var response = createResponse();
-        when(metadataClient.get("/harvest?query=type:(audiobook OR book) AND modified:[" + lastModified + " TO *]", GetV1PublicationsHarvest200Response.class)).thenReturn(new MetadataClientResponse<>(Optional.empty(), response));
+        when(metadataClient.get("/harvest?query=type:(audiobook OR book) AND modified:[" + lastModified + " TO *]", GetV1PublicationsHarvest200Response.class)).thenReturn(new MetadataClientResponse<>(response));
 
         var metadata = bibbiGateway.find();
         assertEquals(0, metadata.size());

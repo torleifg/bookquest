@@ -16,19 +16,19 @@ class OaiPmhResponse {
         this.oaipmHtype = oaipmHtype;
     }
 
-    public static OaiPmhResponse from(OAIPMHtype oaipmHtype) {
+    static OaiPmhResponse from(OAIPMHtype oaipmHtype) {
         return new OaiPmhResponse(oaipmHtype);
     }
 
-    public boolean hasErrors() {
+    boolean hasErrors() {
         return !oaipmHtype.getError().isEmpty();
     }
 
-    public boolean hasBadResumptionTokenError() {
+    boolean hasBadResumptionTokenError() {
         return hasError(oaipmHtype, OAIPMHerrorcodeType.BAD_RESUMPTION_TOKEN);
     }
 
-    public boolean hasNoRecordsMatchError() {
+    boolean hasNoRecordsMatchError() {
         return hasError(oaipmHtype, OAIPMHerrorcodeType.NO_RECORDS_MATCH);
     }
 
@@ -36,11 +36,11 @@ class OaiPmhResponse {
         return response.getError().stream().anyMatch(error -> error.getCode() == errorCodeType);
     }
 
-    public boolean hasRecords() {
+    boolean hasRecords() {
         return oaipmHtype.getListRecords() != null && !oaipmHtype.getListRecords().getRecord().isEmpty();
     }
 
-    public List<RecordType> getRecords() {
+    List<RecordType> getRecords() {
         return Stream.ofNullable(oaipmHtype.getListRecords())
                 .map(ListRecordsType::getRecord)
                 .flatMap(Collection::stream)
@@ -55,14 +55,14 @@ class OaiPmhResponse {
                 .orElseThrow();
     }
 
-    public Optional<String> getResumptionToken() {
+    Optional<String> getResumptionToken() {
         return Optional.ofNullable(oaipmHtype.getListRecords())
                 .map(ListRecordsType::getResumptionToken)
                 .map(ResumptionTokenType::getValue)
                 .filter(token -> !token.isBlank());
     }
 
-    public String errorsToString() {
+    String errorsToString() {
         final StringBuilder sb = new StringBuilder();
         sb.append("List of OAI-PMH Errors:\n");
 

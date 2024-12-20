@@ -20,20 +20,20 @@ class BibbiResponse {
         this.getV1PublicationsHarvest200Response = getV1PublicationsHarvest200Response;
     }
 
-    public static BibbiResponse from(GetV1PublicationsHarvest200Response response) {
+    static BibbiResponse from(GetV1PublicationsHarvest200Response response) {
         return new BibbiResponse(response);
     }
 
-    public Optional<String> getResumptionToken() {
+    Optional<String> getResumptionToken() {
         return Optional.ofNullable(getV1PublicationsHarvest200Response.getResumptionToken())
                 .filter(StringUtils::isNotBlank);
     }
 
-    public boolean hasPublications() {
+    boolean hasPublications() {
         return getV1PublicationsHarvest200Response.getPublications() != null && !getV1PublicationsHarvest200Response.getPublications().isEmpty();
     }
 
-    public List<GetV1PublicationsHarvest200ResponsePublicationsInner> getPublications() {
+    List<GetV1PublicationsHarvest200ResponsePublicationsInner> getPublications() {
         return Stream.ofNullable(getV1PublicationsHarvest200Response.getPublications())
                 .flatMap(Collection::stream)
                 .sorted(Comparator.comparing(this::getLastModified))

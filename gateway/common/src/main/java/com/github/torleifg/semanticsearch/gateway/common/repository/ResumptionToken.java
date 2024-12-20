@@ -1,4 +1,4 @@
-package com.github.torleifg.semanticsearch.gateway.common;
+package com.github.torleifg.semanticsearch.gateway.common.repository;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

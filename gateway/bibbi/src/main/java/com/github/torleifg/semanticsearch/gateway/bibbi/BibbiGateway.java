@@ -2,7 +2,12 @@ package com.github.torleifg.semanticsearch.gateway.bibbi;
 
 import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
 import com.github.torleifg.semanticsearch.book.service.MetadataGateway;
-import com.github.torleifg.semanticsearch.gateway.common.*;
+import com.github.torleifg.semanticsearch.gateway.common.client.MetadataClient;
+import com.github.torleifg.semanticsearch.gateway.common.client.MetadataClientException;
+import com.github.torleifg.semanticsearch.gateway.common.client.MetadataClientResponse;
+import com.github.torleifg.semanticsearch.gateway.common.repository.LastModifiedRepository;
+import com.github.torleifg.semanticsearch.gateway.common.repository.ResumptionToken;
+import com.github.torleifg.semanticsearch.gateway.common.repository.ResumptionTokenRepository;
 import lombok.extern.slf4j.Slf4j;
 import no.bs.bibliografisk.model.BibliographicRecordMetadata;
 import no.bs.bibliografisk.model.GetV1PublicationsHarvest200Response;
@@ -29,7 +34,7 @@ class BibbiGateway implements MetadataGateway {
     private final ResumptionTokenRepository resumptionTokenRepository;
     private final LastModifiedRepository lastModifiedRepository;
 
-    public BibbiGateway(MetadataClient metadataClient, BibbiMapper bibbiMapper, BibbiProperties bibbiProperties, ResumptionTokenRepository resumptionTokenRepository, LastModifiedRepository lastModifiedRepository) {
+    BibbiGateway(MetadataClient metadataClient, BibbiMapper bibbiMapper, BibbiProperties bibbiProperties, ResumptionTokenRepository resumptionTokenRepository, LastModifiedRepository lastModifiedRepository) {
         this.metadataClient = metadataClient;
         this.bibbiMapper = bibbiMapper;
         this.bibbiProperties = bibbiProperties;
@@ -47,7 +52,7 @@ class BibbiGateway implements MetadataGateway {
         try {
             final MetadataClientResponse<GetV1PublicationsHarvest200Response> metadataClientResponse = metadataClient.get(requestUri, GetV1PublicationsHarvest200Response.class);
 
-            response = BibbiResponse.from(metadataClientResponse.body());
+            response = BibbiResponse.from(metadataClientResponse.getBody());
         } catch (MetadataClientException ex) {
             resumptionTokenRepository.delete(serviceUri);
 

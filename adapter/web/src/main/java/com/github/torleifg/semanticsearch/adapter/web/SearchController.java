@@ -12,10 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-public class SearchController {
+class SearchController {
     private final BookService bookService;
 
-    public SearchController(BookService bookService) {
+    SearchController(BookService bookService) {
         this.bookService = bookService;
     }
 

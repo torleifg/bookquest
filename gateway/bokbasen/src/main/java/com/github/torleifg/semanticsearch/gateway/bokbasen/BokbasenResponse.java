@@ -14,15 +14,15 @@ class BokbasenResponse {
         this.onixMessage = onixMessage;
     }
 
-    public static BokbasenResponse from(ONIXMessage onixMessage) {
+    static BokbasenResponse from(ONIXMessage onixMessage) {
         return new BokbasenResponse(onixMessage);
     }
 
-    public boolean hasProducts() {
+    boolean hasProducts() {
         return onixMessage.getProduct() != null && !onixMessage.getProduct().isEmpty();
     }
 
-    public List<Product> getProducts() {
+    List<Product> getProducts() {
         return Stream.ofNullable(onixMessage)
                 .map(ONIXMessage::getProduct)
                 .flatMap(Collection::stream)

@@ -2,10 +2,10 @@ package com.github.torleifg.semanticsearch.gateway.bokbasen;
 
 import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
 import com.github.torleifg.semanticsearch.book.service.MetadataGateway;
-import com.github.torleifg.semanticsearch.gateway.common.MetadataClient;
-import com.github.torleifg.semanticsearch.gateway.common.MetadataClientException;
-import com.github.torleifg.semanticsearch.gateway.common.MetadataClientResponse;
-import com.github.torleifg.semanticsearch.gateway.common.ResumptionTokenRepository;
+import com.github.torleifg.semanticsearch.gateway.common.client.MetadataClient;
+import com.github.torleifg.semanticsearch.gateway.common.client.MetadataClientException;
+import com.github.torleifg.semanticsearch.gateway.common.client.MetadataClientResponse;
+import com.github.torleifg.semanticsearch.gateway.common.repository.ResumptionTokenRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.editeur.ns.onix._3_0.reference.*;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -26,7 +27,7 @@ class BokbasenGateway implements MetadataGateway {
 
     private final ResumptionTokenRepository resumptionTokenRepository;
 
-    public BokbasenGateway(MetadataClient metadataClient, BokbasenMapper bokbasenMapper, BokbasenProperties bokbasenProperties, ResumptionTokenRepository resumptionTokenRepository) {
+    BokbasenGateway(MetadataClient metadataClient, BokbasenMapper bokbasenMapper, BokbasenProperties bokbasenProperties, ResumptionTokenRepository resumptionTokenRepository) {
         this.metadataClient = metadataClient;
         this.bokbasenMapper = bokbasenMapper;
         this.bokbasenProperties = bokbasenProperties;
@@ -42,9 +43,9 @@ class BokbasenGateway implements MetadataGateway {
         final BokbasenResponse response;
         try {
             final MetadataClientResponse<ONIXMessage> metadataClientResponse = metadataClient.get(requestUri, ONIXMessage.class);
-            response = BokbasenResponse.from(metadataClientResponse.body());
+            response = BokbasenResponse.from(metadataClientResponse.getBody());
 
-            metadataClientResponse.resumptionToken().ifPresent(token -> resumptionTokenRepository.save(serviceUri, token));
+            Optional.ofNullable(metadataClientResponse.getResumptionToken()).ifPresent(token -> resumptionTokenRepository.save(serviceUri, token));
         } catch (MetadataClientException ex) {
             throw new BokbasenException(ex);
         }

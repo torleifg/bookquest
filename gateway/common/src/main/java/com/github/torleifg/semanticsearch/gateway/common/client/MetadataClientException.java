@@ -1,4 +1,4 @@
-package com.github.torleifg.semanticsearch.gateway.common;
+package com.github.torleifg.semanticsearch.gateway.common.client;
 
 public class MetadataClientException extends RuntimeException {
 

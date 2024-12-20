@@ -2,7 +2,12 @@ package com.github.torleifg.semanticsearch.gateway.oai_pmh;
 
 import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
 import com.github.torleifg.semanticsearch.book.service.MetadataGateway;
-import com.github.torleifg.semanticsearch.gateway.common.*;
+import com.github.torleifg.semanticsearch.gateway.common.client.MetadataClient;
+import com.github.torleifg.semanticsearch.gateway.common.client.MetadataClientException;
+import com.github.torleifg.semanticsearch.gateway.common.client.MetadataClientResponse;
+import com.github.torleifg.semanticsearch.gateway.common.repository.LastModifiedRepository;
+import com.github.torleifg.semanticsearch.gateway.common.repository.ResumptionToken;
+import com.github.torleifg.semanticsearch.gateway.common.repository.ResumptionTokenRepository;
 import info.lc.xmlns.marcxchange_v1.RecordType;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -43,7 +48,7 @@ class OaiPmhGateway implements MetadataGateway {
         }
     }
 
-    public OaiPmhGateway(MetadataClient metadataClient, OaiPmhMapper oaiPmhMapper, OaiPmhProperties oaiPmhProperties, ResumptionTokenRepository resumptionTokenRepository, LastModifiedRepository lastModifiedRepository) {
+    OaiPmhGateway(MetadataClient metadataClient, OaiPmhMapper oaiPmhMapper, OaiPmhProperties oaiPmhProperties, ResumptionTokenRepository resumptionTokenRepository, LastModifiedRepository lastModifiedRepository) {
         this.metadataClient = metadataClient;
         this.oaiPmhMapper = oaiPmhMapper;
         this.oaiPmhProperties = oaiPmhProperties;
@@ -61,7 +66,7 @@ class OaiPmhGateway implements MetadataGateway {
         try {
             final MetadataClientResponse<OAIPMHtype> metadataClientResponse = metadataClient.get(requestUri, OAIPMHtype.class);
 
-            response = OaiPmhResponse.from(metadataClientResponse.body());
+            response = OaiPmhResponse.from(metadataClientResponse.getBody());
         } catch (MetadataClientException ex) {
             resumptionTokenRepository.delete(serviceUri);
 
