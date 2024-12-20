@@ -1,0 +1,47 @@
+plugins {
+    id 'org.openapi.generator' version '7.6.0'
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+
+    implementation 'io.swagger.parser.v3:swagger-parser:2.1.22'
+
+    implementation project(':application')
+    implementation project(':gateway:common')
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+openApiGenerate {
+    generatorName = 'java'
+    inputSpec = layout.projectDirectory.file('src/main/resources/bibbi/bibbi.json').asFile.absolutePath
+    outputDir = layout.buildDirectory.dir('generated/sources/openapi').get().asFile.absolutePath
+    modelPackage = 'no.bs.bibliografisk.model'
+    generateModelTests = false
+    configOptions = [
+            'library'               : 'restclient',
+            'useJakartaEe'          : 'true',
+            'openApiNullable'       : 'false',
+            'enumUnknownDefaultCase': 'true'
+    ]
+    globalProperties = [
+            apis  : 'false',
+            models: ''
+    ]
+}
+
+compileJava.dependsOn tasks.openApiGenerate
+
+sourceSets {
+    main {
+        java {
+            srcDir "$buildDir/generated/sources/openapi/src/main/java"
+        }
+    }
+}
