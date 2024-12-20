@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class BookMapperTests {
-    BookMapper bookMapper = new BookMapper();
+    final BookMapper bookMapper = new BookMapper();
 
     @Test
     void mapBookTest() {

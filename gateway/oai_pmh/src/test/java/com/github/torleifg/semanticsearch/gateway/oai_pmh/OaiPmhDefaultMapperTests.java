@@ -10,9 +10,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class OaiPmhDefaultMapperTests {
-    OaiPmhDefaultMapper mapper = new OaiPmhDefaultMapper();
+    final OaiPmhDefaultMapper mapper = new OaiPmhDefaultMapper();
 
-    ObjectFactory objectFactory = new ObjectFactory();
+    final ObjectFactory objectFactory = new ObjectFactory();
 
     @Test
     void mapRecordTest() {

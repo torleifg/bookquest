@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class MetadataClientResponse<T> {
-
     private T body;
     private String resumptionToken;
 

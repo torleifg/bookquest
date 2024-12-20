@@ -3,7 +3,6 @@ package com.github.torleifg.semanticsearch.gateway.bokbasen;
 import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
 import com.github.torleifg.semanticsearch.book.service.MetadataGateway;
 import com.github.torleifg.semanticsearch.gateway.common.client.MetadataClient;
-import com.github.torleifg.semanticsearch.gateway.common.client.MetadataClientException;
 import com.github.torleifg.semanticsearch.gateway.common.client.MetadataClientResponse;
 import com.github.torleifg.semanticsearch.gateway.common.repository.ResumptionTokenRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -40,15 +39,11 @@ class BokbasenGateway implements MetadataGateway {
         final String serviceUri = bokbasenProperties.getServiceUri();
         final String requestUri = createRequestUri(serviceUri);
 
-        final BokbasenResponse response;
-        try {
-            final MetadataClientResponse<ONIXMessage> metadataClientResponse = metadataClient.get(requestUri, ONIXMessage.class);
-            response = BokbasenResponse.from(metadataClientResponse.getBody());
+        final MetadataClientResponse<ONIXMessage> metadataClientResponse = metadataClient.get(requestUri, ONIXMessage.class);
+        final BokbasenResponse response = BokbasenResponse.from(metadataClientResponse.getBody());
 
-            Optional.ofNullable(metadataClientResponse.getResumptionToken()).ifPresent(token -> resumptionTokenRepository.save(serviceUri, token));
-        } catch (MetadataClientException ex) {
-            throw new BokbasenException(ex);
-        }
+        Optional.ofNullable(metadataClientResponse.getResumptionToken())
+                .ifPresent(token -> resumptionTokenRepository.save(serviceUri, token));
 
         if (!response.hasProducts()) {
             log.info("Received 0 products from {}", requestUri);

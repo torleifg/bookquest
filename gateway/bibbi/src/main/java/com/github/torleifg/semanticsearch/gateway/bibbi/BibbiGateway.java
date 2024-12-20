@@ -3,7 +3,6 @@ package com.github.torleifg.semanticsearch.gateway.bibbi;
 import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
 import com.github.torleifg.semanticsearch.book.service.MetadataGateway;
 import com.github.torleifg.semanticsearch.gateway.common.client.MetadataClient;
-import com.github.torleifg.semanticsearch.gateway.common.client.MetadataClientException;
 import com.github.torleifg.semanticsearch.gateway.common.client.MetadataClientResponse;
 import com.github.torleifg.semanticsearch.gateway.common.repository.LastModifiedRepository;
 import com.github.torleifg.semanticsearch.gateway.common.repository.ResumptionToken;
@@ -48,16 +47,8 @@ class BibbiGateway implements MetadataGateway {
         final String serviceUri = bibbiProperties.getServiceUri();
         final String requestUri = createRequestUri(serviceUri);
 
-        final BibbiResponse response;
-        try {
-            final MetadataClientResponse<GetV1PublicationsHarvest200Response> metadataClientResponse = metadataClient.get(requestUri, GetV1PublicationsHarvest200Response.class);
-
-            response = BibbiResponse.from(metadataClientResponse.getBody());
-        } catch (MetadataClientException ex) {
-            resumptionTokenRepository.delete(serviceUri);
-
-            throw new BibbiException(ex);
-        }
+        final MetadataClientResponse<GetV1PublicationsHarvest200Response> metadataClientResponse = metadataClient.get(requestUri, GetV1PublicationsHarvest200Response.class);
+        final BibbiResponse response = BibbiResponse.from(metadataClientResponse.getBody());
 
         final Optional<String> resumptionToken = response.getResumptionToken();
 

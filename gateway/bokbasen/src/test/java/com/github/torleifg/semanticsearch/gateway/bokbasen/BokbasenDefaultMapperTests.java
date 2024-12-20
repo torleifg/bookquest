@@ -8,9 +8,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BokbasenDefaultMapperTests {
-    BokbasenDefaultMapper mapper = new BokbasenDefaultMapper();
+    final BokbasenDefaultMapper mapper = new BokbasenDefaultMapper();
 
-    ObjectFactory objectFactory = new ObjectFactory();
+    final ObjectFactory objectFactory = new ObjectFactory();
 
     @Test
     void mapProductTest() {

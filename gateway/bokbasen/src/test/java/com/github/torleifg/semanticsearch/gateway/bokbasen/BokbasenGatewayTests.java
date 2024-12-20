@@ -36,7 +36,7 @@ class BokbasenGatewayTests {
     @InjectMocks
     BokbasenGateway bokbasenGateway;
 
-    ObjectFactory objectFactory = new ObjectFactory();
+    final ObjectFactory objectFactory = new ObjectFactory();
 
     @Test
     void findAllTest() {

@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class DocumentMapperTests {
 
-    DocumentMapper metadataDTOMapper = new DocumentMapper();
+    final DocumentMapper metadataDTOMapper = new DocumentMapper();
 
     @Test
     void mapDocumentTest() {

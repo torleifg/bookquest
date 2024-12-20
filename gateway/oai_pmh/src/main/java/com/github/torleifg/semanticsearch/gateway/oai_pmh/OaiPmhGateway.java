@@ -3,7 +3,6 @@ package com.github.torleifg.semanticsearch.gateway.oai_pmh;
 import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
 import com.github.torleifg.semanticsearch.book.service.MetadataGateway;
 import com.github.torleifg.semanticsearch.gateway.common.client.MetadataClient;
-import com.github.torleifg.semanticsearch.gateway.common.client.MetadataClientException;
 import com.github.torleifg.semanticsearch.gateway.common.client.MetadataClientResponse;
 import com.github.torleifg.semanticsearch.gateway.common.repository.LastModifiedRepository;
 import com.github.torleifg.semanticsearch.gateway.common.repository.ResumptionToken;
@@ -62,16 +61,8 @@ class OaiPmhGateway implements MetadataGateway {
         final String serviceUri = oaiPmhProperties.getServiceUri();
         final String requestUri = createRequestUri(serviceUri);
 
-        final OaiPmhResponse response;
-        try {
-            final MetadataClientResponse<OAIPMHtype> metadataClientResponse = metadataClient.get(requestUri, OAIPMHtype.class);
-
-            response = OaiPmhResponse.from(metadataClientResponse.getBody());
-        } catch (MetadataClientException ex) {
-            resumptionTokenRepository.delete(serviceUri);
-
-            throw new OaiPmhException(ex);
-        }
+        final MetadataClientResponse<OAIPMHtype> metadataClientResponse = metadataClient.get(requestUri, OAIPMHtype.class);
+        final OaiPmhResponse response = OaiPmhResponse.from(metadataClientResponse.getBody());
 
         if (response.hasErrors()) {
 
