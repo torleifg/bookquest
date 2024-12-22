@@ -1,4 +1,4 @@
-package com.github.torleifg.semanticsearch.configuration;
+package com.github.torleifg.semanticsearch.runner;
 
 import com.github.torleifg.semanticsearch.book.service.BookService;
 import org.springframework.beans.factory.annotation.Value;

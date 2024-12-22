@@ -4,7 +4,6 @@ plugins {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
     implementation project(':application')
     implementation project(':gateway:bibbi')
@@ -13,7 +12,4 @@ dependencies {
     implementation project(':adapter:persistence')
     implementation project(':adapter:rest')
     implementation project(':adapter:web')
-
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
 }
