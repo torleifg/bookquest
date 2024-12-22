@@ -1,4 +1,4 @@
-package com.github.torleifg.semanticsearch.configuration;
+package com.github.torleifg.semanticsearch.runner;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
