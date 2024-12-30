@@ -10,6 +10,5 @@ dependencies {
     implementation project(':gateway:bokbasen')
     implementation project(':gateway:oai_pmh')
     implementation project(':adapter:persistence')
-    implementation project(':adapter:rest')
     implementation project(':adapter:web')
 }

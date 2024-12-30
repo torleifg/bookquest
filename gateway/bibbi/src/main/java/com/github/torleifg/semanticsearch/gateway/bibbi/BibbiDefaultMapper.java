@@ -2,8 +2,6 @@ package com.github.torleifg.semanticsearch.gateway.bibbi;
 
 import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
 import no.bs.bibliografisk.model.*;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,8 +9,6 @@ import java.util.stream.Stream;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-@Component
-@ConditionalOnProperty(prefix = "bibbi", name = "mapper", havingValue = "default", matchIfMissing = true)
 class BibbiDefaultMapper implements BibbiMapper {
 
     @Override

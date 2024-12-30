@@ -1,10 +1,8 @@
 package com.github.torleifg.semanticsearch.gateway.oai_pmh;
 
-import com.github.torleifg.semanticsearch.gateway.common.client.MetadataClient;
-import com.github.torleifg.semanticsearch.gateway.common.client.MetadataClientResponse;
-import com.github.torleifg.semanticsearch.gateway.common.repository.LastModifiedRepository;
-import com.github.torleifg.semanticsearch.gateway.common.repository.ResumptionToken;
-import com.github.torleifg.semanticsearch.gateway.common.repository.ResumptionTokenRepository;
+import com.github.torleifg.semanticsearch.book.repository.LastModifiedRepository;
+import com.github.torleifg.semanticsearch.book.repository.ResumptionToken;
+import com.github.torleifg.semanticsearch.book.repository.ResumptionTokenRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,7 +22,7 @@ import static org.mockito.Mockito.when;
 class OaiPmhGatewayTests {
 
     @Mock
-    MetadataClient metadataClient;
+    OaiPmhClient oaiPmhClient;
 
     @Mock
     OaiPmhMapper oaiPmhMapper;
@@ -48,7 +46,7 @@ class OaiPmhGatewayTests {
         when(oaiPmhProperties.getServiceUri()).thenReturn("/harvest");
 
         var response = createResponse();
-        when(metadataClient.get("/harvest?verb=ListRecords&metadataPrefix=marc21", OAIPMHtype.class)).thenReturn(new MetadataClientResponse<>(response));
+        when(oaiPmhClient.get("/harvest?verb=ListRecords&metadataPrefix=marc21")).thenReturn(response);
 
         var metadata = oaiPmhGateway.find();
 
@@ -64,7 +62,7 @@ class OaiPmhGatewayTests {
         when(resumptionTokenRepository.get("/harvest")).thenReturn(Optional.of(new ResumptionToken(resumptionToken, Instant.now())));
 
         var response = createResponse();
-        when(metadataClient.get("/harvest?verb=ListRecords&resumptionToken=" + resumptionToken, OAIPMHtype.class)).thenReturn(new MetadataClientResponse<>(response));
+        when(oaiPmhClient.get("/harvest?verb=ListRecords&resumptionToken=" + resumptionToken)).thenReturn(response);
 
         var metadata = oaiPmhGateway.find();
         assertEquals(0, metadata.size());
@@ -78,7 +76,7 @@ class OaiPmhGatewayTests {
         when(lastModifiedRepository.get("/harvest")).thenReturn(Optional.of(lastModified));
 
         var response = createResponse();
-        when(metadataClient.get("/harvest?verb=ListRecords&metadataPrefix=marc21&from=" + ISO_INSTANT.format(lastModified), OAIPMHtype.class)).thenReturn(new MetadataClientResponse<>(response));
+        when(oaiPmhClient.get("/harvest?verb=ListRecords&metadataPrefix=marc21&from=" + ISO_INSTANT.format(lastModified))).thenReturn(response);
 
         var metadata = oaiPmhGateway.find();
         assertEquals(0, metadata.size());

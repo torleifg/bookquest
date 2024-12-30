@@ -3,12 +3,11 @@ plugins {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 
     implementation 'io.swagger.parser.v3:swagger-parser:2.1.22'
 
     implementation project(':application')
-    implementation project(':gateway:common')
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'

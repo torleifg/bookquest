@@ -1,7 +1,7 @@
 package com.github.torleifg.semanticsearch.adapter.persistence;
 
-import com.github.torleifg.semanticsearch.gateway.common.repository.ResumptionToken;
-import com.github.torleifg.semanticsearch.gateway.common.repository.ResumptionTokenRepository;
+import com.github.torleifg.semanticsearch.book.repository.ResumptionToken;
+import com.github.torleifg.semanticsearch.book.repository.ResumptionTokenRepository;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 

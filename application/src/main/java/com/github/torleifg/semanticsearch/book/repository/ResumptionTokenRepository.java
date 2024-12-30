@@ -1,4 +1,4 @@
-package com.github.torleifg.semanticsearch.gateway.common.repository;
+package com.github.torleifg.semanticsearch.book.repository;
 
 import java.util.Optional;
 

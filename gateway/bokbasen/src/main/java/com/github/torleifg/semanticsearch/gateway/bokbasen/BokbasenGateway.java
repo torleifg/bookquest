@@ -1,14 +1,11 @@
 package com.github.torleifg.semanticsearch.gateway.bokbasen;
 
+import com.github.torleifg.semanticsearch.book.repository.ResumptionTokenRepository;
 import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
 import com.github.torleifg.semanticsearch.book.service.MetadataGateway;
-import com.github.torleifg.semanticsearch.gateway.common.client.MetadataClient;
-import com.github.torleifg.semanticsearch.gateway.common.client.MetadataClientResponse;
-import com.github.torleifg.semanticsearch.gateway.common.repository.ResumptionTokenRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.editeur.ns.onix._3_0.reference.*;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
+import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,17 +14,15 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @Slf4j
-@Component
-@ConditionalOnProperty(prefix = "scheduler", name = "gateway", havingValue = "bokbasen")
 class BokbasenGateway implements MetadataGateway {
-    private final MetadataClient metadataClient;
+    private final BokbasenClient bokbasenClient;
     private final BokbasenMapper bokbasenMapper;
     private final BokbasenProperties bokbasenProperties;
 
     private final ResumptionTokenRepository resumptionTokenRepository;
 
-    BokbasenGateway(MetadataClient metadataClient, BokbasenMapper bokbasenMapper, BokbasenProperties bokbasenProperties, ResumptionTokenRepository resumptionTokenRepository) {
-        this.metadataClient = metadataClient;
+    BokbasenGateway(BokbasenClient bokbasenClient, BokbasenMapper bokbasenMapper, BokbasenProperties bokbasenProperties, ResumptionTokenRepository resumptionTokenRepository) {
+        this.bokbasenClient = bokbasenClient;
         this.bokbasenMapper = bokbasenMapper;
         this.bokbasenProperties = bokbasenProperties;
 
@@ -39,10 +34,13 @@ class BokbasenGateway implements MetadataGateway {
         final String serviceUri = bokbasenProperties.getServiceUri();
         final String requestUri = createRequestUri(serviceUri);
 
-        final MetadataClientResponse<ONIXMessage> metadataClientResponse = metadataClient.get(requestUri, ONIXMessage.class);
-        final BokbasenResponse response = BokbasenResponse.from(metadataClientResponse.getBody());
+        final ResponseEntity<ONIXMessage> entity = bokbasenClient.get(requestUri);
+        final BokbasenResponse response = BokbasenResponse.from(entity.getBody());
 
-        Optional.ofNullable(metadataClientResponse.getResumptionToken())
+        Optional.of(entity.getHeaders())
+                .map(headers -> headers.get("Next"))
+                .map(Collection::stream)
+                .flatMap(Stream::findFirst)
                 .ifPresent(token -> resumptionTokenRepository.save(serviceUri, token));
 
         if (!response.hasProducts()) {

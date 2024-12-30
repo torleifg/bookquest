@@ -19,7 +19,7 @@ class DocumentMapperTests {
         var document = metadataDTOMapper.toDocument(book);
 
         assertNotNull(document.getId());
-        assertNotNull(document.getContent());
+        assertNotNull(document.getText());
         assertNotNull(document.getMetadata());
     }
 
@@ -35,7 +35,7 @@ class DocumentMapperTests {
 
         var document = metadataDTOMapper.toDocument(book);
 
-        assertEquals("passage: title", document.getContent());
+        assertEquals("passage: title", document.getText());
     }
 
     @Test
@@ -50,6 +50,6 @@ class DocumentMapperTests {
 
         var document = metadataDTOMapper.toDocument(book);
 
-        assertEquals("passage: description a b c d e f g h i j k l m n o p q r s t u u v w x y", document.getContent());
+        assertEquals("passage: description a b c d e f g h i j k l m n o p q r s t u u v w x y", document.getText());
     }
 }
