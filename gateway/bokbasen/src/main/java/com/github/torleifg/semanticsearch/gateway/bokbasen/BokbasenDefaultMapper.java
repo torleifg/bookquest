@@ -2,8 +2,6 @@ package com.github.torleifg.semanticsearch.gateway.bokbasen;
 
 import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
 import org.editeur.ns.onix._3_0.reference.*;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.net.URI;
@@ -13,8 +11,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-@Component
-@ConditionalOnProperty(prefix = "bokbasen", name = "mapper", havingValue = "default", matchIfMissing = true)
 class BokbasenDefaultMapper implements BokbasenMapper {
 
     @Override

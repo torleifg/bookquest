@@ -5,7 +5,6 @@ dependencies {
     implementation "org.flywaydb:flyway-database-postgresql"
 
     implementation project(':application')
-    implementation project(':gateway:common')
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'

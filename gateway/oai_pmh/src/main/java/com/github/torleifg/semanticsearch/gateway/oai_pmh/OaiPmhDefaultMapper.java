@@ -4,8 +4,6 @@ import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
 import info.lc.xmlns.marcxchange_v1.DataFieldType;
 import info.lc.xmlns.marcxchange_v1.RecordType;
 import info.lc.xmlns.marcxchange_v1.SubfieldatafieldType;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
 
 import java.net.URI;
 import java.util.List;
@@ -15,8 +13,6 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.groupingBy;
 
-@Component
-@ConditionalOnProperty(prefix = "oai-pmh", name = "mapper", havingValue = "default", matchIfMissing = true)
 class OaiPmhDefaultMapper implements OaiPmhMapper {
 
     @Override

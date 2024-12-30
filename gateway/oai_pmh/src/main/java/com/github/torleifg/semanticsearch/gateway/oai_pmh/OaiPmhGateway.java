@@ -1,22 +1,17 @@
 package com.github.torleifg.semanticsearch.gateway.oai_pmh;
 
+import com.github.torleifg.semanticsearch.book.repository.LastModifiedRepository;
+import com.github.torleifg.semanticsearch.book.repository.ResumptionToken;
+import com.github.torleifg.semanticsearch.book.repository.ResumptionTokenRepository;
 import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
 import com.github.torleifg.semanticsearch.book.service.MetadataGateway;
-import com.github.torleifg.semanticsearch.gateway.common.client.MetadataClient;
-import com.github.torleifg.semanticsearch.gateway.common.client.MetadataClientResponse;
-import com.github.torleifg.semanticsearch.gateway.common.repository.LastModifiedRepository;
-import com.github.torleifg.semanticsearch.gateway.common.repository.ResumptionToken;
-import com.github.torleifg.semanticsearch.gateway.common.repository.ResumptionTokenRepository;
 import info.lc.xmlns.marcxchange_v1.RecordType;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 import lombok.extern.slf4j.Slf4j;
 import org.openarchives.oai._2.HeaderType;
-import org.openarchives.oai._2.OAIPMHtype;
 import org.openarchives.oai._2.StatusType;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
 import org.w3c.dom.Element;
 
 import java.time.Instant;
@@ -27,10 +22,8 @@ import java.util.Optional;
 import static java.time.format.DateTimeFormatter.ISO_INSTANT;
 
 @Slf4j
-@Component
-@ConditionalOnProperty(prefix = "scheduler", name = "gateway", havingValue = "oai-pmh")
 class OaiPmhGateway implements MetadataGateway {
-    private final MetadataClient metadataClient;
+    private final OaiPmhClient oaiPmhClient;
     private final OaiPmhMapper oaiPmhMapper;
     private final OaiPmhProperties oaiPmhProperties;
 
@@ -47,8 +40,8 @@ class OaiPmhGateway implements MetadataGateway {
         }
     }
 
-    OaiPmhGateway(MetadataClient metadataClient, OaiPmhMapper oaiPmhMapper, OaiPmhProperties oaiPmhProperties, ResumptionTokenRepository resumptionTokenRepository, LastModifiedRepository lastModifiedRepository) {
-        this.metadataClient = metadataClient;
+    OaiPmhGateway(OaiPmhClient oaiPmhClient, OaiPmhMapper oaiPmhMapper, OaiPmhProperties oaiPmhProperties, ResumptionTokenRepository resumptionTokenRepository, LastModifiedRepository lastModifiedRepository) {
+        this.oaiPmhClient = oaiPmhClient;
         this.oaiPmhMapper = oaiPmhMapper;
         this.oaiPmhProperties = oaiPmhProperties;
 
@@ -61,8 +54,7 @@ class OaiPmhGateway implements MetadataGateway {
         final String serviceUri = oaiPmhProperties.getServiceUri();
         final String requestUri = createRequestUri(serviceUri);
 
-        final MetadataClientResponse<OAIPMHtype> metadataClientResponse = metadataClient.get(requestUri, OAIPMHtype.class);
-        final OaiPmhResponse response = OaiPmhResponse.from(metadataClientResponse.getBody());
+        final OaiPmhResponse response = OaiPmhResponse.from(oaiPmhClient.get(requestUri));
 
         if (response.hasErrors()) {
 

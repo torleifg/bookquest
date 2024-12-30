@@ -1,18 +1,13 @@
 package com.github.torleifg.semanticsearch.gateway.bibbi;
 
+import com.github.torleifg.semanticsearch.book.repository.LastModifiedRepository;
+import com.github.torleifg.semanticsearch.book.repository.ResumptionToken;
+import com.github.torleifg.semanticsearch.book.repository.ResumptionTokenRepository;
 import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
 import com.github.torleifg.semanticsearch.book.service.MetadataGateway;
-import com.github.torleifg.semanticsearch.gateway.common.client.MetadataClient;
-import com.github.torleifg.semanticsearch.gateway.common.client.MetadataClientResponse;
-import com.github.torleifg.semanticsearch.gateway.common.repository.LastModifiedRepository;
-import com.github.torleifg.semanticsearch.gateway.common.repository.ResumptionToken;
-import com.github.torleifg.semanticsearch.gateway.common.repository.ResumptionTokenRepository;
 import lombok.extern.slf4j.Slf4j;
 import no.bs.bibliografisk.model.BibliographicRecordMetadata;
-import no.bs.bibliografisk.model.GetV1PublicationsHarvest200Response;
 import no.bs.bibliografisk.model.GetV1PublicationsHarvest200ResponsePublicationsInner;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -23,18 +18,16 @@ import static java.time.format.DateTimeFormatter.ISO_INSTANT;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Slf4j
-@Component
-@ConditionalOnProperty(prefix = "scheduler", name = "gateway", havingValue = "bibbi")
 class BibbiGateway implements MetadataGateway {
-    private final MetadataClient metadataClient;
+    private final BibbiClient bibbiClient;
     private final BibbiMapper bibbiMapper;
     private final BibbiProperties bibbiProperties;
 
     private final ResumptionTokenRepository resumptionTokenRepository;
     private final LastModifiedRepository lastModifiedRepository;
 
-    BibbiGateway(MetadataClient metadataClient, BibbiMapper bibbiMapper, BibbiProperties bibbiProperties, ResumptionTokenRepository resumptionTokenRepository, LastModifiedRepository lastModifiedRepository) {
-        this.metadataClient = metadataClient;
+    BibbiGateway(BibbiClient bibbiClient, BibbiMapper bibbiMapper, BibbiProperties bibbiProperties, ResumptionTokenRepository resumptionTokenRepository, LastModifiedRepository lastModifiedRepository) {
+        this.bibbiClient = bibbiClient;
         this.bibbiMapper = bibbiMapper;
         this.bibbiProperties = bibbiProperties;
 
@@ -47,8 +40,7 @@ class BibbiGateway implements MetadataGateway {
         final String serviceUri = bibbiProperties.getServiceUri();
         final String requestUri = createRequestUri(serviceUri);
 
-        final MetadataClientResponse<GetV1PublicationsHarvest200Response> metadataClientResponse = metadataClient.get(requestUri, GetV1PublicationsHarvest200Response.class);
-        final BibbiResponse response = BibbiResponse.from(metadataClientResponse.getBody());
+        final BibbiResponse response = BibbiResponse.from(bibbiClient.get(requestUri));
 
         final Optional<String> resumptionToken = response.getResumptionToken();
 

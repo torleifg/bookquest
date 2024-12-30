@@ -41,27 +41,25 @@ server:
   port: 8080
 
 scheduler:
-  enabled: false
-  # gateway: bibbi
-  # gateway: bokbasen
-  gateway: oai-pmh
+  enabled: true
   initial-delay: 5
   fixed-delay: 3600
 
-oai-pmh:
-  service-uri: https://oai.aja.bs.no/mlnb
-  ttl: 5
-  mapper: default
+gateway:
+  type: bibbi
 
 bibbi:
   service-uri: https://bibliografisk.bs.no/v1/publications/harvest
   ttl: 5
   mapper: default
 
+oai-pmh:
+  service-uri: https://oai.aja.bs.no/mlnb
+  ttl: 5
+  mapper: default
+
 bokbasen:
   service-uri: https://api.bokbasen.io/metadata/export/onix/v1
-  subscription: extended
   after: 19700101090000
-  client: bokbasen
   audience: https://api.bokbasen.io/metadata/
   mapper: default

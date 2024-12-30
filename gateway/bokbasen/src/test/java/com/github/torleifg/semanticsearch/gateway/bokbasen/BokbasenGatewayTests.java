@@ -1,9 +1,7 @@
 package com.github.torleifg.semanticsearch.gateway.bokbasen;
 
-import com.github.torleifg.semanticsearch.gateway.common.client.MetadataClient;
-import com.github.torleifg.semanticsearch.gateway.common.client.MetadataClientResponse;
-import com.github.torleifg.semanticsearch.gateway.common.repository.ResumptionToken;
-import com.github.torleifg.semanticsearch.gateway.common.repository.ResumptionTokenRepository;
+import com.github.torleifg.semanticsearch.book.repository.ResumptionToken;
+import com.github.torleifg.semanticsearch.book.repository.ResumptionTokenRepository;
 import org.editeur.ns.onix._3_0.reference.ONIXMessage;
 import org.editeur.ns.onix._3_0.reference.ObjectFactory;
 import org.junit.jupiter.api.Test;
@@ -11,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -22,7 +21,7 @@ import static org.mockito.Mockito.when;
 class BokbasenGatewayTests {
 
     @Mock
-    MetadataClient metadataClient;
+    BokbasenClient bokbasenClient;
 
     @Mock
     BokbasenMapper bokbasenMapper;
@@ -46,7 +45,7 @@ class BokbasenGatewayTests {
 
         var response = createResponse();
 
-        when(metadataClient.get("/harvest?subscription=extended&after=19700101090000", ONIXMessage.class)).thenReturn(new MetadataClientResponse<>(response));
+        when(bokbasenClient.get("/harvest?subscription=extended&after=19700101090000")).thenReturn(ResponseEntity.ok(response));
 
         var metadata = bokbasenGateway.find();
         assertEquals(0, metadata.size());
@@ -62,7 +61,7 @@ class BokbasenGatewayTests {
 
         var response = createResponse();
 
-        when(metadataClient.get("/harvest?subscription=extended&next=token", ONIXMessage.class)).thenReturn(new MetadataClientResponse<>(response));
+        when(bokbasenClient.get("/harvest?subscription=extended&next=token")).thenReturn(ResponseEntity.ok(response));
 
         var metadata = bokbasenGateway.find();
         assertEquals(0, metadata.size());

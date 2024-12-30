@@ -1,11 +1,9 @@
 rootProject.name = 'book-reviews-semantic-search'
 
-include 'gateway:common'
 include 'gateway:bibbi'
 include 'gateway:bokbasen'
 include 'gateway:oai_pmh'
 include 'adapter:persistence'
-include 'adapter:rest'
 include 'adapter:web'
 include 'application'
 include 'runner'

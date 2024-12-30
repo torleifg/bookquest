@@ -3,13 +3,12 @@ plugins {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
     implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'
     implementation 'com.sun.xml.bind:jaxb-impl:4.0.5'
 
     implementation project(':application')
-    implementation project(':gateway:common')
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'

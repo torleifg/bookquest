@@ -1,5 +1,7 @@
-package com.github.torleifg.semanticsearch.adapter.rest_client;
+package com.github.torleifg.semanticsearch.gateway.bokbasen;
 
+import com.github.torleifg.semanticsearch.book.repository.ResumptionTokenRepository;
+import com.github.torleifg.semanticsearch.book.service.MetadataGateway;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -15,40 +17,39 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
 
 @Configuration
-public class RestClientConfig {
-
-    @Value("${scheduler.gateway}")
-    private String gateway;
-
-    @Value("${bokbasen.client}")
-    private String client;
+@ConditionalOnProperty(prefix = "gateway", name = "type", havingValue = "bokbasen")
+class BokbasenConfig {
 
     @Value("${bokbasen.audience}")
     private String audience;
 
     @Bean
-    public RestClient restClient(RestClient.Builder builder, OAuth2AuthorizedClientManager authorizedClientManager) {
-        switch (gateway.toLowerCase()) {
-            case "bokbasen" -> {
-                final OAuth2ClientHttpRequestInterceptor requestInterceptor = new OAuth2ClientHttpRequestInterceptor(authorizedClientManager);
-                requestInterceptor.setClientRegistrationIdResolver(it -> client);
-
-                return builder
-                        .requestFactory(new JdkClientHttpRequestFactory())
-                        .requestInterceptor(requestInterceptor)
-                        .build();
-            }
-            case "bibbi", "oai-pmh" -> {
-                return builder
-                        .requestFactory(new JdkClientHttpRequestFactory())
-                        .build();
-            }
-            default -> throw new IllegalArgumentException("Unknown gateway: " + gateway);
-        }
+    MetadataGateway metadataGateway(BokbasenClient bokbasenClient, BokbasenMapper bokbasenMapper, BokbasenProperties bokbasenProperties, ResumptionTokenRepository resumptionTokenRepository) {
+        return new BokbasenGateway(bokbasenClient, bokbasenMapper, bokbasenProperties, resumptionTokenRepository);
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "scheduler", name = "gateway", havingValue = "bokbasen")
+    BokbasenMapper bokbasenMapper(BokbasenProperties bokbasenProperties) {
+        return new BokbasenDefaultMapper();
+    }
+
+    @Bean
+    BokbasenClient bokbasenClient(RestClient restClient) {
+        return new BokbasenClient(restClient);
+    }
+
+    @Bean
+    public RestClient restClient(RestClient.Builder builder, OAuth2AuthorizedClientManager authorizedClientManager) {
+        final OAuth2ClientHttpRequestInterceptor requestInterceptor = new OAuth2ClientHttpRequestInterceptor(authorizedClientManager);
+        requestInterceptor.setClientRegistrationIdResolver(it -> "bokbasen");
+
+        return builder
+                .requestFactory(new JdkClientHttpRequestFactory())
+                .requestInterceptor(requestInterceptor)
+                .build();
+    }
+
+    @Bean
     public OAuth2AuthorizedClientManager authorizedClientManager(ClientRegistrationRepository clientRegistrationRepository, OAuth2AuthorizedClientService clientService) {
         final RestClientClientCredentialsTokenResponseClient tokenResponseClient = new RestClientClientCredentialsTokenResponseClient();
 

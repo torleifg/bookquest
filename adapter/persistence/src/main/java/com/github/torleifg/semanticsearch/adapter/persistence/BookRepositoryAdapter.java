@@ -29,7 +29,8 @@ class BookRepositoryAdapter implements BookRepository {
 
     private final DocumentMapper documentMapper;
 
-    private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper().registerModule(new JavaTimeModule());
+    private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper()
+            .registerModule(new JavaTimeModule());
 
     BookRepositoryAdapter(JdbcClient jdbcClient, VectorStore vectorStore, DocumentMapper documentMapper) {
         this.jdbcClient = jdbcClient;
@@ -180,9 +181,11 @@ class BookRepositoryAdapter implements BookRepository {
     }
 
     private List<Document> vectorQuery(String query, int limit) {
-        return vectorStore.similaritySearch(SearchRequest.defaults()
-                .withQuery("query: " + query)
-                .withTopK(limit));
+        return vectorStore.similaritySearch(SearchRequest.builder()
+                .query("query: " + query)
+                .similarityThreshold(0.8)
+                .topK(limit)
+                .build());
     }
 
     private List<Document> vectorSimilarity(int limit) {
@@ -196,10 +199,11 @@ class BookRepositoryAdapter implements BookRepository {
             return List.of();
         }
 
-        return vectorStore.similaritySearch(SearchRequest.defaults()
-                .withQuery("passage: " + randomDocument.get().getContent())
-                .withSimilarityThreshold(0.8)
-                .withTopK(limit));
+        return vectorStore.similaritySearch(SearchRequest.builder()
+                .query("passage: " + randomDocument.get().getText())
+                .similarityThreshold(0.8)
+                .topK(limit)
+                .build());
     }
 
     private static class BookRowMapper implements RowMapper<Book> {
