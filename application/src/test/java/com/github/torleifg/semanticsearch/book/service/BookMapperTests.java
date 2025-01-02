@@ -1,9 +1,10 @@
 package com.github.torleifg.semanticsearch.book.service;
 
+import com.github.torleifg.semanticsearch.book.domain.Metadata;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
-import java.util.Set;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -19,13 +20,11 @@ class BookMapperTests {
         dto.setIsbn("isbn");
         dto.setTitle("title");
         dto.setPublisher("publisher");
-        dto.setAuthors(Set.of("author"));
-        dto.setIllustrators(Set.of("illustrator"));
-        dto.setTranslators(Set.of("translator"));
+        dto.setContributors(List.of(new MetadataDTO.Contributor(List.of(MetadataDTO.Contributor.Role.AUT), "Author")));
         dto.setPublishedYear("2020");
         dto.setDescription("description");
-        dto.setGenreAndForm(Set.of("genre"));
-        dto.setAbout(Set.of("about"));
+        dto.setGenreAndForm(List.of("genre"));
+        dto.setAbout(List.of("about"));
         dto.setThumbnailUrl(URI.create("thumbnailUrl"));
 
         var book = bookMapper.toBook(dto);
@@ -38,13 +37,14 @@ class BookMapperTests {
         assertEquals("isbn", metadata.getIsbn());
         assertEquals("title", metadata.getTitle());
         assertEquals("publisher", metadata.getPublisher());
-        assertEquals(Set.of("author"), metadata.getAuthors());
-        assertEquals(Set.of("translator"), metadata.getTranslators());
-        assertEquals(Set.of("illustrator"), metadata.getIllustrators());
+        assertEquals(1, metadata.getContributors().size());
+        assertEquals(1, metadata.getContributors().getFirst().roles().size());
+        assertEquals(Metadata.Contributor.Role.AUT, metadata.getContributors().getFirst().roles().getFirst());
+        assertEquals("Author", metadata.getContributors().getFirst().name());
         assertEquals("2020", metadata.getPublishedYear());
         assertEquals("description", metadata.getDescription());
-        assertEquals(Set.of("genre"), metadata.getGenreAndForm());
-        assertEquals(Set.of("about"), metadata.getAbout());
+        assertEquals(List.of("genre"), metadata.getGenreAndForm());
+        assertEquals(List.of("about"), metadata.getAbout());
         assertEquals(URI.create("thumbnailUrl"), metadata.getThumbnailUrl());
     }
 }

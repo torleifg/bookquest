@@ -4,6 +4,7 @@ import com.github.torleifg.semanticsearch.book.domain.Book;
 import com.github.torleifg.semanticsearch.book.repository.BookRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class BookService {
         this.bookMapper = bookMapper;
     }
 
+    @Transactional
     public boolean findAndSave() {
         final List<MetadataDTO> dtos = metadataGateway.find();
 

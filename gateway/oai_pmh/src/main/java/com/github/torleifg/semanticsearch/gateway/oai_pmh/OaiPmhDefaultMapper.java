@@ -6,12 +6,14 @@ import info.lc.xmlns.marcxchange_v1.RecordType;
 import info.lc.xmlns.marcxchange_v1.SubfieldatafieldType;
 
 import java.net.URI;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 
 class OaiPmhDefaultMapper implements OaiPmhMapper {
 
@@ -31,81 +33,79 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
         metadata.setDeleted(false);
 
         final Map<String, List<DataFieldType>> dataFieldsByTag = record.getDatafield().stream()
-                .collect(groupingBy(DataFieldType::getTag));
+                .collect(groupingBy(DataFieldType::getTag, LinkedHashMap::new, toList()));
 
-        getSubfieldValue(dataFieldsByTag.getOrDefault("020", List.of()), "a")
+        dataFieldsByTag.getOrDefault("020", List.of()).stream()
+                .flatMap(dataField -> getSubfieldValue(dataField.getSubfield(), "a"))
                 .findFirst()
                 .ifPresent(metadata::setIsbn);
 
-        final Optional<String> title = getSubfieldValue(dataFieldsByTag.getOrDefault("245", List.of()), "a")
+        final Optional<String> title = dataFieldsByTag.getOrDefault("245", List.of()).stream()
+                .flatMap(dataField -> getSubfieldValue(dataField.getSubfield(), "a"))
                 .findFirst();
 
-        final Optional<String> remainderOfTitle = getSubfieldValue(dataFieldsByTag.getOrDefault("245", List.of()), "b")
+        final Optional<String> remainderOfTitle = dataFieldsByTag.getOrDefault("245", List.of()).stream()
+                .flatMap(dataField -> getSubfieldValue(dataField.getSubfield(), "b"))
                 .findFirst();
 
         if (title.isPresent() && remainderOfTitle.isPresent()) {
             metadata.setTitle(title.get() + " : " + remainderOfTitle.get());
         } else title.ifPresent(metadata::setTitle);
 
-        getSubfieldValue(dataFieldsByTag.getOrDefault("264", List.of()), "b")
+        dataFieldsByTag.getOrDefault("264", List.of()).stream()
+                .flatMap(dataField -> getSubfieldValue(dataField.getSubfield(), "b"))
                 .findFirst()
                 .ifPresent(metadata::setPublisher);
 
-        Stream.concat(
-                getSubfieldValue(
-                        dataFieldsByTag.getOrDefault("100", List.of()), "a", new Filter("4", "aut")),
-                getSubfieldValue(
-                        dataFieldsByTag.getOrDefault("700", List.of()), "a", new Filter("4", "aut"))
-        ).forEach(metadata.getAuthors()::add);
+        final List<DataFieldType> dataFields = Stream.concat(
+                        dataFieldsByTag.getOrDefault("100", List.of()).stream(),
+                        dataFieldsByTag.getOrDefault("700", List.of()).stream())
+                .filter(dataField -> dataField.getSubfield().stream().anyMatch(subfield -> subfield.getCode().equals("4")))
+                .toList();
 
-        Stream.concat(
-                getSubfieldValue(
-                        dataFieldsByTag.getOrDefault("100", List.of()), "a", new Filter("4", "trl")),
-                getSubfieldValue(
-                        dataFieldsByTag.getOrDefault("700", List.of()), "a", new Filter("4", "trl"))
-        ).forEach(metadata.getTranslators()::add);
+        for (final DataFieldType dataField : dataFields) {
+            final String name = getSubfieldValue(dataField.getSubfield(), "a")
+                    .findFirst()
+                    .orElse(null);
 
-        Stream.concat(
-                getSubfieldValue(
-                        dataFieldsByTag.getOrDefault("100", List.of()), "a", new Filter("4", "ill")),
-                getSubfieldValue(
-                        dataFieldsByTag.getOrDefault("700", List.of()), "a", new Filter("4", "ill"))
-        ).forEach(metadata.getIllustrators()::add);
+            final List<MetadataDTO.Contributor.Role> roles = getSubfieldValue(dataField.getSubfield(), "4")
+                    .map(String::toUpperCase)
+                    .map(MetadataDTO.Contributor.Role::valueOf)
+                    .toList();
 
-        getSubfieldValue(dataFieldsByTag.getOrDefault("264", List.of()), "c")
+            metadata.getContributors().add(new MetadataDTO.Contributor(roles, name));
+        }
+
+        dataFieldsByTag.getOrDefault("264", List.of()).stream()
+                .flatMap(dataField -> getSubfieldValue(dataField.getSubfield(), "c"))
                 .findFirst()
                 .ifPresent(metadata::setPublishedYear);
 
-        getSubfieldValue(dataFieldsByTag.getOrDefault("520", List.of()), "a")
+        dataFieldsByTag.getOrDefault("520", List.of()).stream()
+                .flatMap(dataField -> getSubfieldValue(dataField.getSubfield(), "a"))
                 .findFirst()
                 .ifPresent(metadata::setDescription);
 
-        getSubfieldValue(dataFieldsByTag.getOrDefault("650", List.of()), "a", new Filter("9", "nob"))
+        dataFieldsByTag.getOrDefault("650", List.of()).stream()
+                .filter(dataField -> OaiPmhDefaultMapper.filter(dataField.getSubfield(), new Filter("9", "nob")))
+                .flatMap(dataField -> getSubfieldValue(dataField.getSubfield(), "a"))
                 .forEach(metadata.getAbout()::add);
 
-        getSubfieldValue(dataFieldsByTag.getOrDefault("655", List.of()), "a", new Filter("9", "nob"))
+        dataFieldsByTag.getOrDefault("655", List.of()).stream()
+                .filter(dataField -> OaiPmhDefaultMapper.filter(dataField.getSubfield(), new Filter("9", "nob")))
+                .flatMap(dataField -> getSubfieldValue(dataField.getSubfield(), "a"))
                 .forEach(metadata.getGenreAndForm()::add);
 
-        getSubfieldValue(dataFieldsByTag.getOrDefault("856", List.of()), "u")
+        dataFieldsByTag.getOrDefault("856", List.of()).stream()
+                .flatMap(dataField -> getSubfieldValue(dataField.getSubfield(), "u"))
                 .map(URI::create)
                 .forEach(metadata::setThumbnailUrl);
 
         return metadata;
     }
 
-    private static Stream<String> getSubfieldValue(List<DataFieldType> dataFieldTypes, String subfieldCode) {
-        return dataFieldTypes.stream()
-                .map(DataFieldType::getSubfield)
-                .flatMap(List::stream)
-                .filter(subfield -> subfield.getCode().equals(subfieldCode))
-                .map(SubfieldatafieldType::getValue);
-    }
-
-    private static Stream<String> getSubfieldValue(List<DataFieldType> dataFieldTypes, String subfieldCode, Filter filter) {
-        return dataFieldTypes.stream()
-                .map(DataFieldType::getSubfield)
-                .filter(subfields -> OaiPmhDefaultMapper.filter(subfields, filter))
-                .flatMap(List::stream)
+    private static Stream<String> getSubfieldValue(List<SubfieldatafieldType> subfields, String subfieldCode) {
+        return subfields.stream()
                 .filter(subfield -> subfield.getCode().equals(subfieldCode))
                 .map(SubfieldatafieldType::getValue);
     }

@@ -1,5 +1,6 @@
 package com.github.torleifg.semanticsearch.gateway.bokbasen;
 
+import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
 import org.editeur.ns.onix._3_0.reference.*;
 import org.junit.jupiter.api.Test;
 
@@ -53,37 +54,21 @@ class BokbasenDefaultMapperTests {
 
         descriptiveDetail.getTitleDetail().add(title);
 
-        var author = objectFactory.createContributor();
+        var contributor = objectFactory.createContributor();
 
         var authorRole = objectFactory.createContributorRole();
         authorRole.setValue(List17.fromValue("A01"));
-        author.getContent().add(authorRole);
-
-        var authorName = objectFactory.createPersonNameInverted();
-        authorName.setValue("author");
-        author.getContent().add(authorName);
-
-        var translator = objectFactory.createContributor();
-
-        var translatorRole = objectFactory.createContributorRole();
-        translatorRole.setValue(List17.fromValue("B06"));
-        translator.getContent().add(translatorRole);
-
-        var translatorName = objectFactory.createPersonNameInverted();
-        translatorName.setValue("translator");
-        translator.getContent().add(translatorName);
-
-        var illustrator = objectFactory.createContributor();
+        contributor.getContent().add(authorRole);
 
         var illustratorRole = objectFactory.createContributorRole();
         illustratorRole.setValue(List17.fromValue("A12"));
-        illustrator.getContent().add(illustratorRole);
+        contributor.getContent().add(illustratorRole);
 
-        var illustratorName = objectFactory.createPersonNameInverted();
-        illustratorName.setValue("illustrator");
-        illustrator.getContent().add(illustratorName);
+        var contributorName = objectFactory.createPersonNameInverted();
+        contributorName.setValue("contributor");
+        contributor.getContent().add(contributorName);
 
-        descriptiveDetail.getContributor().addAll(List.of(author, translator, illustrator));
+        descriptiveDetail.getContributor().add(contributor);
 
         var genre = objectFactory.createSubject();
 
@@ -198,9 +183,10 @@ class BokbasenDefaultMapperTests {
         assertEquals("isbn", metadata.getIsbn());
         assertEquals("title : remainder of title", metadata.getTitle());
         assertEquals("publisher", metadata.getPublisher());
-        assertEquals(1, metadata.getAuthors().size());
-        assertEquals(1, metadata.getTranslators().size());
-        assertEquals(1, metadata.getIllustrators().size());
+        assertEquals(1, metadata.getContributors().size());
+        assertEquals(2, metadata.getContributors().getFirst().roles().size());
+        assertEquals(MetadataDTO.Contributor.Role.AUT, metadata.getContributors().getFirst().roles().getFirst());
+        assertEquals(MetadataDTO.Contributor.Role.ILL, metadata.getContributors().getFirst().roles().getLast());
         assertEquals("1970", metadata.getPublishedYear());
         assertEquals("description", metadata.getDescription());
         assertEquals(1, metadata.getGenreAndForm().size());

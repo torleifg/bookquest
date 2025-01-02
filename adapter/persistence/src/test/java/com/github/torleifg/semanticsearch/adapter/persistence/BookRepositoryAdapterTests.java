@@ -215,7 +215,7 @@ class BookRepositoryAdapterTests {
         metadata.setIsbn("isbn");
         metadata.setTitle("title");
         metadata.setDescription("description");
-        metadata.setAbout(Set.of("about"));
+        metadata.setAbout(List.of("about"));
 
         book.setMetadata(metadata);
 

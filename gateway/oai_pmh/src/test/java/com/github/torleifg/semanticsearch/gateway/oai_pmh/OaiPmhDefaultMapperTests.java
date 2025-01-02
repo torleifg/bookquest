@@ -1,5 +1,6 @@
 package com.github.torleifg.semanticsearch.gateway.oai_pmh;
 
+import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
 import info.lc.xmlns.marcxchange_v1.DataFieldType;
 import info.lc.xmlns.marcxchange_v1.ObjectFactory;
 import info.lc.xmlns.marcxchange_v1.SubfieldatafieldType;
@@ -31,20 +32,11 @@ class OaiPmhDefaultMapperTests {
         var publisherValue = createSubfield("b", "publisher");
         publisher.getSubfield().add(publisherValue);
 
-        var author = createDataField("100");
+        var entry = createDataField("100");
         var authorRole = createSubfield("4", "aut");
-        var authorValue = createSubfield("a", "author");
-        author.getSubfield().addAll(List.of(authorRole, authorValue));
-
-        var translator = createDataField("700");
-        var translatorRole = createSubfield("4", "trl");
-        var translatorValue = createSubfield("a", "translator");
-        translator.getSubfield().addAll(List.of(translatorRole, translatorValue));
-
-        var illustrator = createDataField("700");
         var illustratorRole = createSubfield("4", "ill");
-        var illustratorValue = createSubfield("a", "illustrator");
-        illustrator.getSubfield().addAll(List.of(illustratorRole, illustratorValue));
+        var entryValue = createSubfield("a", "entry");
+        entry.getSubfield().addAll(List.of(authorRole, illustratorRole, entryValue));
 
         var publishedYear = createDataField("264");
         var publishedYearValue = createSubfield("c", "1970");
@@ -68,7 +60,7 @@ class OaiPmhDefaultMapperTests {
         var thumbnailUrlValue = createSubfield("u", "http://thumbnailUrl");
         thumbnailUrl.getSubfield().add(thumbnailUrlValue);
 
-        record.getDatafield().addAll(List.of(isbn, genre, title, publisher, author, translator, illustrator, publishedYear, description, about, genre, thumbnailUrl));
+        record.getDatafield().addAll(List.of(isbn, title, publisher, entry, publishedYear, description, about, genre, thumbnailUrl));
 
         var metadata = mapper.from("id", record);
 
@@ -78,9 +70,10 @@ class OaiPmhDefaultMapperTests {
         assertEquals("isbn", metadata.getIsbn());
         assertEquals("title : remainder of title", metadata.getTitle());
         assertEquals("publisher", metadata.getPublisher());
-        assertEquals(1, metadata.getAuthors().size());
-        assertEquals(1, metadata.getTranslators().size());
-        assertEquals(1, metadata.getIllustrators().size());
+        assertEquals(2, metadata.getContributors().getFirst().roles().size());
+        assertEquals(MetadataDTO.Contributor.Role.AUT, metadata.getContributors().getFirst().roles().getFirst());
+        assertEquals(MetadataDTO.Contributor.Role.ILL, metadata.getContributors().getFirst().roles().getLast());
+        assertEquals("entry", metadata.getContributors().getFirst().name());
         assertEquals("1970", metadata.getPublishedYear());
         assertEquals("description", metadata.getDescription());
         assertEquals(1, metadata.getAbout().size());

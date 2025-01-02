@@ -1,17 +1,23 @@
 package com.github.torleifg.semanticsearch.gateway.bokbasen;
 
 import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
+import org.editeur.ns.onix._3_0.reference.Date;
 import org.editeur.ns.onix._3_0.reference.*;
 
 import java.io.Serializable;
 import java.net.URI;
 import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 class BokbasenDefaultMapper implements BokbasenMapper {
+    private static final Map<String, MetadataDTO.Contributor.Role> CONTRIBUTOR_ROLE_MAPPING = new HashMap<>();
+
+    static {
+        CONTRIBUTOR_ROLE_MAPPING.put("A01", MetadataDTO.Contributor.Role.AUT);
+        CONTRIBUTOR_ROLE_MAPPING.put("A12", MetadataDTO.Contributor.Role.ILL);
+    }
 
     @Override
     public MetadataDTO from(String id) {
@@ -53,14 +59,40 @@ class BokbasenDefaultMapper implements BokbasenMapper {
             metadata.setTitle(title.get() + " : " + remainderOfTitle.get());
         } else title.ifPresent(metadata::setTitle);
 
-        getContributor(descriptiveDetail, List17.fromValue("A01"))
-                .forEach(metadata.getAuthors()::add);
+        final List<Contributor> contributors = Stream.ofNullable(descriptiveDetail)
+                .map(DescriptiveDetail::getContributor)
+                .flatMap(Collection::stream)
+                .toList();
 
-        getContributor(descriptiveDetail, List17.fromValue("B06"))
-                .forEach(metadata.getTranslators()::add);
+        for (final Contributor contributor : contributors) {
+            final List<MetadataDTO.Contributor.Role> roles = contributor.getContent().stream()
+                    .filter(ContributorRole.class::isInstance)
+                    .map(ContributorRole.class::cast)
+                    .map(ContributorRole::getValue)
+                    .map(List17::value)
+                    .map(CONTRIBUTOR_ROLE_MAPPING::get)
+                    .toList();
 
-        getContributor(descriptiveDetail, List17.fromValue("A12"))
-                .forEach(metadata.getIllustrators()::add);
+            final String name = contributor.getContent().stream()
+                    .map(content -> {
+                        if (content instanceof PersonNameInverted personNameInverted) {
+                            return personNameInverted.getValue();
+                        } else if (content instanceof PersonName personName) {
+                            return personName.getValue();
+                        }
+
+                        return null;
+                    })
+                    .filter(Objects::nonNull)
+                    .findFirst()
+                    .orElse(null);
+
+            if (roles.isEmpty()) {
+                continue;
+            }
+
+            metadata.getContributors().add(new MetadataDTO.Contributor(roles, name));
+        }
 
         final List<Subject> subjects = descriptiveDetail.getSubject();
 
@@ -172,34 +204,6 @@ class BokbasenDefaultMapper implements BokbasenMapper {
         return metadata;
     }
 
-    private static Stream<String> getContributor(DescriptiveDetail descriptiveDetail, List17 role) {
-        return Stream.ofNullable(descriptiveDetail)
-                .map(DescriptiveDetail::getContributor)
-                .flatMap(Collection::stream)
-                .map(Contributor::getContent)
-                .filter(content -> {
-                    for (final Object object : content) {
-                        if (object instanceof ContributorRole contributorRole) {
-                            return contributorRole.getValue() == role;
-                        }
-                    }
-
-                    return false;
-                })
-                .map(content -> {
-                    for (final Object object : content) {
-                        if (object instanceof PersonNameInverted name) {
-                            return name.getValue();
-                        } else if (object instanceof PersonName name) {
-                            return name.getValue();
-                        }
-                    }
-
-                    return null;
-                })
-                .filter(Objects::nonNull);
-    }
-
     private static boolean isProprietary(SubjectSchemeIdentifier subjectSchemeIdentifier) {
         return subjectSchemeIdentifier.getValue() == List27.fromValue("24");
     }
@@ -219,3 +223,4 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                 .flatMap(Collection::stream);
     }
 }
+

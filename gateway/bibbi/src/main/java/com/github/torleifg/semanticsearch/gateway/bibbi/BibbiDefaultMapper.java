@@ -3,10 +3,11 @@ package com.github.torleifg.semanticsearch.gateway.bibbi;
 import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
 import no.bs.bibliografisk.model.*;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 class BibbiDefaultMapper implements BibbiMapper {
@@ -38,23 +39,26 @@ class BibbiDefaultMapper implements BibbiMapper {
             metadata.setPublisher(publication.getPublisher());
         }
 
-        Stream.ofNullable(publication.getCreator())
+        final Map<String, List<Creator>> creatorsByName = Stream.ofNullable(publication.getCreator())
                 .flatMap(List::stream)
-                .filter(creator -> creator.getRole() == Creator.RoleEnum.AUT)
-                .map(Creator::getName)
-                .forEach(metadata.getAuthors()::add);
+                .collect(groupingBy(Creator::getName, LinkedHashMap::new, toList()));
 
-        Stream.ofNullable(publication.getCreator())
-                .flatMap(List::stream)
-                .filter(creator -> creator.getRole() == Creator.RoleEnum.TRL)
-                .map(Creator::getName)
-                .forEach(metadata.getTranslators()::add);
+        for (final Map.Entry<String, List<Creator>> entry : creatorsByName.entrySet()) {
+            final List<MetadataDTO.Contributor.Role> roles = new ArrayList<>();
+            final String name = entry.getKey();
 
-        Stream.ofNullable(publication.getCreator())
-                .flatMap(List::stream)
-                .filter(creator -> creator.getRole() == Creator.RoleEnum.ILL)
-                .map(Creator::getName)
-                .forEach(metadata.getIllustrators()::add);
+            for (final Creator creator : entry.getValue()) {
+                if (creator.getRole() != null) {
+                    roles.add(MetadataDTO.Contributor.Role.valueOf(creator.getRole().name()));
+                }
+            }
+
+            if (roles.isEmpty()) {
+                continue;
+            }
+
+            metadata.getContributors().add(new MetadataDTO.Contributor(roles, name));
+        }
 
         if (isNotBlank(publication.getDatePublished())) {
             metadata.setPublishedYear(publication.getDatePublished());

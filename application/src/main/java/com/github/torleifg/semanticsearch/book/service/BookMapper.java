@@ -4,6 +4,8 @@ import com.github.torleifg.semanticsearch.book.domain.Book;
 import com.github.torleifg.semanticsearch.book.domain.Metadata;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class BookMapper {
 
@@ -16,9 +18,16 @@ public class BookMapper {
         metadata.setIsbn(dto.getIsbn());
         metadata.setTitle(dto.getTitle());
         metadata.setPublisher(dto.getPublisher());
-        metadata.setAuthors(dto.getAuthors());
-        metadata.setTranslators(dto.getTranslators());
-        metadata.setIllustrators(dto.getIllustrators());
+
+        for (final MetadataDTO.Contributor contributor : dto.getContributors()) {
+            final List<Metadata.Contributor.Role> roles = contributor.roles().stream()
+                    .map(MetadataDTO.Contributor.Role::name)
+                    .map(Metadata.Contributor.Role::valueOf)
+                    .toList();
+
+            metadata.getContributors().add(new Metadata.Contributor(roles, contributor.name()));
+        }
+
         metadata.setPublishedYear(dto.getPublishedYear());
         metadata.setDescription(dto.getDescription());
         metadata.setAbout(dto.getAbout());
