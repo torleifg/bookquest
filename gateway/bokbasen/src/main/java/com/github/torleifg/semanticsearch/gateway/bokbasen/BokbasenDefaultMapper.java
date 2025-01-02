@@ -96,6 +96,8 @@ class BokbasenDefaultMapper implements BokbasenMapper {
 
         final List<Subject> subjects = descriptiveDetail.getSubject();
 
+        final List<MetadataDTO.Classification> classifications = new ArrayList<>();
+
         if (subjects != null && !subjects.isEmpty()) {
             for (final Subject subject : subjects) {
                 final List<Object> content = subject.getContent();
@@ -103,12 +105,14 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                 if (content != null && !content.isEmpty()) {
                     SubjectSchemeIdentifier subjectSchemeIdentifier = null;
                     SubjectSchemeName subjectSchemeName = null;
+                    SubjectCode subjectCode = null;
                     SubjectHeadingText subjectHeadingText = null;
 
                     for (final Object object : content) {
                         switch (object) {
                             case SubjectSchemeIdentifier identifier -> subjectSchemeIdentifier = identifier;
                             case SubjectSchemeName name -> subjectSchemeName = name;
+                            case SubjectCode code -> subjectCode = code;
                             case SubjectHeadingText text -> subjectHeadingText = text;
                             default -> {
                             }
@@ -119,6 +123,10 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                         continue;
                     }
 
+                    final String code = Optional.ofNullable(subjectCode)
+                            .map(SubjectCode::getValue)
+                            .orElse(null);
+
                     final String text = subjectHeadingText.getValue();
 
                     if (subjectSchemeIdentifier != null) {
@@ -127,13 +135,13 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                                 final String name = subjectSchemeName.getValue();
 
                                 if (name.equals("Bokbasen_Subject")) {
-                                    metadata.getAbout().add(text);
+                                    metadata.getAbout().add(new MetadataDTO.Classification(null, List.of(new MetadataDTO.LocalizedString("nob", text))));
                                 }
                             }
                         }
 
                         if (isGenreAndForm(subjectSchemeIdentifier)) {
-                            metadata.getGenreAndForm().add(text);
+                            metadata.getGenreAndForm().add(new MetadataDTO.Classification(code, List.of(new MetadataDTO.LocalizedString("nob", text))));
                         }
                     }
                 }

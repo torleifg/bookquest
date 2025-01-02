@@ -43,7 +43,7 @@ class BibbiDefaultMapper implements BibbiMapper {
                 .flatMap(List::stream)
                 .collect(groupingBy(Creator::getName, LinkedHashMap::new, toList()));
 
-        for (final Map.Entry<String, List<Creator>> entry : creatorsByName.entrySet()) {
+        for (final var entry : creatorsByName.entrySet()) {
             final List<MetadataDTO.Contributor.Role> roles = new ArrayList<>();
             final String name = entry.getKey();
 
@@ -51,10 +51,6 @@ class BibbiDefaultMapper implements BibbiMapper {
                 if (creator.getRole() != null) {
                     roles.add(MetadataDTO.Contributor.Role.valueOf(creator.getRole().name()));
                 }
-            }
-
-            if (roles.isEmpty()) {
-                continue;
             }
 
             metadata.getContributors().add(new MetadataDTO.Contributor(roles, name));
@@ -68,17 +64,30 @@ class BibbiDefaultMapper implements BibbiMapper {
             metadata.setDescription(publication.getDescription());
         }
 
-        Stream.ofNullable(publication.getGenre())
-                .flatMap(List::stream)
-                .map(Genre::getName)
-                .map(GenreName::getNob)
-                .forEach(metadata.getGenreAndForm()::add);
+        for (final Subject about : publication.getAbout()) {
+            final SubjectName name = about.getName();
 
-        Stream.ofNullable(publication.getAbout())
-                .flatMap(List::stream)
-                .map(Subject::getName)
-                .map(SubjectName::getNob)
-                .forEach(metadata.getAbout()::add);
+            final List<MetadataDTO.LocalizedString> names = List.of(
+                    new MetadataDTO.LocalizedString("nob", name.getNob()),
+                    new MetadataDTO.LocalizedString("nno", name.getNno())
+            );
+
+            metadata.getAbout().add(new MetadataDTO.Classification(about.getId(), names));
+        }
+
+        for (final Genre genre : publication.getGenre()) {
+            final GenreName name = genre.getName();
+
+            final List<MetadataDTO.LocalizedString> names = new ArrayList<>();
+            names.add(new MetadataDTO.LocalizedString("nob", name.getNob()));
+            names.add(new MetadataDTO.LocalizedString("nno", name.getNno()));
+
+            if (name.getEng() != null) {
+                names.add(new MetadataDTO.LocalizedString("eng", name.getEng()));
+            }
+
+            metadata.getGenreAndForm().add(new MetadataDTO.Classification(genre.getId(), names));
+        }
 
         Optional.ofNullable(publication.getImage())
                 .map(PublicationImage::getThumbnailUrl)

@@ -137,7 +137,7 @@
                         <span th:text="${contributor.name}"></span>
                             (
                             <span th:each="role, roleIterStat : ${contributor.roles}">
-                                <span th:text="${role.getTerm()}"></span>
+                                <span th:text="${role.term}"></span>
                                 <span th:if="${!roleIterStat.last}">, </span>
                             </span>
                             )
@@ -163,11 +163,19 @@
                         </li>
                         <li th:if="${#lists.size(metadata.about) > 0}">
                             <strong>About: </strong>
-                            <span th:text="${#strings.listJoin(metadata.about, '; ')}"></span>
+                            <span th:each="about, iterStat : ${metadata.about}">
+                                <span th:each="name : ${about.names()}" th:if="${name.language == 'nob'}"
+                                      th:text="${name.text}"></span>
+                                <span th:if="${!iterStat.last}">; </span>
+                            </span>
                         </li>
                         <li th:if="${#lists.size(metadata.genreAndForm) > 0}">
                             <strong>Genre and form: </strong>
-                            <span th:text="${#strings.listJoin(metadata.genreAndForm, '; ')}"></span>
+                            <span th:each="genreAndForm, iterStat : ${metadata.genreAndForm}">
+                                <span th:each="name : ${genreAndForm.names()}" th:if="${name.language == 'nob'}"
+                                      th:text="${name.text}"></span>
+                                <span th:if="${!iterStat.last}">; </span>
+                            </span>
                         </li>
                     </ul>
                 </details>

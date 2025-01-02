@@ -70,28 +70,18 @@ class BokbasenDefaultMapperTests {
 
         descriptiveDetail.getContributor().add(contributor);
 
-        var genre = objectFactory.createSubject();
-
-        var genreSubjectSchemeIdentifier = objectFactory.createSubjectSchemeIdentifier();
-        genreSubjectSchemeIdentifier.setValue(List27.fromValue("24"));
-        genre.getContent().add(genreSubjectSchemeIdentifier);
-
-        var genreSubjectSchemeName = objectFactory.createSubjectSchemeName();
-        genreSubjectSchemeName.setValue("Bokbasen_Genre");
-        genre.getContent().add(genreSubjectSchemeName);
-
-        var genreSubjectHeadingText = objectFactory.createSubjectHeadingText();
-        genreSubjectHeadingText.setValue("genre");
-        genre.getContent().add(genreSubjectHeadingText);
-
         var genreAndForm = objectFactory.createSubject();
 
         var genreAndFormSubjectSchemeIdentifier = objectFactory.createSubjectSchemeIdentifier();
         genreAndFormSubjectSchemeIdentifier.setValue(List27.fromValue("C8"));
         genreAndForm.getContent().add(genreAndFormSubjectSchemeIdentifier);
 
+        final SubjectCode genreSubjectCode = objectFactory.createSubjectCode();
+        genreSubjectCode.setValue("id");
+        genreAndForm.getContent().add(genreSubjectCode);
+
         var genreAndFormSubjectHeadingText = objectFactory.createSubjectHeadingText();
-        genreAndFormSubjectHeadingText.setValue("form");
+        genreAndFormSubjectHeadingText.setValue("genre");
         genreAndForm.getContent().add(genreAndFormSubjectHeadingText);
 
         var about = objectFactory.createSubject();
@@ -108,7 +98,7 @@ class BokbasenDefaultMapperTests {
         aboutSubjectHeadingText.setValue("about");
         about.getContent().add(aboutSubjectHeadingText);
 
-        descriptiveDetail.getSubject().addAll(List.of(genre, genreAndForm, about));
+        descriptiveDetail.getSubject().addAll(List.of(genreAndForm, about));
         product.setDescriptiveDetail(descriptiveDetail);
 
         var publishingDetail = objectFactory.createPublishingDetail();
@@ -189,8 +179,16 @@ class BokbasenDefaultMapperTests {
         assertEquals(MetadataDTO.Contributor.Role.ILL, metadata.getContributors().getFirst().roles().getLast());
         assertEquals("1970", metadata.getPublishedYear());
         assertEquals("description", metadata.getDescription());
-        assertEquals(1, metadata.getGenreAndForm().size());
         assertEquals(1, metadata.getAbout().size());
+        assertNull(metadata.getAbout().getFirst().id());
+        assertEquals(1, metadata.getAbout().getFirst().names().size());
+        assertEquals("nob", metadata.getAbout().getFirst().names().getFirst().language());
+        assertEquals("about", metadata.getAbout().getFirst().names().getFirst().text());
+        assertEquals(1, metadata.getGenreAndForm().size());
+        assertEquals("id", metadata.getGenreAndForm().getFirst().id());
+        assertEquals(1, metadata.getGenreAndForm().getFirst().names().size());
+        assertEquals("nob", metadata.getGenreAndForm().getFirst().names().getFirst().language());
+        assertEquals("genre", metadata.getGenreAndForm().getFirst().names().getFirst().text());
         assertEquals("http://thumbnailUrl", metadata.getThumbnailUrl().toString());
     }
 

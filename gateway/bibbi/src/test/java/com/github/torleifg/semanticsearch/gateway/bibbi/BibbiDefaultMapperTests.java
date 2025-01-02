@@ -36,16 +36,20 @@ class BibbiDefaultMapperTests {
 
         var genreName = new GenreName();
         genreName.setNob("genre");
+        genreName.setEng("genre");
 
         var genre = new Genre();
+        genre.setId("id");
         genre.setName(genreName);
 
         publication.setGenre(List.of(genre));
 
         var subjectName = new SubjectName();
-        subjectName.setNob("subject");
+        subjectName.setNob("about");
+        subjectName.setNno("about");
 
         var subject = new Subject();
+        subject.setId("id");
         subject.setName(subjectName);
 
         publication.setAbout(List.of(subject));
@@ -68,8 +72,20 @@ class BibbiDefaultMapperTests {
         assertEquals("creator", metadata.getContributors().getFirst().name());
         assertEquals("1970", metadata.getPublishedYear());
         assertEquals("description", metadata.getDescription());
-        assertEquals(1, metadata.getGenreAndForm().size());
         assertEquals(1, metadata.getAbout().size());
+        assertEquals("id", metadata.getAbout().getFirst().id());
+        assertEquals(2, metadata.getAbout().getFirst().names().size());
+        assertEquals("nob", metadata.getAbout().getFirst().names().getFirst().language());
+        assertEquals("about", metadata.getAbout().getFirst().names().getFirst().text());
+        assertEquals("nno", metadata.getAbout().getFirst().names().getLast().language());
+        assertEquals("about", metadata.getAbout().getFirst().names().getLast().text());
+        assertEquals(1, metadata.getGenreAndForm().size());
+        assertEquals("id", metadata.getGenreAndForm().getFirst().id());
+        assertEquals(3, metadata.getGenreAndForm().getFirst().names().size());
+        assertEquals("nob", metadata.getGenreAndForm().getFirst().names().getFirst().language());
+        assertEquals("genre", metadata.getGenreAndForm().getFirst().names().getFirst().text());
+        assertEquals("eng", metadata.getGenreAndForm().getFirst().names().getLast().language());
+        assertEquals("genre", metadata.getGenreAndForm().getFirst().names().getLast().text());
         assertEquals("http://thumbnailUrl", metadata.getThumbnailUrl().toString());
     }
 

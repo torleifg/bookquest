@@ -30,12 +30,25 @@ public class BookMapper {
 
         metadata.setPublishedYear(dto.getPublishedYear());
         metadata.setDescription(dto.getDescription());
-        metadata.setAbout(dto.getAbout());
-        metadata.setGenreAndForm(dto.getGenreAndForm());
+
+        for (final MetadataDTO.Classification classification : dto.getAbout()) {
+            metadata.getAbout().add(new Metadata.Classification(classification.id(), getLocalizedStrings(classification)));
+        }
+
+        for (final MetadataDTO.Classification classification : dto.getGenreAndForm()) {
+            metadata.getGenreAndForm().add(new Metadata.Classification(classification.id(), getLocalizedStrings(classification)));
+        }
+
         metadata.setThumbnailUrl(dto.getThumbnailUrl());
 
         book.setMetadata(metadata);
 
         return book;
+    }
+
+    private static List<Metadata.LocalizedString> getLocalizedStrings(MetadataDTO.Classification classification) {
+        return classification.names().stream()
+                .map(localizedString -> new Metadata.LocalizedString(localizedString.language(), localizedString.text()))
+                .toList();
     }
 }

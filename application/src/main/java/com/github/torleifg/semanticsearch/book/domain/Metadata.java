@@ -18,10 +18,16 @@ public class Metadata {
     private String publishedYear;
     private String description;
 
-    private List<String> about = new ArrayList<>();
-    private List<String> genreAndForm = new ArrayList<>();
+    private List<Classification> about = new ArrayList<>();
+    private List<Classification> genreAndForm = new ArrayList<>();
 
     private URI thumbnailUrl;
+
+    public record Classification(String id, List<LocalizedString> names) {
+    }
+
+    public record LocalizedString(String language, String text) {
+    }
 
     public record Contributor(List<Role> roles, String name) {
 
