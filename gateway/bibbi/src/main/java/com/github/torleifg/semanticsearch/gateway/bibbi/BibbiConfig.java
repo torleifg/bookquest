@@ -30,14 +30,11 @@ class BibbiConfig {
     }
 
     @Bean
-    BibbiClient bibbiClient(RestClient restClient) {
-        return new BibbiClient(restClient);
-    }
-
-    @Bean
-    RestClient restClient(RestClient.Builder builder) {
-        return builder
+    BibbiClient bibbiClient(RestClient.Builder builder) {
+        final RestClient restClient = builder
                 .requestFactory(new JdkClientHttpRequestFactory())
                 .build();
+
+        return new BibbiClient(restClient);
     }
 }
