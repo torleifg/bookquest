@@ -32,11 +32,11 @@ public class BookMapper {
         metadata.setDescription(dto.getDescription());
 
         for (final MetadataDTO.Classification classification : dto.getAbout()) {
-            metadata.getAbout().add(new Metadata.Classification(classification.id(), getLocalizedStrings(classification)));
+            metadata.getAbout().add(new Metadata.Classification(classification.id(), classification.source(), getLocalizedStrings(classification)));
         }
 
         for (final MetadataDTO.Classification classification : dto.getGenreAndForm()) {
-            metadata.getGenreAndForm().add(new Metadata.Classification(classification.id(), getLocalizedStrings(classification)));
+            metadata.getGenreAndForm().add(new Metadata.Classification(classification.id(), classification.source(), getLocalizedStrings(classification)));
         }
 
         metadata.setThumbnailUrl(dto.getThumbnailUrl());

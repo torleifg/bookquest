@@ -30,6 +30,12 @@ class BokbasenConfig {
 
     @Bean
     BokbasenMapper bokbasenMapper(BokbasenProperties bokbasenProperties) {
+        final String mapper = bokbasenProperties.getMapper();
+
+        /*
+        Mapper factory
+         */
+
         return new BokbasenDefaultMapper();
     }
 

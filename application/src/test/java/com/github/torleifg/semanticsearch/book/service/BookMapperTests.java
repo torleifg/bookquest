@@ -23,8 +23,8 @@ class BookMapperTests {
         dto.setContributors(List.of(new MetadataDTO.Contributor(List.of(MetadataDTO.Contributor.Role.AUT), "Author")));
         dto.setPublishedYear("2020");
         dto.setDescription("description");
-        dto.setAbout(List.of(new MetadataDTO.Classification("id", List.of(new MetadataDTO.LocalizedString("nob", "about")))));
-        dto.setGenreAndForm(List.of(new MetadataDTO.Classification("id", List.of(new MetadataDTO.LocalizedString("nob", "genre")))));
+        dto.setAbout(List.of(new MetadataDTO.Classification("id", "source", List.of(new MetadataDTO.LocalizedString("nob", "about")))));
+        dto.setGenreAndForm(List.of(new MetadataDTO.Classification("id", "source", List.of(new MetadataDTO.LocalizedString("nob", "genre")))));
         dto.setThumbnailUrl(URI.create("thumbnailUrl"));
 
         var book = bookMapper.toBook(dto);
@@ -44,15 +44,17 @@ class BookMapperTests {
         assertEquals("2020", metadata.getPublishedYear());
         assertEquals("description", metadata.getDescription());
         assertEquals(1, metadata.getAbout().size());
+        assertEquals("id", metadata.getAbout().getFirst().id());
+        assertEquals("source", metadata.getAbout().getFirst().source());
         assertEquals(1, metadata.getAbout().getFirst().names().size());
         assertEquals("nob", metadata.getAbout().getFirst().names().getFirst().language());
         assertEquals("about", metadata.getAbout().getFirst().names().getFirst().text());
-        assertEquals("id", metadata.getAbout().getFirst().id());
         assertEquals(1, metadata.getGenreAndForm().size());
+        assertEquals("id", metadata.getGenreAndForm().getFirst().id());
+        assertEquals("source", metadata.getGenreAndForm().getFirst().source());
         assertEquals(1, metadata.getGenreAndForm().getFirst().names().size());
         assertEquals("nob", metadata.getGenreAndForm().getFirst().names().getFirst().language());
         assertEquals("genre", metadata.getGenreAndForm().getFirst().names().getFirst().text());
-        assertEquals("id", metadata.getGenreAndForm().getFirst().id());
         assertEquals(URI.create("thumbnailUrl"), metadata.getThumbnailUrl());
     }
 }

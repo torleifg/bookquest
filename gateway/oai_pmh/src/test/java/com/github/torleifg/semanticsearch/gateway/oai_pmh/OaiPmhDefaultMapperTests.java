@@ -48,27 +48,31 @@ class OaiPmhDefaultMapperTests {
 
         var aboutNob = createDataField("650");
         var aboutNobId = createSubfield("0", "id");
+        var aboutNobSource = createSubfield("2", "bibbi");
         var aboutNobLanguage = createSubfield("9", "nob");
         var aboutNobValue = createSubfield("a", "about");
-        aboutNob.getSubfield().addAll(List.of(aboutNobId, aboutNobLanguage, aboutNobValue));
+        aboutNob.getSubfield().addAll(List.of(aboutNobId, aboutNobSource, aboutNobLanguage, aboutNobValue));
 
         var aboutNno = createDataField("650");
         var aboutNnoId = createSubfield("0", "id");
+        var aboutNnoSource = createSubfield("2", "bibbi");
         var aboutNnoLanguage = createSubfield("9", "nno");
         var aboutNnoValue = createSubfield("a", "about");
-        aboutNno.getSubfield().addAll(List.of(aboutNnoId, aboutNnoLanguage, aboutNnoValue));
+        aboutNno.getSubfield().addAll(List.of(aboutNnoId, aboutNnoSource, aboutNnoLanguage, aboutNnoValue));
 
         var genreNob = createDataField("655");
         var genreNobId = createSubfield("0", "id");
+        var genreNobSource = createSubfield("2", "ntsf");
         var genreNobLanguage = createSubfield("9", "nob");
         var genreMobValue = createSubfield("a", "genre");
-        genreNob.getSubfield().addAll(List.of(genreNobId, genreNobLanguage, genreMobValue));
+        genreNob.getSubfield().addAll(List.of(genreNobId, genreNobSource, genreNobLanguage, genreMobValue));
 
         var genreEng = createDataField("655");
         var genreEngId = createSubfield("0", "id");
+        var genreEngSource = createSubfield("2", "ntsf");
         var genreEngLanguage = createSubfield("9", "eng");
         var genreEngValue = createSubfield("a", "genre");
-        genreEng.getSubfield().addAll(List.of(genreEngId, genreEngLanguage, genreEngValue));
+        genreEng.getSubfield().addAll(List.of(genreEngId, genreEngSource, genreEngLanguage, genreEngValue));
 
         var thumbnailUrl = createDataField("856");
         var thumbnailUrlValue = createSubfield("u", "http://thumbnailUrl");
@@ -92,6 +96,7 @@ class OaiPmhDefaultMapperTests {
         assertEquals("description", metadata.getDescription());
         assertEquals(1, metadata.getAbout().size());
         assertEquals("id", metadata.getAbout().getFirst().id());
+        assertEquals("bibbi", metadata.getAbout().getFirst().source());
         assertEquals(2, metadata.getAbout().getFirst().names().size());
         assertEquals("nob", metadata.getAbout().getFirst().names().getFirst().language());
         assertEquals("about", metadata.getAbout().getFirst().names().getFirst().text());
@@ -99,6 +104,7 @@ class OaiPmhDefaultMapperTests {
         assertEquals("about", metadata.getAbout().getFirst().names().getLast().text());
         assertEquals(1, metadata.getGenreAndForm().size());
         assertEquals("id", metadata.getGenreAndForm().getFirst().id());
+        assertEquals("ntsf", metadata.getGenreAndForm().getFirst().source());
         assertEquals(2, metadata.getGenreAndForm().getFirst().names().size());
         assertEquals("nob", metadata.getGenreAndForm().getFirst().names().getFirst().language());
         assertEquals("genre", metadata.getGenreAndForm().getFirst().names().getFirst().text());

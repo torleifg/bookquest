@@ -48,6 +48,6 @@ public class BookService {
     }
 
     public List<Book> semanticSimilarity() {
-        return bookRepository.semanticSimilarity();
+        return bookRepository.semanticSimilarity(20);
     }
 }

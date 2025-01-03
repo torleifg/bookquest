@@ -20,6 +20,12 @@ class OaiPmhConfig {
 
     @Bean
     OaiPmhMapper bibbiMapper(OaiPmhProperties oaiPmhProperties) {
+        final String mapper = oaiPmhProperties.getMapper();
+
+        /*
+        Mapper factory
+         */
+
         return new OaiPmhDefaultMapper();
     }
 

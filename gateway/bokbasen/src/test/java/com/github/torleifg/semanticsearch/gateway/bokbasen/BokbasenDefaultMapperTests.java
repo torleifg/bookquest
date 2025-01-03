@@ -181,11 +181,13 @@ class BokbasenDefaultMapperTests {
         assertEquals("description", metadata.getDescription());
         assertEquals(1, metadata.getAbout().size());
         assertNull(metadata.getAbout().getFirst().id());
+        assertEquals("Bokbasen_Subject", metadata.getAbout().getFirst().source());
         assertEquals(1, metadata.getAbout().getFirst().names().size());
         assertEquals("nob", metadata.getAbout().getFirst().names().getFirst().language());
         assertEquals("about", metadata.getAbout().getFirst().names().getFirst().text());
         assertEquals(1, metadata.getGenreAndForm().size());
         assertEquals("id", metadata.getGenreAndForm().getFirst().id());
+        assertEquals("ntsf", metadata.getGenreAndForm().getFirst().source());
         assertEquals(1, metadata.getGenreAndForm().getFirst().names().size());
         assertEquals("nob", metadata.getGenreAndForm().getFirst().names().getFirst().language());
         assertEquals("genre", metadata.getGenreAndForm().getFirst().names().getFirst().text());

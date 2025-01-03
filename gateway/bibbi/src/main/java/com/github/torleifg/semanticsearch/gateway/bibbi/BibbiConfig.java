@@ -20,6 +20,12 @@ class BibbiConfig {
 
     @Bean
     BibbiMapper bibbiMapper(BibbiProperties bibbiProperties) {
+        final String mapper = bibbiProperties.getMapper();
+
+        /*
+        Mapper factory
+         */
+
         return new BibbiDefaultMapper();
     }
 

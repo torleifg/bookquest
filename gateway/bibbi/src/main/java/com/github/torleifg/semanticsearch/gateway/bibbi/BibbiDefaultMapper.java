@@ -72,7 +72,7 @@ class BibbiDefaultMapper implements BibbiMapper {
                     new MetadataDTO.LocalizedString("nno", name.getNno())
             );
 
-            metadata.getAbout().add(new MetadataDTO.Classification(about.getId(), names));
+            metadata.getAbout().add(new MetadataDTO.Classification(about.getId(), about.getVocabulary().getValue(), names));
         }
 
         for (final Genre genre : publication.getGenre()) {
@@ -86,7 +86,11 @@ class BibbiDefaultMapper implements BibbiMapper {
                 names.add(new MetadataDTO.LocalizedString("eng", name.getEng()));
             }
 
-            metadata.getGenreAndForm().add(new MetadataDTO.Classification(genre.getId(), names));
+            final String source = Optional.ofNullable(genre.getVocabulary())
+                    .map(Genre.VocabularyEnum::getValue)
+                    .orElse("undefined");
+
+            metadata.getGenreAndForm().add(new MetadataDTO.Classification(genre.getId(), source, names));
         }
 
         Optional.ofNullable(publication.getImage())

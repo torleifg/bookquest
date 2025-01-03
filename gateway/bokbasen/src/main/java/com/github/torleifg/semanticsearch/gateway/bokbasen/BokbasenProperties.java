@@ -11,4 +11,5 @@ class BokbasenProperties {
     private String serviceUri;
     private String after;
     private String subscription;
+    private String mapper;
 }

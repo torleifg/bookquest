@@ -1,23 +1,17 @@
 package com.github.torleifg.semanticsearch.gateway.bokbasen;
 
 import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
-import org.editeur.ns.onix._3_0.reference.Date;
 import org.editeur.ns.onix._3_0.reference.*;
 
 import java.io.Serializable;
 import java.net.URI;
 import java.util.Collection;
-import java.util.Map;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 class BokbasenDefaultMapper implements BokbasenMapper {
-    private static final Map<String, MetadataDTO.Contributor.Role> CONTRIBUTOR_ROLE_MAPPING = new HashMap<>();
-
-    static {
-        CONTRIBUTOR_ROLE_MAPPING.put("A01", MetadataDTO.Contributor.Role.AUT);
-        CONTRIBUTOR_ROLE_MAPPING.put("A12", MetadataDTO.Contributor.Role.ILL);
-    }
 
     @Override
     public MetadataDTO from(String id) {
@@ -70,7 +64,7 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                     .map(ContributorRole.class::cast)
                     .map(ContributorRole::getValue)
                     .map(List17::value)
-                    .map(CONTRIBUTOR_ROLE_MAPPING::get)
+                    .map(MetadataDTO.Contributor.Role::fromOnix)
                     .toList();
 
             final String name = contributor.getContent().stream()
@@ -95,8 +89,6 @@ class BokbasenDefaultMapper implements BokbasenMapper {
         }
 
         final List<Subject> subjects = descriptiveDetail.getSubject();
-
-        final List<MetadataDTO.Classification> classifications = new ArrayList<>();
 
         if (subjects != null && !subjects.isEmpty()) {
             for (final Subject subject : subjects) {
@@ -135,13 +127,13 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                                 final String name = subjectSchemeName.getValue();
 
                                 if (name.equals("Bokbasen_Subject")) {
-                                    metadata.getAbout().add(new MetadataDTO.Classification(null, List.of(new MetadataDTO.LocalizedString("nob", text))));
+                                    metadata.getAbout().add(new MetadataDTO.Classification(null, "Bokbasen_Subject", List.of(new MetadataDTO.LocalizedString("nob", text))));
                                 }
                             }
                         }
 
                         if (isGenreAndForm(subjectSchemeIdentifier)) {
-                            metadata.getGenreAndForm().add(new MetadataDTO.Classification(code, List.of(new MetadataDTO.LocalizedString("nob", text))));
+                            metadata.getGenreAndForm().add(new MetadataDTO.Classification(code, "ntsf", List.of(new MetadataDTO.LocalizedString("nob", text))));
                         }
                     }
                 }

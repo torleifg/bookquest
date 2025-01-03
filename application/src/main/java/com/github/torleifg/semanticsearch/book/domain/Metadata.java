@@ -23,7 +23,7 @@ public class Metadata {
 
     private URI thumbnailUrl;
 
-    public record Classification(String id, List<LocalizedString> names) {
+    public record Classification(String id, String source, List<LocalizedString> names) {
     }
 
     public record LocalizedString(String language, String text) {

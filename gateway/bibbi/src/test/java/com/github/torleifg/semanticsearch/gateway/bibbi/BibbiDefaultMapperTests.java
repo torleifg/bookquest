@@ -34,25 +34,27 @@ class BibbiDefaultMapperTests {
         publication.setDatePublished("1970");
         publication.setDescription("description");
 
+        var aboutName = new SubjectName();
+        aboutName.setNob("about");
+        aboutName.setNno("about");
+
+        var about = new Subject();
+        about.setId("id");
+        about.setVocabulary(Subject.VocabularyEnum.BIBBI);
+        about.setName(aboutName);
+
+        publication.setAbout(List.of(about));
+
         var genreName = new GenreName();
         genreName.setNob("genre");
         genreName.setEng("genre");
 
         var genre = new Genre();
         genre.setId("id");
+        genre.setVocabulary(Genre.VocabularyEnum.NTSF);
         genre.setName(genreName);
 
         publication.setGenre(List.of(genre));
-
-        var subjectName = new SubjectName();
-        subjectName.setNob("about");
-        subjectName.setNno("about");
-
-        var subject = new Subject();
-        subject.setId("id");
-        subject.setName(subjectName);
-
-        publication.setAbout(List.of(subject));
 
         var publicationImage = new PublicationImage();
         publicationImage.setThumbnailUrl(URI.create("http://thumbnailUrl"));
@@ -74,6 +76,7 @@ class BibbiDefaultMapperTests {
         assertEquals("description", metadata.getDescription());
         assertEquals(1, metadata.getAbout().size());
         assertEquals("id", metadata.getAbout().getFirst().id());
+        assertEquals("bibbi", metadata.getAbout().getFirst().source());
         assertEquals(2, metadata.getAbout().getFirst().names().size());
         assertEquals("nob", metadata.getAbout().getFirst().names().getFirst().language());
         assertEquals("about", metadata.getAbout().getFirst().names().getFirst().text());
@@ -81,6 +84,7 @@ class BibbiDefaultMapperTests {
         assertEquals("about", metadata.getAbout().getFirst().names().getLast().text());
         assertEquals(1, metadata.getGenreAndForm().size());
         assertEquals("id", metadata.getGenreAndForm().getFirst().id());
+        assertEquals("ntsf", metadata.getGenreAndForm().getFirst().source());
         assertEquals(3, metadata.getGenreAndForm().getFirst().names().size());
         assertEquals("nob", metadata.getGenreAndForm().getFirst().names().getFirst().language());
         assertEquals("genre", metadata.getGenreAndForm().getFirst().names().getFirst().text());
