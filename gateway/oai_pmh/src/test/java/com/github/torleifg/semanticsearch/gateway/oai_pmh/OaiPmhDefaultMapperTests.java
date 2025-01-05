@@ -1,5 +1,6 @@
 package com.github.torleifg.semanticsearch.gateway.oai_pmh;
 
+import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
 import info.lc.xmlns.marcxchange_v1.DataFieldType;
 import info.lc.xmlns.marcxchange_v1.ObjectFactory;
 import info.lc.xmlns.marcxchange_v1.SubfieldatafieldType;
@@ -31,20 +32,11 @@ class OaiPmhDefaultMapperTests {
         var publisherValue = createSubfield("b", "publisher");
         publisher.getSubfield().add(publisherValue);
 
-        var author = createDataField("100");
+        var entry = createDataField("100");
         var authorRole = createSubfield("4", "aut");
-        var authorValue = createSubfield("a", "author");
-        author.getSubfield().addAll(List.of(authorRole, authorValue));
-
-        var translator = createDataField("700");
-        var translatorRole = createSubfield("4", "trl");
-        var translatorValue = createSubfield("a", "translator");
-        translator.getSubfield().addAll(List.of(translatorRole, translatorValue));
-
-        var illustrator = createDataField("700");
         var illustratorRole = createSubfield("4", "ill");
-        var illustratorValue = createSubfield("a", "illustrator");
-        illustrator.getSubfield().addAll(List.of(illustratorRole, illustratorValue));
+        var entryValue = createSubfield("a", "entry");
+        entry.getSubfield().addAll(List.of(authorRole, illustratorRole, entryValue));
 
         var publishedYear = createDataField("264");
         var publishedYearValue = createSubfield("c", "1970");
@@ -54,21 +46,39 @@ class OaiPmhDefaultMapperTests {
         var descriptionValue = createSubfield("a", "description");
         description.getSubfield().add(descriptionValue);
 
-        var about = createDataField("650");
-        var aboutLanguage = createSubfield("9", "nob");
-        var aboutValue = createSubfield("a", "about");
-        about.getSubfield().addAll(List.of(aboutLanguage, aboutValue));
+        var aboutNob = createDataField("650");
+        var aboutNobId = createSubfield("0", "id");
+        var aboutNobSource = createSubfield("2", "bibbi");
+        var aboutNobLanguage = createSubfield("9", "nob");
+        var aboutNobValue = createSubfield("a", "about");
+        aboutNob.getSubfield().addAll(List.of(aboutNobId, aboutNobSource, aboutNobLanguage, aboutNobValue));
 
-        var genre = createDataField("655");
-        var genreLanguage = createSubfield("9", "nob");
-        var genreValue = createSubfield("a", "genre");
-        genre.getSubfield().addAll(List.of(genreLanguage, genreValue));
+        var aboutNno = createDataField("650");
+        var aboutNnoId = createSubfield("0", "id");
+        var aboutNnoSource = createSubfield("2", "bibbi");
+        var aboutNnoLanguage = createSubfield("9", "nno");
+        var aboutNnoValue = createSubfield("a", "about");
+        aboutNno.getSubfield().addAll(List.of(aboutNnoId, aboutNnoSource, aboutNnoLanguage, aboutNnoValue));
+
+        var genreNob = createDataField("655");
+        var genreNobId = createSubfield("0", "id");
+        var genreNobSource = createSubfield("2", "ntsf");
+        var genreNobLanguage = createSubfield("9", "nob");
+        var genreMobValue = createSubfield("a", "genre");
+        genreNob.getSubfield().addAll(List.of(genreNobId, genreNobSource, genreNobLanguage, genreMobValue));
+
+        var genreEng = createDataField("655");
+        var genreEngId = createSubfield("0", "id");
+        var genreEngSource = createSubfield("2", "ntsf");
+        var genreEngLanguage = createSubfield("9", "eng");
+        var genreEngValue = createSubfield("a", "genre");
+        genreEng.getSubfield().addAll(List.of(genreEngId, genreEngSource, genreEngLanguage, genreEngValue));
 
         var thumbnailUrl = createDataField("856");
         var thumbnailUrlValue = createSubfield("u", "http://thumbnailUrl");
         thumbnailUrl.getSubfield().add(thumbnailUrlValue);
 
-        record.getDatafield().addAll(List.of(isbn, genre, title, publisher, author, translator, illustrator, publishedYear, description, about, genre, thumbnailUrl));
+        record.getDatafield().addAll(List.of(isbn, title, publisher, entry, publishedYear, description, aboutNob, aboutNno, genreNob, genreEng, thumbnailUrl));
 
         var metadata = mapper.from("id", record);
 
@@ -78,13 +88,30 @@ class OaiPmhDefaultMapperTests {
         assertEquals("isbn", metadata.getIsbn());
         assertEquals("title : remainder of title", metadata.getTitle());
         assertEquals("publisher", metadata.getPublisher());
-        assertEquals(1, metadata.getAuthors().size());
-        assertEquals(1, metadata.getTranslators().size());
-        assertEquals(1, metadata.getIllustrators().size());
+        assertEquals(2, metadata.getContributors().getFirst().roles().size());
+        assertEquals(MetadataDTO.Contributor.Role.AUT, metadata.getContributors().getFirst().roles().getFirst());
+        assertEquals(MetadataDTO.Contributor.Role.ILL, metadata.getContributors().getFirst().roles().getLast());
+        assertEquals("entry", metadata.getContributors().getFirst().name());
         assertEquals("1970", metadata.getPublishedYear());
         assertEquals("description", metadata.getDescription());
-        assertEquals(1, metadata.getAbout().size());
-        assertEquals(1, metadata.getGenreAndForm().size());
+        assertEquals(2, metadata.getAbout().size());
+        assertEquals("id", metadata.getAbout().getFirst().id());
+        assertEquals("bibbi", metadata.getAbout().getFirst().source());
+        assertEquals("nob", metadata.getAbout().getFirst().language());
+        assertEquals("about", metadata.getAbout().getFirst().term());
+        assertEquals("id", metadata.getAbout().getLast().id());
+        assertEquals("bibbi", metadata.getAbout().getLast().source());
+        assertEquals("nno", metadata.getAbout().getLast().language());
+        assertEquals("about", metadata.getAbout().getLast().term());
+        assertEquals(2, metadata.getGenreAndForm().size());
+        assertEquals("id", metadata.getGenreAndForm().getFirst().id());
+        assertEquals("ntsf", metadata.getGenreAndForm().getFirst().source());
+        assertEquals("nob", metadata.getGenreAndForm().getFirst().language());
+        assertEquals("genre", metadata.getGenreAndForm().getFirst().term());
+        assertEquals("id", metadata.getGenreAndForm().getLast().id());
+        assertEquals("ntsf", metadata.getGenreAndForm().getLast().source());
+        assertEquals("eng", metadata.getGenreAndForm().getLast().language());
+        assertEquals("genre", metadata.getGenreAndForm().getLast().term());
         assertEquals("http://thumbnailUrl", metadata.getThumbnailUrl().toString());
     }
 

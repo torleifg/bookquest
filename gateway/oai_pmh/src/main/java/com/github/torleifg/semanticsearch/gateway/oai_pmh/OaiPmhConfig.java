@@ -20,18 +20,21 @@ class OaiPmhConfig {
 
     @Bean
     OaiPmhMapper bibbiMapper(OaiPmhProperties oaiPmhProperties) {
+        final String mapper = oaiPmhProperties.getMapper();
+
+        /*
+        Mapper factory
+         */
+
         return new OaiPmhDefaultMapper();
     }
 
     @Bean
-    OaiPmhClient oaiPmhClient(RestClient restClient) {
-        return new OaiPmhClient(restClient);
-    }
-
-    @Bean
-    RestClient restClient(RestClient.Builder builder) {
-        return builder
+    OaiPmhClient oaiPmhClient(RestClient.Builder builder) {
+        final RestClient restClient = builder
                 .requestFactory(new JdkClientHttpRequestFactory())
                 .build();
+
+        return new OaiPmhClient(restClient);
     }
 }

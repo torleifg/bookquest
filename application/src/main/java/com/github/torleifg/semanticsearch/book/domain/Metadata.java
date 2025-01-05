@@ -3,8 +3,8 @@ package com.github.torleifg.semanticsearch.book.domain;
 import lombok.Data;
 
 import java.net.URI;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class Metadata {
@@ -12,15 +12,13 @@ public class Metadata {
     private String title;
     private String publisher;
 
-    private Set<String> authors = new HashSet<>();
-    private Set<String> translators = new HashSet<>();
-    private Set<String> illustrators = new HashSet<>();
+    private List<Contributor> contributors = new ArrayList<>();
 
     private String publishedYear;
     private String description;
 
-    private Set<String> about = new HashSet<>();
-    private Set<String> genreAndForm = new HashSet<>();
+    private List<Classification> about = new ArrayList<>();
+    private List<Classification> genreAndForm = new ArrayList<>();
 
     private URI thumbnailUrl;
 }

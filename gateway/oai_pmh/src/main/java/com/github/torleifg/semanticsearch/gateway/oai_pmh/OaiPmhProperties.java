@@ -10,4 +10,5 @@ import org.springframework.context.annotation.Configuration;
 class OaiPmhProperties {
     private String serviceUri;
     private long ttl;
+    private String mapper;
 }

@@ -20,18 +20,21 @@ class BibbiConfig {
 
     @Bean
     BibbiMapper bibbiMapper(BibbiProperties bibbiProperties) {
+        final String mapper = bibbiProperties.getMapper();
+
+        /*
+        Mapper factory
+         */
+
         return new BibbiDefaultMapper();
     }
 
     @Bean
-    BibbiClient bibbiClient(RestClient restClient) {
-        return new BibbiClient(restClient);
-    }
-
-    @Bean
-    RestClient restClient(RestClient.Builder builder) {
-        return builder
+    BibbiClient bibbiClient(RestClient.Builder builder) {
+        final RestClient restClient = builder
                 .requestFactory(new JdkClientHttpRequestFactory())
                 .build();
+
+        return new BibbiClient(restClient);
     }
 }

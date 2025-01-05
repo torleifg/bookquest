@@ -43,7 +43,7 @@ class BibbiGatewayTests {
         when(bibbiProperties.getServiceUri()).thenReturn("/harvest");
 
         var response = createResponse();
-        when(bibbiClient.get("/harvest?query=type:(audiobook OR book)")).thenReturn(response);
+        when(bibbiClient.get("/harvest?limit=100&query=type:(audiobook OR book)")).thenReturn(response);
 
         var metadata = bibbiGateway.find();
         assertEquals(0, metadata.size());
@@ -58,7 +58,7 @@ class BibbiGatewayTests {
         when(resumptionTokenRepository.get("/harvest")).thenReturn(Optional.of(new ResumptionToken(resumptionToken, Instant.now())));
 
         var response = createResponse();
-        when(bibbiClient.get("/harvest?resumption_token=" + resumptionToken)).thenReturn(response);
+        when(bibbiClient.get("/harvest?limit=100&resumption_token=" + resumptionToken)).thenReturn(response);
 
         var metadata = bibbiGateway.find();
         assertEquals(0, metadata.size());
@@ -72,7 +72,7 @@ class BibbiGatewayTests {
         when(lastModifiedRepository.get("/harvest")).thenReturn(Optional.of(lastModified));
 
         var response = createResponse();
-        when(bibbiClient.get("/harvest?query=type:(audiobook OR book) AND modified:[" + lastModified + " TO *]")).thenReturn(response);
+        when(bibbiClient.get("/harvest?limit=100&query=type:(audiobook OR book) AND modified:[" + lastModified + " TO *]")).thenReturn(response);
 
         var metadata = bibbiGateway.find();
         assertEquals(0, metadata.size());

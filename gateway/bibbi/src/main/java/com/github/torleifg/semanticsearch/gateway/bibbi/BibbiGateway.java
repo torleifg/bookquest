@@ -89,11 +89,11 @@ class BibbiGateway implements MetadataGateway {
         final Optional<ResumptionToken> resumptionToken = resumptionTokenRepository.get(serviceUri);
 
         if (resumptionToken.isPresent() && resumptionToken.get().isNotExpired(bibbiProperties.getTtl())) {
-            return serviceUri + "?resumption_token=" + resumptionToken.get().value();
+            return serviceUri + "?limit=100&resumption_token=" + resumptionToken.get().value();
         }
 
         return lastModifiedRepository.get(serviceUri)
-                .map(lastModified -> serviceUri + String.format("?query=type:(audiobook OR book) AND modified:[%s TO *]", ISO_INSTANT.format(lastModified)))
-                .orElse(serviceUri + "?query=type:(audiobook OR book)");
+                .map(lastModified -> serviceUri + String.format("?limit=100&query=type:(audiobook OR book) AND modified:[%s TO *]", ISO_INSTANT.format(lastModified)))
+                .orElse(serviceUri + "?limit=100&query=type:(audiobook OR book)");
     }
 }

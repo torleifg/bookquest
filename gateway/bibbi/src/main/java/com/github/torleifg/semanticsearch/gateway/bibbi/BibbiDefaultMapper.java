@@ -3,10 +3,11 @@ package com.github.torleifg.semanticsearch.gateway.bibbi;
 import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
 import no.bs.bibliografisk.model.*;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 class BibbiDefaultMapper implements BibbiMapper {
@@ -38,23 +39,24 @@ class BibbiDefaultMapper implements BibbiMapper {
             metadata.setPublisher(publication.getPublisher());
         }
 
-        Stream.ofNullable(publication.getCreator())
+        final Map<String, List<Creator>> creatorsByName = Stream.ofNullable(publication.getCreator())
                 .flatMap(List::stream)
-                .filter(creator -> creator.getRole() == Creator.RoleEnum.AUT)
-                .map(Creator::getName)
-                .forEach(metadata.getAuthors()::add);
+                .collect(groupingBy(Creator::getName, LinkedHashMap::new, toList()));
 
-        Stream.ofNullable(publication.getCreator())
-                .flatMap(List::stream)
-                .filter(creator -> creator.getRole() == Creator.RoleEnum.TRL)
-                .map(Creator::getName)
-                .forEach(metadata.getTranslators()::add);
+        for (final var entry : creatorsByName.entrySet()) {
+            final List<MetadataDTO.Contributor.Role> roles = new ArrayList<>();
+            final String name = entry.getKey();
 
-        Stream.ofNullable(publication.getCreator())
-                .flatMap(List::stream)
-                .filter(creator -> creator.getRole() == Creator.RoleEnum.ILL)
-                .map(Creator::getName)
-                .forEach(metadata.getIllustrators()::add);
+            for (final Creator creator : entry.getValue()) {
+                if (creator.getRole() != null) {
+                    roles.add(MetadataDTO.Contributor.Role.valueOf(creator.getRole().name()));
+                } else {
+                    roles.add(MetadataDTO.Contributor.Role.OTH);
+                }
+            }
+
+            metadata.getContributors().add(new MetadataDTO.Contributor(roles, name));
+        }
 
         if (isNotBlank(publication.getDatePublished())) {
             metadata.setPublishedYear(publication.getDatePublished());
@@ -64,17 +66,37 @@ class BibbiDefaultMapper implements BibbiMapper {
             metadata.setDescription(publication.getDescription());
         }
 
-        Stream.ofNullable(publication.getGenre())
-                .flatMap(List::stream)
-                .map(Genre::getName)
-                .map(GenreName::getNob)
-                .forEach(metadata.getGenreAndForm()::add);
+        for (final Subject about : publication.getAbout()) {
+            final SubjectName name = about.getName();
 
-        Stream.ofNullable(publication.getAbout())
-                .flatMap(List::stream)
-                .map(Subject::getName)
-                .map(SubjectName::getNob)
-                .forEach(metadata.getAbout()::add);
+            final String id = about.getId();
+            final String source = about.getVocabulary().getValue();
+
+            metadata.getAbout().add(new MetadataDTO.Classification(id, source, "nob", name.getNob()));
+
+            if (name.getNno() != null) {
+                metadata.getAbout().add(new MetadataDTO.Classification(id, source, "nno", name.getNno()));
+            }
+        }
+
+        for (final Genre genre : publication.getGenre()) {
+            final GenreName name = genre.getName();
+
+            final String id = genre.getId();
+
+            final String source = Optional.ofNullable(genre.getVocabulary())
+                    .map(Genre.VocabularyEnum::getValue)
+                    .orElse(null);
+
+            metadata.getGenreAndForm().addAll(List.of(
+                    new MetadataDTO.Classification(id, source, "nob", name.getNob()),
+                    new MetadataDTO.Classification(id, source, "nno", name.getNno())
+            ));
+
+            if (name.getEng() != null) {
+                metadata.getGenreAndForm().add(new MetadataDTO.Classification(id, source, "eng", name.getEng()));
+            }
+        }
 
         Optional.ofNullable(publication.getImage())
                 .map(PublicationImage::getThumbnailUrl)

@@ -1,5 +1,6 @@
 package com.github.torleifg.semanticsearch.gateway.bokbasen;
 
+import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
 import org.editeur.ns.onix._3_0.reference.*;
 import org.junit.jupiter.api.Test;
 
@@ -53,51 +54,21 @@ class BokbasenDefaultMapperTests {
 
         descriptiveDetail.getTitleDetail().add(title);
 
-        var author = objectFactory.createContributor();
+        var contributor = objectFactory.createContributor();
 
         var authorRole = objectFactory.createContributorRole();
         authorRole.setValue(List17.fromValue("A01"));
-        author.getContent().add(authorRole);
-
-        var authorName = objectFactory.createPersonNameInverted();
-        authorName.setValue("author");
-        author.getContent().add(authorName);
-
-        var translator = objectFactory.createContributor();
-
-        var translatorRole = objectFactory.createContributorRole();
-        translatorRole.setValue(List17.fromValue("B06"));
-        translator.getContent().add(translatorRole);
-
-        var translatorName = objectFactory.createPersonNameInverted();
-        translatorName.setValue("translator");
-        translator.getContent().add(translatorName);
-
-        var illustrator = objectFactory.createContributor();
+        contributor.getContent().add(authorRole);
 
         var illustratorRole = objectFactory.createContributorRole();
         illustratorRole.setValue(List17.fromValue("A12"));
-        illustrator.getContent().add(illustratorRole);
+        contributor.getContent().add(illustratorRole);
 
-        var illustratorName = objectFactory.createPersonNameInverted();
-        illustratorName.setValue("illustrator");
-        illustrator.getContent().add(illustratorName);
+        var contributorName = objectFactory.createPersonNameInverted();
+        contributorName.setValue("contributor");
+        contributor.getContent().add(contributorName);
 
-        descriptiveDetail.getContributor().addAll(List.of(author, translator, illustrator));
-
-        var genre = objectFactory.createSubject();
-
-        var genreSubjectSchemeIdentifier = objectFactory.createSubjectSchemeIdentifier();
-        genreSubjectSchemeIdentifier.setValue(List27.fromValue("24"));
-        genre.getContent().add(genreSubjectSchemeIdentifier);
-
-        var genreSubjectSchemeName = objectFactory.createSubjectSchemeName();
-        genreSubjectSchemeName.setValue("Bokbasen_Genre");
-        genre.getContent().add(genreSubjectSchemeName);
-
-        var genreSubjectHeadingText = objectFactory.createSubjectHeadingText();
-        genreSubjectHeadingText.setValue("genre");
-        genre.getContent().add(genreSubjectHeadingText);
+        descriptiveDetail.getContributor().add(contributor);
 
         var genreAndForm = objectFactory.createSubject();
 
@@ -105,8 +76,12 @@ class BokbasenDefaultMapperTests {
         genreAndFormSubjectSchemeIdentifier.setValue(List27.fromValue("C8"));
         genreAndForm.getContent().add(genreAndFormSubjectSchemeIdentifier);
 
+        final SubjectCode genreSubjectCode = objectFactory.createSubjectCode();
+        genreSubjectCode.setValue("id");
+        genreAndForm.getContent().add(genreSubjectCode);
+
         var genreAndFormSubjectHeadingText = objectFactory.createSubjectHeadingText();
-        genreAndFormSubjectHeadingText.setValue("form");
+        genreAndFormSubjectHeadingText.setValue("genre");
         genreAndForm.getContent().add(genreAndFormSubjectHeadingText);
 
         var about = objectFactory.createSubject();
@@ -123,7 +98,7 @@ class BokbasenDefaultMapperTests {
         aboutSubjectHeadingText.setValue("about");
         about.getContent().add(aboutSubjectHeadingText);
 
-        descriptiveDetail.getSubject().addAll(List.of(genre, genreAndForm, about));
+        descriptiveDetail.getSubject().addAll(List.of(genreAndForm, about));
         product.setDescriptiveDetail(descriptiveDetail);
 
         var publishingDetail = objectFactory.createPublishingDetail();
@@ -198,13 +173,22 @@ class BokbasenDefaultMapperTests {
         assertEquals("isbn", metadata.getIsbn());
         assertEquals("title : remainder of title", metadata.getTitle());
         assertEquals("publisher", metadata.getPublisher());
-        assertEquals(1, metadata.getAuthors().size());
-        assertEquals(1, metadata.getTranslators().size());
-        assertEquals(1, metadata.getIllustrators().size());
+        assertEquals(1, metadata.getContributors().size());
+        assertEquals(2, metadata.getContributors().getFirst().roles().size());
+        assertEquals(MetadataDTO.Contributor.Role.AUT, metadata.getContributors().getFirst().roles().getFirst());
+        assertEquals(MetadataDTO.Contributor.Role.ILL, metadata.getContributors().getFirst().roles().getLast());
         assertEquals("1970", metadata.getPublishedYear());
         assertEquals("description", metadata.getDescription());
-        assertEquals(1, metadata.getGenreAndForm().size());
         assertEquals(1, metadata.getAbout().size());
+        assertNull(metadata.getAbout().getFirst().id());
+        assertEquals("Bokbasen_Subject", metadata.getAbout().getFirst().source());
+        assertEquals("nob", metadata.getAbout().getFirst().language());
+        assertEquals("about", metadata.getAbout().getFirst().term());
+        assertEquals(1, metadata.getGenreAndForm().size());
+        assertEquals("id", metadata.getGenreAndForm().getFirst().id());
+        assertEquals("ntsf", metadata.getGenreAndForm().getFirst().source());
+        assertEquals("nob", metadata.getGenreAndForm().getFirst().language());
+        assertEquals("genre", metadata.getGenreAndForm().getFirst().term());
         assertEquals("http://thumbnailUrl", metadata.getThumbnailUrl().toString());
     }
 

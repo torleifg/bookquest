@@ -1,5 +1,6 @@
 package com.github.torleifg.semanticsearch.gateway.bibbi;
 
+import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
 import no.bs.bibliografisk.model.*;
 import org.junit.jupiter.api.Test;
 
@@ -22,36 +23,39 @@ class BibbiDefaultMapperTests {
 
         var author = new Creator();
         author.setRole(Creator.RoleEnum.AUT);
-        author.setName("author");
-
-        var translator = new Creator();
-        translator.setRole(Creator.RoleEnum.TRL);
-        translator.setName("translator");
+        author.setName("creator");
 
         var illustrator = new Creator();
         illustrator.setRole(Creator.RoleEnum.ILL);
-        illustrator.setName("illustrator");
+        illustrator.setName("creator");
 
-        publication.setCreator(List.of(author, translator, illustrator));
+        publication.setCreator(List.of(author, illustrator));
 
         publication.setDatePublished("1970");
         publication.setDescription("description");
 
+        var aboutName = new SubjectName();
+        aboutName.setNob("about");
+        aboutName.setNno("about");
+
+        var about = new Subject();
+        about.setId("id");
+        about.setVocabulary(Subject.VocabularyEnum.BIBBI);
+        about.setName(aboutName);
+
+        publication.setAbout(List.of(about));
+
         var genreName = new GenreName();
         genreName.setNob("genre");
+        genreName.setNno("genre");
+        genreName.setEng("genre");
 
         var genre = new Genre();
+        genre.setId("id");
+        genre.setVocabulary(Genre.VocabularyEnum.NTSF);
         genre.setName(genreName);
 
         publication.setGenre(List.of(genre));
-
-        var subjectName = new SubjectName();
-        subjectName.setNob("subject");
-
-        var subject = new Subject();
-        subject.setName(subjectName);
-
-        publication.setAbout(List.of(subject));
 
         var publicationImage = new PublicationImage();
         publicationImage.setThumbnailUrl(URI.create("http://thumbnailUrl"));
@@ -64,13 +68,31 @@ class BibbiDefaultMapperTests {
         assertEquals("isbn", metadata.getIsbn());
         assertEquals("title", metadata.getTitle());
         assertEquals("publisher", metadata.getPublisher());
-        assertEquals(1, metadata.getAuthors().size());
-        assertEquals(1, metadata.getTranslators().size());
-        assertEquals(1, metadata.getIllustrators().size());
+        assertEquals(1, metadata.getContributors().size());
+        assertEquals(2, metadata.getContributors().getFirst().roles().size());
+        assertEquals(MetadataDTO.Contributor.Role.AUT, metadata.getContributors().getFirst().roles().getFirst());
+        assertEquals(MetadataDTO.Contributor.Role.ILL, metadata.getContributors().getFirst().roles().getLast());
+        assertEquals("creator", metadata.getContributors().getFirst().name());
         assertEquals("1970", metadata.getPublishedYear());
         assertEquals("description", metadata.getDescription());
-        assertEquals(1, metadata.getGenreAndForm().size());
-        assertEquals(1, metadata.getAbout().size());
+        assertEquals(2, metadata.getAbout().size());
+        assertEquals("id", metadata.getAbout().getFirst().id());
+        assertEquals("bibbi", metadata.getAbout().getFirst().source());
+        assertEquals("nob", metadata.getAbout().getFirst().language());
+        assertEquals("about", metadata.getAbout().getFirst().term());
+        assertEquals("id", metadata.getAbout().getLast().id());
+        assertEquals("bibbi", metadata.getAbout().getLast().source());
+        assertEquals("nno", metadata.getAbout().getLast().language());
+        assertEquals("about", metadata.getAbout().getLast().term());
+        assertEquals(3, metadata.getGenreAndForm().size());
+        assertEquals("id", metadata.getGenreAndForm().getFirst().id());
+        assertEquals("ntsf", metadata.getGenreAndForm().getFirst().source());
+        assertEquals("nob", metadata.getGenreAndForm().getFirst().language());
+        assertEquals("genre", metadata.getGenreAndForm().getFirst().term());
+        assertEquals("id", metadata.getGenreAndForm().getLast().id());
+        assertEquals("ntsf", metadata.getGenreAndForm().getLast().source());
+        assertEquals("eng", metadata.getGenreAndForm().getLast().language());
+        assertEquals("genre", metadata.getGenreAndForm().getLast().term());
         assertEquals("http://thumbnailUrl", metadata.getThumbnailUrl().toString());
     }
 

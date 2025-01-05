@@ -1,5 +1,6 @@
 package com.github.torleifg.semanticsearch.adapter.persistence;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.torleifg.semanticsearch.book.domain.Book;
@@ -30,7 +31,8 @@ class BookRepositoryAdapter implements BookRepository {
     private final DocumentMapper documentMapper;
 
     private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper()
-            .registerModule(new JavaTimeModule());
+            .registerModule(new JavaTimeModule())
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     BookRepositoryAdapter(JdbcClient jdbcClient, VectorStore vectorStore, DocumentMapper documentMapper) {
         this.jdbcClient = jdbcClient;
@@ -68,12 +70,12 @@ class BookRepositoryAdapter implements BookRepository {
 
     @Override
     public List<Book> fullTextSearch(String query, int limit) {
-        return query(query, 20);
+        return query(query, limit);
     }
 
     @Override
     public List<Book> semanticSearch(String query, int limit) {
-        final List<UUID> ids = vectorQuery(query, 15).stream()
+        final List<UUID> ids = vectorQuery(query, limit).stream()
                 .map(Document::getId)
                 .map(UUID::fromString)
                 .toList();
@@ -82,8 +84,8 @@ class BookRepositoryAdapter implements BookRepository {
     }
 
     @Override
-    public List<Book> semanticSimilarity() {
-        final List<UUID> ids = vectorSimilarity(15).stream()
+    public List<Book> semanticSimilarity(int limit) {
+        final List<UUID> ids = vectorSimilarity(limit).stream()
                 .map(Document::getId)
                 .map(UUID::fromString)
                 .toList();

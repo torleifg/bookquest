@@ -53,14 +53,37 @@ class BokbasenDefaultMapper implements BokbasenMapper {
             metadata.setTitle(title.get() + " : " + remainderOfTitle.get());
         } else title.ifPresent(metadata::setTitle);
 
-        getContributor(descriptiveDetail, List17.fromValue("A01"))
-                .forEach(metadata.getAuthors()::add);
+        final List<Contributor> contributors = Stream.ofNullable(descriptiveDetail)
+                .map(DescriptiveDetail::getContributor)
+                .flatMap(Collection::stream)
+                .toList();
 
-        getContributor(descriptiveDetail, List17.fromValue("B06"))
-                .forEach(metadata.getTranslators()::add);
+        for (final Contributor contributor : contributors) {
+            final List<MetadataDTO.Contributor.Role> roles = contributor.getContent().stream()
+                    .filter(ContributorRole.class::isInstance)
+                    .map(ContributorRole.class::cast)
+                    .map(ContributorRole::getValue)
+                    .map(List17::value)
+                    .map(ContributorRoleMapping::valueOf)
+                    .map(ContributorRoleMapping::getCode)
+                    .toList();
 
-        getContributor(descriptiveDetail, List17.fromValue("A12"))
-                .forEach(metadata.getIllustrators()::add);
+            final String name = contributor.getContent().stream()
+                    .map(content -> {
+                        if (content instanceof PersonNameInverted personNameInverted) {
+                            return personNameInverted.getValue();
+                        } else if (content instanceof PersonName personName) {
+                            return personName.getValue();
+                        }
+
+                        return null;
+                    })
+                    .filter(Objects::nonNull)
+                    .findFirst()
+                    .orElse(null);
+
+            metadata.getContributors().add(new MetadataDTO.Contributor(roles, name));
+        }
 
         final List<Subject> subjects = descriptiveDetail.getSubject();
 
@@ -71,12 +94,14 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                 if (content != null && !content.isEmpty()) {
                     SubjectSchemeIdentifier subjectSchemeIdentifier = null;
                     SubjectSchemeName subjectSchemeName = null;
+                    SubjectCode subjectCode = null;
                     SubjectHeadingText subjectHeadingText = null;
 
                     for (final Object object : content) {
                         switch (object) {
                             case SubjectSchemeIdentifier identifier -> subjectSchemeIdentifier = identifier;
                             case SubjectSchemeName name -> subjectSchemeName = name;
+                            case SubjectCode code -> subjectCode = code;
                             case SubjectHeadingText text -> subjectHeadingText = text;
                             default -> {
                             }
@@ -87,6 +112,10 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                         continue;
                     }
 
+                    final String code = Optional.ofNullable(subjectCode)
+                            .map(SubjectCode::getValue)
+                            .orElse(null);
+
                     final String text = subjectHeadingText.getValue();
 
                     if (subjectSchemeIdentifier != null) {
@@ -95,13 +124,13 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                                 final String name = subjectSchemeName.getValue();
 
                                 if (name.equals("Bokbasen_Subject")) {
-                                    metadata.getAbout().add(text);
+                                    metadata.getAbout().add(new MetadataDTO.Classification(null, "Bokbasen_Subject", "nob", text));
                                 }
                             }
                         }
 
                         if (isGenreAndForm(subjectSchemeIdentifier)) {
-                            metadata.getGenreAndForm().add(text);
+                            metadata.getGenreAndForm().add(new MetadataDTO.Classification(code, "ntsf", "nob", text));
                         }
                     }
                 }
@@ -170,34 +199,6 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                 .ifPresent(metadata::setThumbnailUrl);
 
         return metadata;
-    }
-
-    private static Stream<String> getContributor(DescriptiveDetail descriptiveDetail, List17 role) {
-        return Stream.ofNullable(descriptiveDetail)
-                .map(DescriptiveDetail::getContributor)
-                .flatMap(Collection::stream)
-                .map(Contributor::getContent)
-                .filter(content -> {
-                    for (final Object object : content) {
-                        if (object instanceof ContributorRole contributorRole) {
-                            return contributorRole.getValue() == role;
-                        }
-                    }
-
-                    return false;
-                })
-                .map(content -> {
-                    for (final Object object : content) {
-                        if (object instanceof PersonNameInverted name) {
-                            return name.getValue();
-                        } else if (object instanceof PersonName name) {
-                            return name.getValue();
-                        }
-                    }
-
-                    return null;
-                })
-                .filter(Objects::nonNull);
     }
 
     private static boolean isProprietary(SubjectSchemeIdentifier subjectSchemeIdentifier) {

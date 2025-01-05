@@ -16,7 +16,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -215,7 +214,6 @@ class BookRepositoryAdapterTests {
         metadata.setIsbn("isbn");
         metadata.setTitle("title");
         metadata.setDescription("description");
-        metadata.setAbout(Set.of("about"));
 
         book.setMetadata(metadata);
 

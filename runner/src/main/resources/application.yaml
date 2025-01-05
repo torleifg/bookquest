@@ -61,5 +61,6 @@ oai-pmh:
 bokbasen:
   service-uri: https://api.bokbasen.io/metadata/export/onix/v1
   after: 19700101090000
-  audience: https://api.bokbasen.io/metadata/
   mapper: default
+  client: bokbasen
+  audience: https://api.bokbasen.io/metadata/

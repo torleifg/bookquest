@@ -132,11 +132,20 @@
                 </p>
                 <img th:src="${metadata.thumbnailUrl != null ? metadata.thumbnailUrl : 'fallback.png'}"
                      alt=""/>
-                <p th:if="${#sets.size(metadata.authors) > 0}">
-                    <span th:text="${#strings.setJoin(metadata.authors, '; ')}"></span>
+                <p th:if="${#lists.size(metadata.contributors) > 0}">
+                    <span th:each="contributor, iterStat : ${metadata.contributors}">
+                        <span th:text="${contributor.name}"></span>
+                            (
+                            <span th:each="role, roleIterStat : ${contributor.roles}">
+                                <span th:text="${role.term}"></span>
+                                <span th:if="${!roleIterStat.last}">, </span>
+                            </span>
+                            )
+                        <span th:if="${!iterStat.last}">; </span>
+                    </span>
                 </p>
-                <p th:if="${#sets.size(metadata.authors) == 0}">
-                    <span>Author information is missing.</span>
+                <p th:if="${#lists.size(metadata.contributors) == 0}">
+                    <span>Contributor information is missing</span>
                 </p>
                 <p th:if="${metadata.description != null}">
                     <span th:text="${metadata.description}"></span>
@@ -152,21 +161,19 @@
                             <strong>Publisher: </strong>
                             <span th:text="${metadata.publisher}"></span>
                         </li>
-                        <li th:if="${#sets.size(metadata.translators) > 0}">
-                            <strong>Translated by: </strong>
-                            <span th:text="${#strings.setJoin(metadata.translators, '; ')}"></span>
-                        </li>
-                        <li th:if="${#sets.size(metadata.illustrators) > 0}">
-                            <strong>Illustrated by: </strong>
-                            <span th:text="${#strings.setJoin(metadata.illustrators, '; ')}"></span>
-                        </li>
-                        <li th:if="${#sets.size(metadata.about) > 0}">
+                        <li th:if="${#lists.size(metadata.about) > 0}">
                             <strong>About: </strong>
-                            <span th:text="${#strings.setJoin(metadata.about, '; ')}"></span>
+                            <span th:each="about, iterStat : ${metadata.about}">
+                                <span th:text="${about.term}"></span>
+                                <span th:if="${!iterStat.last}">; </span>
+                            </span>
                         </li>
-                        <li th:if="${#sets.size(metadata.genreAndForm) > 0}">
+                        <li th:if="${#lists.size(metadata.genreAndForm) > 0}">
                             <strong>Genre and form: </strong>
-                            <span th:text="${#strings.setJoin(metadata.genreAndForm, '; ')}"></span>
+                            <span th:each="genreAndForm, iterStat : ${metadata.genreAndForm}">
+                                <span th:text="${genreAndForm.term}"></span>
+                                <span th:if="${!iterStat.last}">; </span>
+                            </span>
                         </li>
                     </ul>
                 </details>
@@ -174,7 +181,7 @@
             </div>
         </div>
         <div th:if="${#lists.size(results) == 0}">
-            <p>No results found. Please try a different query.</p>
+            <p>No results found. Please try a different query</p>
         </div>
     </div>
 </div>

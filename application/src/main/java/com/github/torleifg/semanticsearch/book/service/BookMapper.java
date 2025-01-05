@@ -1,8 +1,12 @@
 package com.github.torleifg.semanticsearch.book.service;
 
 import com.github.torleifg.semanticsearch.book.domain.Book;
+import com.github.torleifg.semanticsearch.book.domain.Classification;
+import com.github.torleifg.semanticsearch.book.domain.Contributor;
 import com.github.torleifg.semanticsearch.book.domain.Metadata;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class BookMapper {
@@ -16,13 +20,27 @@ public class BookMapper {
         metadata.setIsbn(dto.getIsbn());
         metadata.setTitle(dto.getTitle());
         metadata.setPublisher(dto.getPublisher());
-        metadata.setAuthors(dto.getAuthors());
-        metadata.setTranslators(dto.getTranslators());
-        metadata.setIllustrators(dto.getIllustrators());
+
+        for (final MetadataDTO.Contributor contributor : dto.getContributors()) {
+            final List<Contributor.Role> roles = contributor.roles().stream()
+                    .map(MetadataDTO.Contributor.Role::name)
+                    .map(Contributor.Role::valueOf)
+                    .toList();
+
+            metadata.getContributors().add(new Contributor(roles, contributor.name()));
+        }
+
         metadata.setPublishedYear(dto.getPublishedYear());
         metadata.setDescription(dto.getDescription());
-        metadata.setAbout(dto.getAbout());
-        metadata.setGenreAndForm(dto.getGenreAndForm());
+
+        for (final MetadataDTO.Classification classification : dto.getAbout()) {
+            metadata.getAbout().add(new Classification(classification.id(), classification.source(), classification.language(), classification.term()));
+        }
+
+        for (final MetadataDTO.Classification classification : dto.getGenreAndForm()) {
+            metadata.getGenreAndForm().add(new Classification(classification.id(), classification.source(), classification.language(), classification.term()));
+        }
+
         metadata.setThumbnailUrl(dto.getThumbnailUrl());
 
         book.setMetadata(metadata);
