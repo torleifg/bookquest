@@ -25,10 +25,7 @@ public class MetadataDTO {
     private List<Classification> about = new ArrayList<>();
     private List<Classification> genreAndForm = new ArrayList<>();
 
-    public record Classification(String id, String source, List<LocalizedString> names) {
-    }
-
-    public record LocalizedString(String language, String text) {
+    public record Classification(String id, String source, String language, String term) {
     }
 
     private URI thumbnailUrl;

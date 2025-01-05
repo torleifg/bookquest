@@ -124,13 +124,13 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                                 final String name = subjectSchemeName.getValue();
 
                                 if (name.equals("Bokbasen_Subject")) {
-                                    metadata.getAbout().add(new MetadataDTO.Classification(null, "Bokbasen_Subject", List.of(new MetadataDTO.LocalizedString("nob", text))));
+                                    metadata.getAbout().add(new MetadataDTO.Classification(null, "Bokbasen_Subject", "nob", text));
                                 }
                             }
                         }
 
                         if (isGenreAndForm(subjectSchemeIdentifier)) {
-                            metadata.getGenreAndForm().add(new MetadataDTO.Classification(code, "ntsf", List.of(new MetadataDTO.LocalizedString("nob", text))));
+                            metadata.getGenreAndForm().add(new MetadataDTO.Classification(code, "ntsf", "nob", text));
                         }
                     }
                 }

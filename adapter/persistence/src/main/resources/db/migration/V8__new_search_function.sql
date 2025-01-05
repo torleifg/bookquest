@@ -21,9 +21,9 @@ select b.external_id,
                setweight(to_tsvector('simple', coalesce(b.metadata ->> 'description', '')), 'D') ||
                setweight(to_tsvector('simple', coalesce(jsonb_array_to_text(b.metadata -> 'contributors', 'name'), '')),
                          'A') ||
-               setweight(to_tsvector('simple', coalesce(jsonb_array_to_text(b.metadata -> 'about', 'text'), '')),
+               setweight(to_tsvector('simple', coalesce(jsonb_array_to_text(b.metadata -> 'about', 'term'), '')),
                          'C') ||
-               setweight(to_tsvector('simple', coalesce(jsonb_array_to_text(b.metadata -> 'genreAndForm', 'text'), '')),
+               setweight(to_tsvector('simple', coalesce(jsonb_array_to_text(b.metadata -> 'genreAndForm', 'term'), '')),
                          'C'),
                plainto_tsquery('simple', search_query)
        ) as rank
@@ -32,8 +32,8 @@ where to_tsvector('simple',
                   coalesce(b.metadata ->> 'title', '') || ' ' ||
                   coalesce(b.metadata ->> 'description', '') || ' ' ||
                   coalesce(jsonb_array_to_text(b.metadata -> 'contributors', 'name'), '') || ' ' ||
-                  coalesce(jsonb_array_to_text(b.metadata -> 'about', 'text'), '') || ' ' ||
-                  coalesce(jsonb_array_to_text(b.metadata -> 'genreAndForm', 'text'), ''))
+                  coalesce(jsonb_array_to_text(b.metadata -> 'about', 'term'), '') || ' ' ||
+                  coalesce(jsonb_array_to_text(b.metadata -> 'genreAndForm', 'term'), ''))
                   @@ plainto_tsquery('simple', search_query)
 order by rank desc
     limit result_limit;

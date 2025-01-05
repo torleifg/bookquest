@@ -6,7 +6,10 @@ import info.lc.xmlns.marcxchange_v1.RecordType;
 import info.lc.xmlns.marcxchange_v1.SubfieldatafieldType;
 
 import java.net.URI;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.groupingBy;
@@ -83,20 +86,12 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
                 .findFirst()
                 .ifPresent(metadata::setDescription);
 
-        final Map<String, List<MetadataDTO.Classification>> aboutById = dataFieldsByTag.getOrDefault("650", List.of()).stream()
-                .map(OaiPmhDefaultMapper::getClassification)
-                .collect(groupingBy(MetadataDTO.Classification::id, LinkedHashMap::new, toList()));
-
-        aboutById.entrySet().stream()
-                .map(entry -> new MetadataDTO.Classification(entry.getKey(), getSource(entry.getValue()), getNames(entry.getValue())))
+        dataFieldsByTag.getOrDefault("650", List.of()).stream()
+                .map(OaiPmhDefaultMapper::createClassification)
                 .forEach(metadata.getAbout()::add);
 
-        final Map<String, List<MetadataDTO.Classification>> genreAndFormById = dataFieldsByTag.getOrDefault("655", List.of()).stream()
-                .map(OaiPmhDefaultMapper::getClassification)
-                .collect(groupingBy(MetadataDTO.Classification::id, LinkedHashMap::new, toList()));
-
-        genreAndFormById.entrySet().stream()
-                .map(entry -> new MetadataDTO.Classification(entry.getKey(), getSource(entry.getValue()), getNames(entry.getValue())))
+        dataFieldsByTag.getOrDefault("655", List.of()).stream()
+                .map(OaiPmhDefaultMapper::createClassification)
                 .forEach(metadata.getGenreAndForm()::add);
 
         dataFieldsByTag.getOrDefault("856", List.of()).stream()
@@ -113,38 +108,23 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
                 .map(SubfieldatafieldType::getValue);
     }
 
-    private static MetadataDTO.Classification getClassification(DataFieldType dataField) {
+    private static MetadataDTO.Classification createClassification(DataFieldType dataField) {
         final String id = getSubfieldValue(dataField.getSubfield(), "0")
                 .findFirst()
-                .orElse("undefined");
+                .orElse(null);
 
         final String source = getSubfieldValue(dataField.getSubfield(), "2")
                 .findFirst()
-                .orElse("undefined");
+                .orElse(null);
 
         final String language = getSubfieldValue(dataField.getSubfield(), "9")
                 .findFirst()
                 .orElse("und");
 
-        final String text = getSubfieldValue(dataField.getSubfield(), "a")
+        final String term = getSubfieldValue(dataField.getSubfield(), "a")
                 .findFirst()
-                .orElse("");
+                .orElse(null);
 
-        return new MetadataDTO.Classification(id, source, List.of(new MetadataDTO.LocalizedString(language, text)));
-    }
-
-    private static String getSource(List<MetadataDTO.Classification> classifications) {
-        return classifications.stream()
-                .map(MetadataDTO.Classification::source)
-                .filter(Objects::nonNull)
-                .findFirst()
-                .orElse("undefined");
-    }
-
-    private static List<MetadataDTO.LocalizedString> getNames(List<MetadataDTO.Classification> classifications) {
-        return classifications.stream()
-                .map(MetadataDTO.Classification::names)
-                .flatMap(List::stream)
-                .toList();
+        return new MetadataDTO.Classification(id, source, language, term);
     }
 }

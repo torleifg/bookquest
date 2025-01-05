@@ -50,6 +50,8 @@ class BibbiDefaultMapper implements BibbiMapper {
             for (final Creator creator : entry.getValue()) {
                 if (creator.getRole() != null) {
                     roles.add(MetadataDTO.Contributor.Role.valueOf(creator.getRole().name()));
+                } else {
+                    roles.add(MetadataDTO.Contributor.Role.OTH);
                 }
             }
 
@@ -67,30 +69,33 @@ class BibbiDefaultMapper implements BibbiMapper {
         for (final Subject about : publication.getAbout()) {
             final SubjectName name = about.getName();
 
-            final List<MetadataDTO.LocalizedString> names = List.of(
-                    new MetadataDTO.LocalizedString("nob", name.getNob()),
-                    new MetadataDTO.LocalizedString("nno", name.getNno())
-            );
+            final String id = about.getId();
+            final String source = about.getVocabulary().getValue();
 
-            metadata.getAbout().add(new MetadataDTO.Classification(about.getId(), about.getVocabulary().getValue(), names));
+            metadata.getAbout().add(new MetadataDTO.Classification(id, source, "nob", name.getNob()));
+
+            if (name.getNno() != null) {
+                metadata.getAbout().add(new MetadataDTO.Classification(id, source, "nno", name.getNno()));
+            }
         }
 
         for (final Genre genre : publication.getGenre()) {
             final GenreName name = genre.getName();
 
-            final List<MetadataDTO.LocalizedString> names = new ArrayList<>();
-            names.add(new MetadataDTO.LocalizedString("nob", name.getNob()));
-            names.add(new MetadataDTO.LocalizedString("nno", name.getNno()));
-
-            if (name.getEng() != null) {
-                names.add(new MetadataDTO.LocalizedString("eng", name.getEng()));
-            }
+            final String id = genre.getId();
 
             final String source = Optional.ofNullable(genre.getVocabulary())
                     .map(Genre.VocabularyEnum::getValue)
-                    .orElse("undefined");
+                    .orElse(null);
 
-            metadata.getGenreAndForm().add(new MetadataDTO.Classification(genre.getId(), source, names));
+            metadata.getGenreAndForm().addAll(List.of(
+                    new MetadataDTO.Classification(id, source, "nob", name.getNob()),
+                    new MetadataDTO.Classification(id, source, "nno", name.getNno())
+            ));
+
+            if (name.getEng() != null) {
+                metadata.getGenreAndForm().add(new MetadataDTO.Classification(id, source, "eng", name.getEng()));
+            }
         }
 
         Optional.ofNullable(publication.getImage())
