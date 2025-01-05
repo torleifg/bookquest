@@ -70,20 +70,6 @@ class BokbasenDefaultMapperTests {
 
         descriptiveDetail.getContributor().add(contributor);
 
-        var genreAndForm = objectFactory.createSubject();
-
-        var genreAndFormSubjectSchemeIdentifier = objectFactory.createSubjectSchemeIdentifier();
-        genreAndFormSubjectSchemeIdentifier.setValue(List27.fromValue("C8"));
-        genreAndForm.getContent().add(genreAndFormSubjectSchemeIdentifier);
-
-        final SubjectCode genreSubjectCode = objectFactory.createSubjectCode();
-        genreSubjectCode.setValue("id");
-        genreAndForm.getContent().add(genreSubjectCode);
-
-        var genreAndFormSubjectHeadingText = objectFactory.createSubjectHeadingText();
-        genreAndFormSubjectHeadingText.setValue("genre");
-        genreAndForm.getContent().add(genreAndFormSubjectHeadingText);
-
         var about = objectFactory.createSubject();
 
         var aboutSubjectSchemeIdentifier = objectFactory.createSubjectSchemeIdentifier();
@@ -98,7 +84,22 @@ class BokbasenDefaultMapperTests {
         aboutSubjectHeadingText.setValue("about");
         about.getContent().add(aboutSubjectHeadingText);
 
-        descriptiveDetail.getSubject().addAll(List.of(genreAndForm, about));
+        var genreAndForm = objectFactory.createSubject();
+
+        var genreAndFormSubjectSchemeIdentifier = objectFactory.createSubjectSchemeIdentifier();
+        genreAndFormSubjectSchemeIdentifier.setValue(List27.fromValue("C8"));
+        genreAndForm.getContent().add(genreAndFormSubjectSchemeIdentifier);
+
+        final SubjectCode genreSubjectCode = objectFactory.createSubjectCode();
+        genreSubjectCode.setValue("id");
+        genreAndForm.getContent().add(genreSubjectCode);
+
+        var genreAndFormSubjectHeadingText = objectFactory.createSubjectHeadingText();
+        genreAndFormSubjectHeadingText.setLanguage(List74.NNO);
+        genreAndFormSubjectHeadingText.setValue("genre");
+        genreAndForm.getContent().add(genreAndFormSubjectHeadingText);
+
+        descriptiveDetail.getSubject().addAll(List.of(about, genreAndForm));
         product.setDescriptiveDetail(descriptiveDetail);
 
         var publishingDetail = objectFactory.createPublishingDetail();
@@ -187,7 +188,7 @@ class BokbasenDefaultMapperTests {
         assertEquals(1, metadata.getGenreAndForm().size());
         assertEquals("id", metadata.getGenreAndForm().getFirst().id());
         assertEquals("ntsf", metadata.getGenreAndForm().getFirst().source());
-        assertEquals("nob", metadata.getGenreAndForm().getFirst().language());
+        assertEquals("nno", metadata.getGenreAndForm().getFirst().language());
         assertEquals("genre", metadata.getGenreAndForm().getFirst().term());
         assertEquals("http://thumbnailUrl", metadata.getThumbnailUrl().toString());
     }

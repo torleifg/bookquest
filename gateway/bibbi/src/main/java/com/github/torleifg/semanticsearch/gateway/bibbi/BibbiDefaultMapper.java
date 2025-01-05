@@ -41,18 +41,22 @@ class BibbiDefaultMapper implements BibbiMapper {
 
         final Map<String, List<Creator>> creatorsByName = Stream.ofNullable(publication.getCreator())
                 .flatMap(List::stream)
+                .filter(creator -> isNotBlank(creator.getName()))
                 .collect(groupingBy(Creator::getName, LinkedHashMap::new, toList()));
 
         for (final var entry : creatorsByName.entrySet()) {
-            final List<MetadataDTO.Contributor.Role> roles = new ArrayList<>();
             final String name = entry.getKey();
 
-            for (final Creator creator : entry.getValue()) {
-                if (creator.getRole() != null) {
-                    roles.add(MetadataDTO.Contributor.Role.valueOf(creator.getRole().name()));
-                } else {
-                    roles.add(MetadataDTO.Contributor.Role.OTH);
-                }
+            final List<MetadataDTO.Contributor.Role> roles = entry.getValue().stream()
+                    .map(Creator::getRole)
+                    .filter(Objects::nonNull)
+                    .map(Creator.RoleEnum::name)
+                    .map(MetadataDTO.Contributor.Role::valueOf)
+                    .distinct()
+                    .toList();
+
+            if (roles.isEmpty()) {
+                continue;
             }
 
             metadata.getContributors().add(new MetadataDTO.Contributor(roles, name));

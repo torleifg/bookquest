@@ -8,6 +8,8 @@ public interface BookRepository {
 
     void save(List<Book> books);
 
+    List<Book> lastModified(int limit);
+
     List<Book> fullTextSearch(String query, int limit);
 
     List<Book> semanticSearch(String query, int limit);

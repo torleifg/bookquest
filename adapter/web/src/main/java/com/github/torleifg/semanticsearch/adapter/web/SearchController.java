@@ -22,7 +22,7 @@ class SearchController {
 
     @GetMapping
     public String search(Model model) {
-        final List<Book> books = bookService.semanticSimilarity();
+        final List<Book> books = bookService.lastModified();
 
         filter(books, "nob");
 

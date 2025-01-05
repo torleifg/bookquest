@@ -191,7 +191,28 @@ class BookRepositoryAdapterTests {
     }
 
     @Test
-    void queryTest() {
+    void lastModifiedTest() {
+        var firstBook = createBook();
+
+        var secondBook = createBook();
+        secondBook.setExternalId("secondExternalId");
+        secondBook.getMetadata().setDescription(null);
+
+        for (final var book : List.of(firstBook, secondBook)) {
+            client.sql("insert into book (external_id, metadata) values (?, ?)")
+                    .param(book.getExternalId())
+                    .param(BookRepositoryAdapter.toPGobject(book.getMetadata()))
+                    .update();
+        }
+
+        var books = adapter.lastModified(10);
+        assertEquals(1, books.size());
+        assertEquals(books.getFirst().getExternalId(), firstBook.getExternalId());
+        assertEquals(books.getFirst().getMetadata(), firstBook.getMetadata());
+    }
+
+    @Test
+    void fullTextSearchTest() {
         var book = createBook();
 
         client.sql("insert into book (external_id, metadata) values (?, ?)")
@@ -199,7 +220,7 @@ class BookRepositoryAdapterTests {
                 .param(BookRepositoryAdapter.toPGobject(book.getMetadata()))
                 .update();
 
-        var books = adapter.query("title description", 10);
+        var books = adapter.fullTextSearch("title description", 10);
         assertEquals(1, books.size());
         assertEquals(books.getFirst().getExternalId(), book.getExternalId());
         assertEquals(books.getFirst().getMetadata(), book.getMetadata());
