@@ -36,9 +36,9 @@ class BokbasenConfig {
     }
 
     @Bean
-    BokbasenClient bokbasenClient(RestClient.Builder builder, OAuth2AuthorizedClientManager authorizedClientManager) {
+    BokbasenClient bokbasenClient(RestClient.Builder builder, OAuth2AuthorizedClientManager authorizedClientManager, BokbasenProperties bokbasenProperties) {
         final OAuth2ClientHttpRequestInterceptor requestInterceptor = new OAuth2ClientHttpRequestInterceptor(authorizedClientManager);
-        requestInterceptor.setClientRegistrationIdResolver(it -> "bokbasen");
+        requestInterceptor.setClientRegistrationIdResolver(it -> bokbasenProperties.getClient());
 
         final RestClient restClient = builder
                 .requestFactory(new JdkClientHttpRequestFactory())
@@ -49,12 +49,12 @@ class BokbasenConfig {
     }
 
     @Bean
-    OAuth2AuthorizedClientManager authorizedClientManager(ClientRegistrationRepository clientRegistrationRepository, OAuth2AuthorizedClientService clientService) {
+    OAuth2AuthorizedClientManager authorizedClientManager(ClientRegistrationRepository clientRegistrationRepository, OAuth2AuthorizedClientService clientService, BokbasenProperties bokbasenProperties) {
         final RestClientClientCredentialsTokenResponseClient tokenResponseClient = new RestClientClientCredentialsTokenResponseClient();
 
         tokenResponseClient.addParametersConverter(grantRequest -> {
             final MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-            parameters.set(OAuth2ParameterNames.AUDIENCE, "https://api.bokbasen.io/metadata/");
+            parameters.set(OAuth2ParameterNames.AUDIENCE, bokbasenProperties.getAudience());
 
             return parameters;
         });

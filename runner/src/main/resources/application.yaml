@@ -62,3 +62,5 @@ bokbasen:
   service-uri: https://api.bokbasen.io/metadata/export/onix/v1
   after: 19700101090000
   mapper: default
+  client: bokbasen
+  audience: https://api.bokbasen.io/metadata/

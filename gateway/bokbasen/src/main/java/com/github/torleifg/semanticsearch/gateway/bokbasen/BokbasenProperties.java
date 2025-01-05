@@ -12,4 +12,6 @@ class BokbasenProperties {
     private String after;
     private String subscription;
     private String mapper;
+    private String client;
+    private String audience;
 }

@@ -93,6 +93,8 @@ class BokbasenClientTests {
         BokbasenProperties bokbasenProperties() {
             var bokbasenProperties = new BokbasenProperties();
             bokbasenProperties.setMapper("default");
+            bokbasenProperties.setClient("bokbasen");
+            bokbasenProperties.setAudience("https://api.bokbasen.io/metadata/");
 
             return bokbasenProperties;
         }

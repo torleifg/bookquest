@@ -64,7 +64,8 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                     .map(ContributorRole.class::cast)
                     .map(ContributorRole::getValue)
                     .map(List17::value)
-                    .map(MetadataDTO.Contributor.Role::fromOnix)
+                    .map(ContributorRoleMapping::valueOf)
+                    .map(ContributorRoleMapping::getCode)
                     .toList();
 
             final String name = contributor.getContent().stream()
@@ -80,10 +81,6 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                     .filter(Objects::nonNull)
                     .findFirst()
                     .orElse(null);
-
-            if (roles.isEmpty()) {
-                continue;
-            }
 
             metadata.getContributors().add(new MetadataDTO.Contributor(roles, name));
         }
@@ -223,4 +220,3 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                 .flatMap(Collection::stream);
     }
 }
-
