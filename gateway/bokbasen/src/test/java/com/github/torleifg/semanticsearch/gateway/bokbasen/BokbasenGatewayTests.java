@@ -41,11 +41,12 @@ class BokbasenGatewayTests {
     void findAllTest() {
         when(bokbasenProperties.getServiceUri()).thenReturn("/harvest");
         when(bokbasenProperties.getSubscription()).thenReturn("extended");
+        when(bokbasenProperties.getPagesize()).thenReturn(100);
         when(bokbasenProperties.getAfter()).thenReturn("19700101090000");
 
         var response = createResponse();
 
-        when(bokbasenClient.get("/harvest?subscription=extended&after=19700101090000")).thenReturn(ResponseEntity.ok(response));
+        when(bokbasenClient.get("/harvest?subscription=extended&pagesize=100&after=19700101090000")).thenReturn(ResponseEntity.ok(response));
 
         var metadata = bokbasenGateway.find();
         assertEquals(0, metadata.size());
@@ -55,13 +56,14 @@ class BokbasenGatewayTests {
     void findFromResumptionTokenTest() {
         when(bokbasenProperties.getServiceUri()).thenReturn("/harvest");
         when(bokbasenProperties.getSubscription()).thenReturn("extended");
+        when(bokbasenProperties.getPagesize()).thenReturn(100);
 
         var resumptionToken = "token";
         when(resumptionTokenRepository.get("/harvest")).thenReturn(Optional.of(new ResumptionToken(resumptionToken, Instant.now())));
 
         var response = createResponse();
 
-        when(bokbasenClient.get("/harvest?subscription=extended&next=token")).thenReturn(ResponseEntity.ok(response));
+        when(bokbasenClient.get("/harvest?subscription=extended&pagesize=100&next=token")).thenReturn(ResponseEntity.ok(response));
 
         var metadata = bokbasenGateway.find();
         assertEquals(0, metadata.size());

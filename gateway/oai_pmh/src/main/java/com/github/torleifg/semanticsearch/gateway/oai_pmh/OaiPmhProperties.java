@@ -11,4 +11,6 @@ class OaiPmhProperties {
     private String serviceUri;
     private long ttl;
     private String mapper;
+    private String verb;
+    private String metadataPrefix;
 }

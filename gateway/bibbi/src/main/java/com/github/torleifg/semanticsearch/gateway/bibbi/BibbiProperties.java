@@ -11,4 +11,6 @@ class BibbiProperties {
     private String serviceUri;
     private long ttl;
     private String mapper;
+    private int limit;
+    private String query;
 }
