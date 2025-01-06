@@ -39,6 +39,10 @@ public class BookService {
         return true;
     }
 
+    public List<Book> lastModified() {
+        return bookRepository.lastModified(20);
+    }
+
     public List<Book> fullTextSearch(String query) {
         return bookRepository.fullTextSearch(query, 20);
     }

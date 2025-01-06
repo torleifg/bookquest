@@ -1,5 +1,6 @@
 package com.github.torleifg.semanticsearch.gateway.bokbasen;
 
+import com.github.torleifg.semanticsearch.book.repository.ResumptionToken;
 import com.github.torleifg.semanticsearch.book.repository.ResumptionTokenRepository;
 import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
 import com.github.torleifg.semanticsearch.book.service.MetadataGateway;
@@ -73,9 +74,23 @@ class BokbasenGateway implements MetadataGateway {
     }
 
     private String createRequestUri(String serviceUri) {
-        return resumptionTokenRepository.get(serviceUri)
-                .map(token -> serviceUri + "?subscription=" + bokbasenProperties.getSubscription() + "&next=" + token.value())
-                .orElseGet(() -> serviceUri + "?subscription=" + bokbasenProperties.getSubscription() + "&after=" + bokbasenProperties.getAfter());
+        final StringBuilder requestUri = new StringBuilder(serviceUri)
+                .append("?subscription=")
+                .append(bokbasenProperties.getSubscription())
+                .append("&pagesize=")
+                .append(bokbasenProperties.getPagesize());
+
+        final Optional<ResumptionToken> resumptionToken = resumptionTokenRepository.get(serviceUri);
+
+        if (resumptionToken.isPresent()) {
+            return requestUri.append("&next=")
+                    .append(resumptionToken.get().value())
+                    .toString();
+        }
+
+        return requestUri.append("&after=")
+                .append(bokbasenProperties.getAfter())
+                .toString();
     }
 
     private static boolean isBook(DescriptiveDetail descriptiveDetail) {

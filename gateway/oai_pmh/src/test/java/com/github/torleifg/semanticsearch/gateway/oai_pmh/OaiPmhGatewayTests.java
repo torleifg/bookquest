@@ -44,6 +44,8 @@ class OaiPmhGatewayTests {
     @Test
     void findAllTest() {
         when(oaiPmhProperties.getServiceUri()).thenReturn("/harvest");
+        when(oaiPmhProperties.getVerb()).thenReturn("ListRecords");
+        when(oaiPmhProperties.getMetadataPrefix()).thenReturn("marc21");
 
         var response = createResponse();
         when(oaiPmhClient.get("/harvest?verb=ListRecords&metadataPrefix=marc21")).thenReturn(response);
@@ -56,6 +58,7 @@ class OaiPmhGatewayTests {
     @Test
     void findFromResumptionTokenTest() {
         when(oaiPmhProperties.getServiceUri()).thenReturn("/harvest");
+        when(oaiPmhProperties.getVerb()).thenReturn("ListRecords");
         when(oaiPmhProperties.getTtl()).thenReturn(5L);
 
         var resumptionToken = "token";
@@ -71,6 +74,8 @@ class OaiPmhGatewayTests {
     @Test
     void findFromLastModifiedTest() {
         when(oaiPmhProperties.getServiceUri()).thenReturn("/harvest");
+        when(oaiPmhProperties.getVerb()).thenReturn("ListRecords");
+        when(oaiPmhProperties.getMetadataPrefix()).thenReturn("marc21");
 
         var lastModified = Instant.now();
         when(lastModifiedRepository.get("/harvest")).thenReturn(Optional.of(lastModified));

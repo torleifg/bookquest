@@ -133,14 +133,29 @@ class OaiPmhGateway implements MetadataGateway {
     }
 
     private String createRequestUri(String serviceUri) {
+        final StringBuilder requestUri = new StringBuilder(serviceUri)
+                .append("?verb=")
+                .append(oaiPmhProperties.getVerb());
+
         final Optional<ResumptionToken> resumptionToken = resumptionTokenRepository.get(serviceUri);
 
         if (resumptionToken.isPresent() && resumptionToken.get().isNotExpired(oaiPmhProperties.getTtl())) {
-            return serviceUri + "?verb=ListRecords&resumptionToken=" + resumptionToken.get().value();
+            return requestUri.append("&resumptionToken=")
+                    .append(resumptionToken.get().value())
+                    .toString();
         }
 
-        return lastModifiedRepository.get(serviceUri)
-                .map(lastModified -> serviceUri + "?verb=ListRecords&metadataPrefix=marc21&from=" + ISO_INSTANT.format(lastModified))
-                .orElse(serviceUri + "?verb=ListRecords&metadataPrefix=marc21");
+        requestUri.append("&metadataPrefix=")
+                .append(oaiPmhProperties.getMetadataPrefix());
+
+        final Optional<Instant> lastModified = lastModifiedRepository.get(serviceUri);
+
+        if (lastModified.isPresent()) {
+            return requestUri.append("&from=")
+                    .append(ISO_INSTANT.format(lastModified.get()))
+                    .toString();
+        }
+
+        return requestUri.toString();
     }
 }

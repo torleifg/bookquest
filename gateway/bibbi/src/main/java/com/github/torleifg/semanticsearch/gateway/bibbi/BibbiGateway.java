@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import no.bs.bibliografisk.model.BibliographicRecordMetadata;
 import no.bs.bibliografisk.model.GetV1PublicationsHarvest200ResponsePublicationsInner;
 
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -86,14 +87,29 @@ class BibbiGateway implements MetadataGateway {
     }
 
     private String createRequestUri(String serviceUri) {
+        final StringBuilder requestUri = new StringBuilder(serviceUri)
+                .append("?limit=")
+                .append(bibbiProperties.getLimit());
+
         final Optional<ResumptionToken> resumptionToken = resumptionTokenRepository.get(serviceUri);
 
         if (resumptionToken.isPresent() && resumptionToken.get().isNotExpired(bibbiProperties.getTtl())) {
-            return serviceUri + "?limit=100&resumption_token=" + resumptionToken.get().value();
+            return requestUri.append("&resumption_token=")
+                    .append(resumptionToken.get().value())
+                    .toString();
         }
 
-        return lastModifiedRepository.get(serviceUri)
-                .map(lastModified -> serviceUri + String.format("?limit=100&query=type:(audiobook OR book) AND modified:[%s TO *]", ISO_INSTANT.format(lastModified)))
-                .orElse(serviceUri + "?limit=100&query=type:(audiobook OR book)");
+        final Optional<Instant> lastModified = lastModifiedRepository.get(serviceUri);
+
+        if (lastModified.isPresent()) {
+            return requestUri.append("&query=")
+                    .append(bibbiProperties.getQuery())
+                    .append(String.format(" AND modified:[%s TO *]", ISO_INSTANT.format(lastModified.get())))
+                    .toString();
+        }
+
+        return requestUri.append("&query=")
+                .append(bibbiProperties.getQuery())
+                .toString();
     }
 }

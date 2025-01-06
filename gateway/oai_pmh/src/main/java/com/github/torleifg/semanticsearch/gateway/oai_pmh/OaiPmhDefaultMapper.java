@@ -6,10 +6,7 @@ import info.lc.xmlns.marcxchange_v1.RecordType;
 import info.lc.xmlns.marcxchange_v1.SubfieldatafieldType;
 
 import java.net.URI;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.groupingBy;
@@ -57,23 +54,33 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
                 .findFirst()
                 .ifPresent(metadata::setPublisher);
 
-        final List<DataFieldType> dataFields = Stream.concat(
-                        dataFieldsByTag.getOrDefault("100", List.of()).stream(),
-                        dataFieldsByTag.getOrDefault("700", List.of()).stream())
-                .filter(dataField -> dataField.getSubfield().stream().anyMatch(subfield -> subfield.getCode().equals("4")))
-                .toList();
+        final List<DataFieldType> dataFields = new ArrayList<>();
+        dataFields.addAll(dataFieldsByTag.getOrDefault("100", List.of()));
+        dataFields.addAll(dataFieldsByTag.getOrDefault("110", List.of()));
+        dataFields.addAll(dataFieldsByTag.getOrDefault("111", List.of()));
+        dataFields.addAll(dataFieldsByTag.getOrDefault("700", List.of()));
+        dataFields.addAll(dataFieldsByTag.getOrDefault("710", List.of()));
+        dataFields.addAll(dataFieldsByTag.getOrDefault("711", List.of()));
 
         for (final DataFieldType dataField : dataFields) {
-            final String name = getSubfieldValue(dataField.getSubfield(), "a")
-                    .findFirst()
-                    .orElse(null);
+            final Optional<String> name = getSubfieldValue(dataField.getSubfield(), "a")
+                    .findFirst();
+
+            if (name.isEmpty()) {
+                continue;
+            }
 
             final List<MetadataDTO.Contributor.Role> roles = getSubfieldValue(dataField.getSubfield(), "4")
                     .map(String::toUpperCase)
                     .map(MetadataDTO.Contributor.Role::valueOf)
+                    .distinct()
                     .toList();
 
-            metadata.getContributors().add(new MetadataDTO.Contributor(roles, name));
+            if (roles.isEmpty()) {
+                continue;
+            }
+
+            metadata.getContributors().add(new MetadataDTO.Contributor(roles, name.get()));
         }
 
         dataFieldsByTag.getOrDefault("264", List.of()).stream()

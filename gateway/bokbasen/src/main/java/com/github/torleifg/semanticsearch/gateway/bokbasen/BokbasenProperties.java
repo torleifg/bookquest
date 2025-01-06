@@ -14,4 +14,5 @@ class BokbasenProperties {
     private String mapper;
     private String client;
     private String audience;
+    private int pagesize;
 }

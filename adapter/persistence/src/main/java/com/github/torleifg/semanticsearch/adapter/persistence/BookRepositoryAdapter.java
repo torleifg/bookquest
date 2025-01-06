@@ -20,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -59,23 +60,49 @@ class BookRepositoryAdapter implements BookRepository {
             final Optional<UUID> existingVector = findVectorStoreIdByExternalId(externalId);
 
             final Document document = documentMapper.toDocument(book);
-            save(document);
+            vectorStore.add(List.of(document));
 
             final UUID newVector = UUID.fromString(document.getId());
             save(book, newVector);
 
-            existingVector.ifPresent(this::delete);
+            existingVector
+                    .map(UUID::toString)
+                    .map(List::of)
+                    .ifPresent(vectorStore::delete);
         }
     }
 
     @Override
+    public List<Book> lastModified(int limit) {
+        return jdbcClient.sql("""
+                        select * from book where metadata ->> 'description' is not null order by modified desc limit ?
+                        """)
+                .param(limit)
+                .query(new BookRowMapper())
+                .list();
+    }
+
+    @Override
     public List<Book> fullTextSearch(String query, int limit) {
-        return query(query, limit);
+        return jdbcClient.sql("""
+                        select * from search_books(?, ?)
+                        """)
+                .param(query)
+                .param(limit)
+                .query(new BookRowMapper())
+                .list();
     }
 
     @Override
     public List<Book> semanticSearch(String query, int limit) {
-        final List<UUID> ids = vectorQuery(query, limit).stream()
+        final SearchRequest searchRequest = SearchRequest.builder()
+                .query("query: " + query)
+                .similarityThreshold(0.8)
+                .topK(limit)
+                .build();
+
+        final List<UUID> ids = Stream.ofNullable(vectorStore.similaritySearch(searchRequest))
+                .flatMap(List::stream)
                 .map(Document::getId)
                 .map(UUID::fromString)
                 .toList();
@@ -85,7 +112,24 @@ class BookRepositoryAdapter implements BookRepository {
 
     @Override
     public List<Book> semanticSimilarity(int limit) {
-        final List<UUID> ids = vectorSimilarity(limit).stream()
+        final Optional<Document> randomDocument = jdbcClient.sql("""
+                        select * from vector_store order by random() limit 1
+                        """)
+                .query((resultSet, rowNum) -> new Document(resultSet.getString("content")))
+                .optional();
+
+        if (randomDocument.isEmpty()) {
+            return List.of();
+        }
+
+        final SearchRequest searchRequest = SearchRequest.builder()
+                .query("passage: " + randomDocument.get().getText())
+                .similarityThreshold(0.8)
+                .topK(limit)
+                .build();
+
+        final List<UUID> ids = Stream.ofNullable(vectorStore.similaritySearch(searchRequest))
+                .flatMap(List::stream)
                 .map(Document::getId)
                 .map(UUID::fromString)
                 .toList();
@@ -137,7 +181,7 @@ class BookRepositoryAdapter implements BookRepository {
                 .list();
     }
 
-    private void save(Book book) {
+    void save(Book book) {
         jdbcClient.sql("""
                         insert into book(external_id, deleted, metadata) values (?, ?, ?)
                         on conflict (external_id)
@@ -162,50 +206,6 @@ class BookRepositoryAdapter implements BookRepository {
                 .param(toPGobject(book.getMetadata()))
                 .param(vectorStoreId)
                 .update();
-    }
-
-    List<Book> query(String query, int limit) {
-        return jdbcClient.sql("""
-                        select * from search_books(?, ?)
-                        """)
-                .param(query)
-                .param(limit)
-                .query(new BookRowMapper())
-                .list();
-    }
-
-    private void save(Document document) {
-        vectorStore.add(List.of(document));
-    }
-
-    private void delete(UUID vectorId) {
-        vectorStore.delete(List.of(vectorId.toString()));
-    }
-
-    private List<Document> vectorQuery(String query, int limit) {
-        return vectorStore.similaritySearch(SearchRequest.builder()
-                .query("query: " + query)
-                .similarityThreshold(0.8)
-                .topK(limit)
-                .build());
-    }
-
-    private List<Document> vectorSimilarity(int limit) {
-        final Optional<Document> randomDocument = jdbcClient.sql("""
-                        select * from vector_store order by random() limit 1
-                        """)
-                .query((resultSet, rowNum) -> new Document(resultSet.getString("content")))
-                .optional();
-
-        if (randomDocument.isEmpty()) {
-            return List.of();
-        }
-
-        return vectorStore.similaritySearch(SearchRequest.builder()
-                .query("passage: " + randomDocument.get().getText())
-                .similarityThreshold(0.8)
-                .topK(limit)
-                .build());
     }
 
     private static class BookRowMapper implements RowMapper<Book> {
