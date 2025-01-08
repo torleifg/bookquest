@@ -1,33 +1,30 @@
 package com.github.torleifg.semanticsearch.gateway.oai_pmh;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.torleifg.semanticsearch.book.repository.LastModifiedRepository;
 import com.github.torleifg.semanticsearch.book.repository.ResumptionTokenRepository;
 import org.junit.jupiter.api.Test;
 import org.openarchives.oai._2.OAIPMHerrorcodeType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.wiremock.spring.ConfigureWireMock;
 import org.wiremock.spring.EnableWireMock;
-import org.wiremock.spring.InjectWireMock;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.okXml;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@EnableWireMock
 @RestClientTest(OaiPmhClient.class)
-@EnableWireMock({@ConfigureWireMock(port = 8888)})
 @TestPropertySource(properties = "gateway.type=oai-pmh")
 @ContextConfiguration(classes = {OaiPmhConfig.class, OaiPmhClientTests.OaiPmhTestConfig.class})
 class OaiPmhClientTests {
 
-    @InjectWireMock
-    WireMockServer wm;
+    @Value("${wiremock.server.baseUrl}")
+    String wireMockUrl;
 
     @Autowired
     OaiPmhClient oaiPmhClient;
@@ -40,7 +37,7 @@ class OaiPmhClientTests {
 
     @Test
     void getTest() {
-        wm.stubFor(get("/mlnb").willReturn(okXml("""
+        stubFor(get("/mlnb").willReturn(okXml("""
                 <?xml version="1.0" encoding="UTF-8"?>
                 <OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
                     <responseDate>2025-01-01T12:00:00Z</responseDate>
@@ -49,7 +46,7 @@ class OaiPmhClientTests {
                 </OAI-PMH>
                 """)));
 
-        var response = oaiPmhClient.get(wm.baseUrl() + "/mlnb");
+        var response = oaiPmhClient.get(wireMockUrl + "/mlnb");
 
         assertEquals(1, response.getError().size());
         assertEquals(OAIPMHerrorcodeType.NO_RECORDS_MATCH, response.getError().getFirst().getCode());

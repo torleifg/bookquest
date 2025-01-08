@@ -40,6 +40,8 @@ spring:
 server:
   port: 8080
 
+language: nob
+
 scheduler:
   enabled: true
   initial-delay: 5

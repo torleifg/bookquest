@@ -1,9 +1,9 @@
 package com.github.torleifg.semanticsearch.gateway.bokbasen;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.torleifg.semanticsearch.book.repository.ResumptionTokenRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -16,21 +16,19 @@ import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.wiremock.spring.ConfigureWireMock;
 import org.wiremock.spring.EnableWireMock;
-import org.wiremock.spring.InjectWireMock;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@EnableWireMock
 @RestClientTest(BokbasenClient.class)
-@EnableWireMock({@ConfigureWireMock(port = 8888)})
 @TestPropertySource(properties = "gateway.type=bokbasen")
 @ContextConfiguration(classes = {BokbasenConfig.class, BokbasenClientTests.BokbasenTestConfig.class})
 class BokbasenClientTests {
 
-    @InjectWireMock
-    WireMockServer wm;
+    @Value("${wiremock.server.baseUrl}")
+    String wireMockUrl;
 
     @Autowired
     BokbasenClient bokbasenClient;
@@ -40,14 +38,14 @@ class BokbasenClientTests {
 
     @Test
     void getTest() {
-        wm.stubFor(post("/token").willReturn(okJson("""
+        stubFor(post("/token").willReturn(okJson("""
                       {
                         "access_token": "MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3",
                         "token_type": "Bearer"
                        }
                 """)));
 
-        wm.stubFor(get("/onix/v1").willReturn(okXml("""
+        stubFor(get("/onix/v1").willReturn(okXml("""
                 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
                 <ONIXMessage xmlns="http://ns.editeur.org/onix/3.0/reference" release="3.0">
                     <Header>
@@ -63,7 +61,7 @@ class BokbasenClientTests {
                 </ONIXMessage>
                 """)));
 
-        var responseEntity = bokbasenClient.get(wm.baseUrl() + "/onix/v1");
+        var responseEntity = bokbasenClient.get(wireMockUrl + "/onix/v1");
         var message = responseEntity.getBody();
 
         assertNotNull(message);
@@ -72,6 +70,9 @@ class BokbasenClientTests {
 
     @TestConfiguration
     static class BokbasenTestConfig {
+
+        @Value("${wiremock.server.baseUrl}")
+        String wireMockUrl;
 
         @Bean
         OAuth2AuthorizedClientService authorizedClientService(ClientRegistrationRepository clientRegistrationRepository) {
@@ -85,7 +86,7 @@ class BokbasenClientTests {
                     .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                     .clientId("clientId")
                     .clientSecret("clientSecret")
-                    .tokenUri("http://localhost:8888/token")
+                    .tokenUri(wireMockUrl + "/token")
                     .build());
         }
 
