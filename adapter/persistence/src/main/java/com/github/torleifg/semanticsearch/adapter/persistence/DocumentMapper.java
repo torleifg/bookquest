@@ -1,9 +1,15 @@
 package com.github.torleifg.semanticsearch.adapter.persistence;
 
 import com.github.torleifg.semanticsearch.book.domain.Book;
+import com.github.torleifg.semanticsearch.book.domain.Classification;
+import com.github.torleifg.semanticsearch.book.domain.Contributor;
 import com.github.torleifg.semanticsearch.book.domain.Metadata;
 import org.springframework.ai.document.Document;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+import static java.util.stream.Collectors.joining;
 
 @Component
 class DocumentMapper {
@@ -11,15 +17,25 @@ class DocumentMapper {
     Document toDocument(Book book) {
         final Metadata metadata = book.getMetadata();
 
-        final String passage;
+        final StringBuilder passage = new StringBuilder("passage: " + "Title: " + metadata.getTitle());
 
-        if (hasMoreThanTwentyWords(metadata.getDescription())) {
-            passage = "passage: " + metadata.getDescription();
-        } else {
-            passage = "passage: " + metadata.getTitle();
+        if (!metadata.getContributors().isEmpty()) {
+            passage.append(". Contributors: ").append(getContributorsAsString(metadata.getContributors()));
         }
 
-        return new Document(passage);
+        if (hasMoreThanTwentyWords(metadata.getDescription())) {
+            passage.append(". Description: ").append(metadata.getDescription());
+        }
+
+        if (!metadata.getAbout().isEmpty()) {
+            passage.append(". About: ").append(getClassificationAsString(metadata.getAbout()));
+        }
+
+        if (!metadata.getGenreAndForm().isEmpty()) {
+            passage.append(". Genre: ").append(getClassificationAsString(metadata.getGenreAndForm()));
+        }
+
+        return new Document(passage.toString());
     }
 
 
@@ -31,5 +47,17 @@ class DocumentMapper {
         final String[] words = text.trim().split("\\s+");
 
         return words.length > 20;
+    }
+
+    private String getContributorsAsString(List<Contributor> contributors) {
+        return contributors.stream()
+                .map(Contributor::name)
+                .collect(joining(", "));
+    }
+
+    private String getClassificationAsString(List<Classification> classifications) {
+        return classifications.stream()
+                .map(Classification::term)
+                .collect(joining(", "));
     }
 }
