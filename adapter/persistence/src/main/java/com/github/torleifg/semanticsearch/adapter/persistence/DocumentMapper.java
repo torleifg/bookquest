@@ -20,7 +20,7 @@ class DocumentMapper {
         final StringBuilder passage = new StringBuilder("passage: " + "Title: " + metadata.getTitle());
 
         if (!metadata.getContributors().isEmpty()) {
-            passage.append(". Contributors: ").append(getContributorsAsString(metadata.getContributors()));
+            passage.append(". Author: ").append(getAuthorsAsString(metadata.getContributors()));
         }
 
         if (hasMoreThanTwentyWords(metadata.getDescription())) {
@@ -49,8 +49,9 @@ class DocumentMapper {
         return words.length > 20;
     }
 
-    private String getContributorsAsString(List<Contributor> contributors) {
+    private String getAuthorsAsString(List<Contributor> contributors) {
         return contributors.stream()
+                .filter(contributor -> contributor.roles().contains(Contributor.Role.AUT))
                 .map(Contributor::name)
                 .collect(joining(", "));
     }
