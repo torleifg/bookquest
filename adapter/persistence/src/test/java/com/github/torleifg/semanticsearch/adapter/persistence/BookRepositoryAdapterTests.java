@@ -220,7 +220,7 @@ class BookRepositoryAdapterTests {
                 .param(BookRepositoryAdapter.toPGobject(book.getMetadata()))
                 .update();
 
-        var books = adapter.fullTextSearch("title description", 10);
+        var books = adapter.fullTextSearch("title", 10);
         assertEquals(1, books.size());
         assertEquals(books.getFirst().getExternalId(), book.getExternalId());
         assertEquals(books.getFirst().getMetadata(), book.getMetadata());
