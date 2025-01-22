@@ -63,6 +63,7 @@ oai-pmh:
   mapper: default
   verb: ListRecords
   metadataPrefix: marc21
+  set:
 
 bokbasen:
   service-uri: https://api.bokbasen.io/metadata/export/onix/v1

@@ -1,10 +1,10 @@
 package com.github.torleifg.semanticsearch.gateway.oai_pmh;
 
 import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
-import info.lc.xmlns.marcxchange_v1.DataFieldType;
-import info.lc.xmlns.marcxchange_v1.ObjectFactory;
-import info.lc.xmlns.marcxchange_v1.SubfieldatafieldType;
 import org.junit.jupiter.api.Test;
+import org.marc4j.marc.impl.DataFieldImpl;
+import org.marc4j.marc.impl.RecordImpl;
+import org.marc4j.marc.impl.SubfieldImpl;
 
 import java.util.List;
 
@@ -13,72 +13,58 @@ import static org.junit.jupiter.api.Assertions.*;
 class OaiPmhDefaultMapperTests {
     final OaiPmhDefaultMapper mapper = new OaiPmhDefaultMapper();
 
-    final ObjectFactory objectFactory = new ObjectFactory();
-
     @Test
     void mapRecordTest() {
-        var record = objectFactory.createRecordType();
+        var isbn = new DataFieldImpl("020", ' ', ' ');
+        isbn.addSubfield(new SubfieldImpl('a', "isbn"));
 
-        var isbn = createDataField("020");
-        var isbnValue = createSubfield("a", "isbn");
-        isbn.getSubfield().add(isbnValue);
+        var entry = new DataFieldImpl("100", ' ', ' ');
+        entry.addSubfield(new SubfieldImpl('4', "aut"));
+        entry.addSubfield(new SubfieldImpl('4', "ill"));
+        entry.addSubfield(new SubfieldImpl('a', "entry"));
 
-        var title = createDataField("245");
-        var titleValue = createSubfield("a", "title");
-        var remainderOfTitleValue = createSubfield("b", "remainder of title");
-        title.getSubfield().addAll(List.of(titleValue, remainderOfTitleValue));
+        var title = new DataFieldImpl("245", ' ', ' ');
+        title.addSubfield(new SubfieldImpl('a', "title"));
+        title.addSubfield(new SubfieldImpl('b', "remainder of title"));
 
-        var publisher = createDataField("264");
-        var publisherValue = createSubfield("b", "publisher");
-        publisher.getSubfield().add(publisherValue);
+        var publisher = new DataFieldImpl("264", ' ', ' ');
+        publisher.addSubfield(new SubfieldImpl('b', "publisher"));
 
-        var entry = createDataField("100");
-        var authorRole = createSubfield("4", "aut");
-        var illustratorRole = createSubfield("4", "ill");
-        var entryValue = createSubfield("a", "entry");
-        entry.getSubfield().addAll(List.of(authorRole, illustratorRole, entryValue));
+        var publishedYear = new DataFieldImpl("264", ' ', ' ');
+        publishedYear.addSubfield(new SubfieldImpl('c', "1970"));
 
-        var publishedYear = createDataField("264");
-        var publishedYearValue = createSubfield("c", "1970");
-        publishedYear.getSubfield().add(publishedYearValue);
+        var description = new DataFieldImpl("520", ' ', ' ');
+        description.addSubfield(new SubfieldImpl('a', "description"));
 
-        var description = createDataField("520");
-        var descriptionValue = createSubfield("a", "description");
-        description.getSubfield().add(descriptionValue);
+        var aboutNob = new DataFieldImpl("650", ' ', ' ');
+        aboutNob.addSubfield(new SubfieldImpl('0', "id"));
+        aboutNob.addSubfield(new SubfieldImpl('2', "aja"));
+        aboutNob.addSubfield(new SubfieldImpl('9', "nob"));
+        aboutNob.addSubfield(new SubfieldImpl('a', "about"));
 
-        var aboutNob = createDataField("650");
-        var aboutNobId = createSubfield("0", "id");
-        var aboutNobSource = createSubfield("2", "bibbi");
-        var aboutNobLanguage = createSubfield("9", "nob");
-        var aboutNobValue = createSubfield("a", "about");
-        aboutNob.getSubfield().addAll(List.of(aboutNobId, aboutNobSource, aboutNobLanguage, aboutNobValue));
+        var aboutNno = new DataFieldImpl("650", ' ', ' ');
+        aboutNno.addSubfield(new SubfieldImpl('0', "id"));
+        aboutNno.addSubfield(new SubfieldImpl('2', "aja"));
+        aboutNno.addSubfield(new SubfieldImpl('9', "nno"));
+        aboutNno.addSubfield(new SubfieldImpl('a', "about"));
 
-        var aboutNno = createDataField("650");
-        var aboutNnoId = createSubfield("0", "id");
-        var aboutNnoSource = createSubfield("2", "bibbi");
-        var aboutNnoLanguage = createSubfield("9", "nno");
-        var aboutNnoValue = createSubfield("a", "about");
-        aboutNno.getSubfield().addAll(List.of(aboutNnoId, aboutNnoSource, aboutNnoLanguage, aboutNnoValue));
+        var genreNob = new DataFieldImpl("655", ' ', ' ');
+        genreNob.addSubfield(new SubfieldImpl('0', "id"));
+        genreNob.addSubfield(new SubfieldImpl('2', "ntsf"));
+        genreNob.addSubfield(new SubfieldImpl('9', "nob"));
+        genreNob.addSubfield(new SubfieldImpl('a', "genre"));
 
-        var genreNob = createDataField("655");
-        var genreNobId = createSubfield("0", "id");
-        var genreNobSource = createSubfield("2", "ntsf");
-        var genreNobLanguage = createSubfield("9", "nob");
-        var genreMobValue = createSubfield("a", "genre");
-        genreNob.getSubfield().addAll(List.of(genreNobId, genreNobSource, genreNobLanguage, genreMobValue));
+        var genreEng = new DataFieldImpl("655", ' ', ' ');
+        genreEng.addSubfield(new SubfieldImpl('0', "id"));
+        genreEng.addSubfield(new SubfieldImpl('2', "ntsf"));
+        genreEng.addSubfield(new SubfieldImpl('9', "eng"));
+        genreEng.addSubfield(new SubfieldImpl('a', "genre"));
 
-        var genreEng = createDataField("655");
-        var genreEngId = createSubfield("0", "id");
-        var genreEngSource = createSubfield("2", "ntsf");
-        var genreEngLanguage = createSubfield("9", "eng");
-        var genreEngValue = createSubfield("a", "genre");
-        genreEng.getSubfield().addAll(List.of(genreEngId, genreEngSource, genreEngLanguage, genreEngValue));
+        var thumbnailUrl = new DataFieldImpl("856", ' ', ' ');
+        thumbnailUrl.addSubfield(new SubfieldImpl('u', "http://thumbnailUrl"));
 
-        var thumbnailUrl = createDataField("856");
-        var thumbnailUrlValue = createSubfield("u", "http://thumbnailUrl");
-        thumbnailUrl.getSubfield().add(thumbnailUrlValue);
-
-        record.getDatafield().addAll(List.of(isbn, title, publisher, entry, publishedYear, description, aboutNob, aboutNno, genreNob, genreEng, thumbnailUrl));
+        var record = new RecordImpl();
+        record.getDataFields().addAll(List.of(isbn, title, publisher, entry, publishedYear, description, aboutNob, aboutNno, genreNob, genreEng, thumbnailUrl));
 
         var metadata = mapper.from("id", record);
 
@@ -96,11 +82,11 @@ class OaiPmhDefaultMapperTests {
         assertEquals("description", metadata.getDescription());
         assertEquals(2, metadata.getAbout().size());
         assertEquals("id", metadata.getAbout().getFirst().id());
-        assertEquals("bibbi", metadata.getAbout().getFirst().source());
+        assertEquals("aja", metadata.getAbout().getFirst().source());
         assertEquals("nob", metadata.getAbout().getFirst().language());
         assertEquals("about", metadata.getAbout().getFirst().term());
         assertEquals("id", metadata.getAbout().getLast().id());
-        assertEquals("bibbi", metadata.getAbout().getLast().source());
+        assertEquals("aja", metadata.getAbout().getLast().source());
         assertEquals("nno", metadata.getAbout().getLast().language());
         assertEquals("about", metadata.getAbout().getLast().term());
         assertEquals(2, metadata.getGenreAndForm().size());
@@ -120,20 +106,5 @@ class OaiPmhDefaultMapperTests {
         var metadata = mapper.from("id");
 
         assertTrue(metadata.isDeleted());
-    }
-
-    DataFieldType createDataField(String number) {
-        var datafield = objectFactory.createDataFieldType();
-        datafield.setTag(number);
-
-        return datafield;
-    }
-
-    SubfieldatafieldType createSubfield(String code, String value) {
-        var subfield = objectFactory.createSubfieldatafieldType();
-        subfield.setCode(code);
-        subfield.setValue(value);
-
-        return subfield;
     }
 }
