@@ -1,13 +1,12 @@
 package com.github.torleifg.semanticsearch.gateway.oai_pmh;
 
 import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
-import info.lc.xmlns.marcxchange_v1.DataFieldType;
-import info.lc.xmlns.marcxchange_v1.RecordType;
-import info.lc.xmlns.marcxchange_v1.SubfieldatafieldType;
+import org.marc4j.marc.DataField;
+import org.marc4j.marc.Record;
+import org.marc4j.marc.Subfield;
 
 import java.net.URI;
 import java.util.*;
-import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
@@ -24,25 +23,31 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
     }
 
     @Override
-    public MetadataDTO from(String id, RecordType record) {
+    public MetadataDTO from(String id, Record record) {
         final MetadataDTO metadata = new MetadataDTO();
         metadata.setExternalId(id);
         metadata.setDeleted(false);
 
-        final Map<String, List<DataFieldType>> dataFieldsByTag = record.getDatafield().stream()
-                .collect(groupingBy(DataFieldType::getTag, LinkedHashMap::new, toList()));
+        final Map<String, List<DataField>> dataFieldsByTag = record.getDataFields().stream()
+                .collect(groupingBy(DataField::getTag, LinkedHashMap::new, toList()));
 
         dataFieldsByTag.getOrDefault("020", List.of()).stream()
-                .flatMap(dataField -> getSubfieldValue(dataField.getSubfield(), "a"))
+                .map(dataField -> dataField.getSubfield('a'))
+                .filter(Objects::nonNull)
+                .map(Subfield::getData)
                 .findFirst()
                 .ifPresent(metadata::setIsbn);
 
         final Optional<String> title = dataFieldsByTag.getOrDefault("245", List.of()).stream()
-                .flatMap(dataField -> getSubfieldValue(dataField.getSubfield(), "a"))
+                .map(dataField -> dataField.getSubfield('a'))
+                .filter(Objects::nonNull)
+                .map(Subfield::getData)
                 .findFirst();
 
         final Optional<String> remainderOfTitle = dataFieldsByTag.getOrDefault("245", List.of()).stream()
-                .flatMap(dataField -> getSubfieldValue(dataField.getSubfield(), "b"))
+                .map(dataField -> dataField.getSubfield('b'))
+                .filter(Objects::nonNull)
+                .map(Subfield::getData)
                 .findFirst();
 
         if (title.isPresent() && remainderOfTitle.isPresent()) {
@@ -50,11 +55,13 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
         } else title.ifPresent(metadata::setTitle);
 
         dataFieldsByTag.getOrDefault("264", List.of()).stream()
-                .flatMap(dataField -> getSubfieldValue(dataField.getSubfield(), "b"))
+                .map(dataField -> dataField.getSubfield('b'))
+                .filter(Objects::nonNull)
+                .map(Subfield::getData)
                 .findFirst()
                 .ifPresent(metadata::setPublisher);
 
-        final List<DataFieldType> dataFields = new ArrayList<>();
+        final List<DataField> dataFields = new ArrayList<>();
         dataFields.addAll(dataFieldsByTag.getOrDefault("100", List.of()));
         dataFields.addAll(dataFieldsByTag.getOrDefault("110", List.of()));
         dataFields.addAll(dataFieldsByTag.getOrDefault("111", List.of()));
@@ -62,17 +69,25 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
         dataFields.addAll(dataFieldsByTag.getOrDefault("710", List.of()));
         dataFields.addAll(dataFieldsByTag.getOrDefault("711", List.of()));
 
-        for (final DataFieldType dataField : dataFields) {
-            final Optional<String> name = getSubfieldValue(dataField.getSubfield(), "a")
-                    .findFirst();
+        for (final DataField dataField : dataFields) {
+            final Optional<String> name = Optional.ofNullable(dataField.getSubfield('a'))
+                    .map(Subfield::getData);
 
             if (name.isEmpty()) {
                 continue;
             }
 
-            final List<MetadataDTO.Contributor.Role> roles = getSubfieldValue(dataField.getSubfield(), "4")
-                    .map(String::toUpperCase)
-                    .map(MetadataDTO.Contributor.Role::valueOf)
+            final List<MetadataDTO.Contributor.Role> roles = dataField.getSubfields('4').stream()
+                    .filter(Objects::nonNull)
+                    .map(Subfield::getData)
+                    .map(role -> {
+                        try {
+                            return MetadataDTO.Contributor.Role.valueOf(role.toUpperCase());
+                        } catch (IllegalArgumentException e) {
+                            return null;
+                        }
+                    })
+                    .filter(Objects::nonNull)
                     .distinct()
                     .toList();
 
@@ -84,12 +99,16 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
         }
 
         dataFieldsByTag.getOrDefault("264", List.of()).stream()
-                .flatMap(dataField -> getSubfieldValue(dataField.getSubfield(), "c"))
+                .map(dataField -> dataField.getSubfield('c'))
+                .filter(Objects::nonNull)
+                .map(Subfield::getData)
                 .findFirst()
                 .ifPresent(metadata::setPublishedYear);
 
         dataFieldsByTag.getOrDefault("520", List.of()).stream()
-                .flatMap(dataField -> getSubfieldValue(dataField.getSubfield(), "a"))
+                .map(dataField -> dataField.getSubfield('a'))
+                .filter(Objects::nonNull)
+                .map(Subfield::getData)
                 .findFirst()
                 .ifPresent(metadata::setDescription);
 
@@ -102,34 +121,37 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
                 .forEach(metadata.getGenreAndForm()::add);
 
         dataFieldsByTag.getOrDefault("856", List.of()).stream()
-                .flatMap(dataField -> getSubfieldValue(dataField.getSubfield(), "u"))
-                .map(URI::create)
+                .map(dataField -> dataField.getSubfield('u'))
+                .filter(Objects::nonNull)
+                .map(Subfield::getData)
+                .map(url -> {
+                    try {
+                        return URI.create(url);
+                    } catch (IllegalArgumentException e) {
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
                 .forEach(metadata::setThumbnailUrl);
 
         return metadata;
     }
 
-    private static Stream<String> getSubfieldValue(List<SubfieldatafieldType> subfields, String subfieldCode) {
-        return subfields.stream()
-                .filter(subfield -> subfield.getCode().equals(subfieldCode))
-                .map(SubfieldatafieldType::getValue);
-    }
-
-    private static MetadataDTO.Classification createClassification(DataFieldType dataField) {
-        final String id = getSubfieldValue(dataField.getSubfield(), "0")
-                .findFirst()
+    private static MetadataDTO.Classification createClassification(DataField dataField) {
+        final String id = Optional.ofNullable(dataField.getSubfield('0'))
+                .map(Subfield::getData)
                 .orElse(null);
 
-        final String source = getSubfieldValue(dataField.getSubfield(), "2")
-                .findFirst()
+        final String source = Optional.ofNullable(dataField.getSubfield('2'))
+                .map(Subfield::getData)
                 .orElse(null);
 
-        final String language = getSubfieldValue(dataField.getSubfield(), "9")
-                .findFirst()
+        final String language = Optional.ofNullable(dataField.getSubfield('9'))
+                .map(Subfield::getData)
                 .orElse("und");
 
-        final String term = getSubfieldValue(dataField.getSubfield(), "a")
-                .findFirst()
+        final String term = Optional.ofNullable(dataField.getSubfield('a'))
+                .map(Subfield::getData)
                 .orElse(null);
 
         return new MetadataDTO.Classification(id, source, language, term);

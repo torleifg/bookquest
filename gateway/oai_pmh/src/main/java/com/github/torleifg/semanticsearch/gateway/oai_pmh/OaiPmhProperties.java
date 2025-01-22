@@ -13,4 +13,5 @@ class OaiPmhProperties {
     private String mapper;
     private String verb;
     private String metadataPrefix;
+    private String set;
 }

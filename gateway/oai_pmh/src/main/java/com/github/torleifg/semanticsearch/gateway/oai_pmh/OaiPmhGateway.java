@@ -5,15 +5,18 @@ import com.github.torleifg.semanticsearch.book.repository.ResumptionToken;
 import com.github.torleifg.semanticsearch.book.repository.ResumptionTokenRepository;
 import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
 import com.github.torleifg.semanticsearch.book.service.MetadataGateway;
-import info.lc.xmlns.marcxchange_v1.RecordType;
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Unmarshaller;
 import lombok.extern.slf4j.Slf4j;
+import org.marc4j.MarcXmlReader;
+import org.marc4j.marc.Record;
 import org.openarchives.oai._2.HeaderType;
 import org.openarchives.oai._2.StatusType;
 import org.w3c.dom.Element;
 
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.ByteArrayInputStream;
+import java.io.StringWriter;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,12 +33,12 @@ class OaiPmhGateway implements MetadataGateway {
     private final ResumptionTokenRepository resumptionTokenRepository;
     private final LastModifiedRepository lastModifiedRepository;
 
-    private static final JAXBContext JAXB_CONTEXT;
+    private static final TransformerFactory TRANSFORMER_FACTORY;
 
     static {
         try {
-            JAXB_CONTEXT = JAXBContext.newInstance(RecordType.class);
-        } catch (JAXBException e) {
+            TRANSFORMER_FACTORY = TransformerFactory.newInstance();
+        } catch (TransformerFactoryConfigurationError e) {
             throw new OaiPmhException(e);
         }
     }
@@ -91,13 +94,6 @@ class OaiPmhGateway implements MetadataGateway {
 
         log.info("Received {} record(s) from {}", oaiPmhrecords.size(), requestUri);
 
-        final Unmarshaller unmarshaller;
-        try {
-            unmarshaller = JAXB_CONTEXT.createUnmarshaller();
-        } catch (JAXBException e) {
-            throw new OaiPmhException(e);
-        }
-
         final List<MetadataDTO> metadata = new ArrayList<>();
 
         for (final var oaiPmhRecord : oaiPmhrecords) {
@@ -113,14 +109,24 @@ class OaiPmhGateway implements MetadataGateway {
                 continue;
             }
 
-            final RecordType marcRecord;
+            final MarcXmlReader marcXmlReader;
             try {
-                marcRecord = unmarshaller.unmarshal(element, RecordType.class).getValue();
-            } catch (JAXBException e) {
-                throw new OaiPmhException(e);
+                final Transformer transformer = TRANSFORMER_FACTORY.newTransformer();
+                transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+
+                final StringWriter writer = new StringWriter();
+                transformer.transform(new DOMSource(element), new StreamResult(writer));
+
+                marcXmlReader = new MarcXmlReader(new ByteArrayInputStream(writer.toString().getBytes()));
+            } catch (TransformerException e) {
+                continue;
             }
 
-            metadata.add(oaiPmhMapper.from(identifier, marcRecord));
+            while (marcXmlReader.hasNext()) {
+                final Record record = marcXmlReader.next();
+
+                metadata.add(oaiPmhMapper.from(identifier, record));
+            }
         }
 
         Optional.of(oaiPmhrecords.getLast())
@@ -147,6 +153,10 @@ class OaiPmhGateway implements MetadataGateway {
 
         requestUri.append("&metadataPrefix=")
                 .append(oaiPmhProperties.getMetadataPrefix());
+
+        if (oaiPmhProperties.getSet() != null && !oaiPmhProperties.getSet().isBlank()) {
+            requestUri.append("&set=").append(oaiPmhProperties.getSet());
+        }
 
         final Optional<Instant> lastModified = lastModifiedRepository.get(serviceUri);
 
