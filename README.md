@@ -52,6 +52,12 @@ Visit ```http://localhost:8080``` in the browser and watch the results as the me
 semantic search enter a search query or leave it blank for a random choice (the first search hit will be the random
 choice and the rest will be semantically similar books). For full-text search enter a search query.
 
+Modify weights etc. for full-text search by editing the repeatable migration located at:
+
+```shell
+adapter/persistence/src/main/resources/db/migration/R__search_function.sql
+```
+
 ## Gateway
 
 The gateway abstracts away the details of the external services and transforms metadata from the external services into
@@ -69,6 +75,11 @@ supports retrieving bibliographic data in MARC21 format.
 Additional documentation for OAI-PMH from Biblioteksentralen (https://www.bibsent.no/):
 
 - **[Ája OAI-PMH API](https://doc.aja.bs.no/hente/bibliografiske-data/oai-pmh.html)** (requires no authentication)
+
+Additional documentation for OAI-PMH from Nasjonalbiblioteket (https://www.nb.no/):
+
+- **[Nasjonalbibliografien og spesialbibliografiene OAI-PMH API](https://bibliotekutvikling.no/kunnskapsorganisering/metadata-fra-nasjonalbiblioteket/hosting-av-nasjonalbibliografien-og-spesialbibliografien/)** (requires no authentication)
+
 
 ### Bokbasen
 
@@ -104,17 +115,23 @@ psql -h localhost -p 5433 -U username -d postgres
 Extract example dataset using genre and form as labels.
 
 ```postgresql
-\copy (
+create temp table temp_export as
 select
-	concat(metadata ->>'title', '. ', metadata ->>'description') as text,
-	metadata ->>'genreAndForm' as labels
+  concat(metadata->>'title', '. ', metadata->>'description') as text,
+  jsonb_agg(distinct genre_terms->>'term' order by genre_terms->>'term') as labels
 from
-	book
+  book,
+  lateral jsonb_array_elements(metadata->'genreAndForm') as genre_terms
 where
-	metadata->>'description' is not null
-	and metadata->>'description' <> ''
-	and length(metadata->>'description') > 200
-	and metadata->>'genreAndForm' is not null
-	and metadata->>'genreAndForm' <> '[]'
-) to '~/dataset.csv' with csv header delimiter ';';
+  metadata->>'description' is not null
+  and metadata->>'description' <> ''
+  and length(metadata->>'description') > 200
+  and metadata->'genreAndForm' is not null
+  and jsonb_array_length(metadata->'genreAndForm') > 0
+  and genre_terms->>'language' = 'nob'
+group by text;
+```
+
+```shell
+\copy temp_export to '~/dataset.csv' with csv header delimiter ';';
 ```
