@@ -30,7 +30,9 @@ This will start the PostgreSQL database with pgvector enabled.
 
 ### 2. Configure the Gateway
 
-Select and configure the appropriate gateway and service-uri for harvesting metadata by editing ```application.yaml```.
+Select and configure the appropriate gateway and service-uri for harvesting metadata by editing 
+```runner/src/main/resources/application.yaml```.
+
 Available options:
 
 - oai-pmh
@@ -62,7 +64,8 @@ adapter/persistence/src/main/resources/db/migration/R__search_function.sql
 
 The gateway abstracts away the details of the external services and transforms metadata from the external services into
 a common model. The application supports three gateways: OAI-PMH (MARC21), Bokbasen (ONIX) and Bibbi. Custom mappers can
-be implemented as needed and activated by configuring the appropriate values in ```application.yaml```.
+be implemented as needed, configured in the config class of the respective gateway and activated by configuring the 
+appropriate values in ```runner/src/main/resources/application.yaml```.
 
 ### OAI-PMH
 

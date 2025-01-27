@@ -84,10 +84,9 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
                         try {
                             return MetadataDTO.Contributor.Role.valueOf(role.toUpperCase());
                         } catch (IllegalArgumentException e) {
-                            return null;
+                            return MetadataDTO.Contributor.Role.OTH;
                         }
                     })
-                    .filter(Objects::nonNull)
                     .distinct()
                     .toList();
 

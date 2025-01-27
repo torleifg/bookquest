@@ -2,7 +2,7 @@ dependencies {
     implementation 'org.springframework.ai:spring-ai-pgvector-store-spring-boot-starter'
     implementation 'org.springframework.ai:spring-ai-transformers-spring-boot-starter'
 
-    implementation "org.flywaydb:flyway-database-postgresql"
+    implementation 'org.flywaydb:flyway-database-postgresql'
 
     implementation project(':application')
 

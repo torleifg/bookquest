@@ -64,7 +64,13 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                     .map(ContributorRole.class::cast)
                     .map(ContributorRole::getValue)
                     .map(List17::value)
-                    .map(ContributorRoleMapping::valueOf)
+                    .map(role -> {
+                        try {
+                            return ContributorRoleMapping.valueOf(role);
+                        } catch (IllegalArgumentException e) {
+                            return ContributorRoleMapping.Z99;
+                        }
+                    })
                     .map(ContributorRoleMapping::getCode)
                     .toList();
 
@@ -201,7 +207,14 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                 .map(ResourceVersion::getResourceLink)
                 .flatMap(Collection::stream)
                 .map(ResourceLink::getValue)
-                .map(URI::create)
+                .map(uri -> {
+                    try {
+                        return URI.create(uri);
+                    } catch (IllegalArgumentException e) {
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
                 .findFirst()
                 .ifPresent(metadata::setThumbnailUrl);
 

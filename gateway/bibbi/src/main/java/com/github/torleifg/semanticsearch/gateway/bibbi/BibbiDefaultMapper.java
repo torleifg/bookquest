@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.trim;
 
 class BibbiDefaultMapper implements BibbiMapper {
 
@@ -51,7 +52,13 @@ class BibbiDefaultMapper implements BibbiMapper {
                     .map(Creator::getRole)
                     .filter(Objects::nonNull)
                     .map(Creator.RoleEnum::name)
-                    .map(MetadataDTO.Contributor.Role::valueOf)
+                    .map(role -> {
+                        try {
+                            return MetadataDTO.Contributor.Role.valueOf(role);
+                        } catch (IllegalArgumentException e) {
+                            return MetadataDTO.Contributor.Role.OTH;
+                        }
+                    })
                     .distinct()
                     .toList();
 
