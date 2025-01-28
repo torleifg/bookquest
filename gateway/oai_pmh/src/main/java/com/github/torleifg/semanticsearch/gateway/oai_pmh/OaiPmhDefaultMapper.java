@@ -18,6 +18,7 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
         final MetadataDTO metadata = new MetadataDTO();
         metadata.setExternalId(id);
         metadata.setDeleted(true);
+        metadata.setFormat(MetadataDTO.BookFormat.UNKNOWN);
 
         return metadata;
     }
@@ -84,10 +85,9 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
                         try {
                             return MetadataDTO.Contributor.Role.valueOf(role.toUpperCase());
                         } catch (IllegalArgumentException e) {
-                            return null;
+                            return MetadataDTO.Contributor.Role.OTH;
                         }
                     })
-                    .filter(Objects::nonNull)
                     .distinct()
                     .toList();
 
@@ -111,6 +111,36 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
                 .map(Subfield::getData)
                 .findFirst()
                 .ifPresent(metadata::setDescription);
+
+        dataFieldsByTag.getOrDefault("020", List.of()).stream()
+                .map(dataField -> dataField.getSubfield('q'))
+                .filter(Objects::nonNull)
+                .map(Subfield::getData)
+                .findFirst()
+                .ifPresent(format -> {
+                    if (format.equals("innbundet")) {
+                        metadata.setFormat(MetadataDTO.BookFormat.HARDCOVER);
+                    } else if (format.equals("heftet")) {
+                        metadata.setFormat(MetadataDTO.BookFormat.PAPERBACK);
+                    }
+                });
+
+        dataFieldsByTag.getOrDefault("347", List.of()).stream()
+                .map(dataField -> dataField.getSubfield('0'))
+                .filter(Objects::nonNull)
+                .map(Subfield::getData)
+                .findFirst()
+                .ifPresent(fileType -> {
+                    if (fileType.equals("http://rdaregistry.info/termList/fileType/1001")) {
+                        metadata.setFormat(MetadataDTO.BookFormat.AUDIOBOOK);
+                    } else if (fileType.equals("http://rdaregistry.info/termList/fileType/1002")) {
+                        metadata.setFormat(MetadataDTO.BookFormat.EBOOK);
+                    }
+                });
+
+        if (metadata.getFormat() == null) {
+            metadata.setFormat(MetadataDTO.BookFormat.UNKNOWN);
+        }
 
         dataFieldsByTag.getOrDefault("650", List.of()).stream()
                 .map(OaiPmhDefaultMapper::createClassification)

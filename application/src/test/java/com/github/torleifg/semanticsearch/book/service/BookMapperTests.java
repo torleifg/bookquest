@@ -1,5 +1,6 @@
 package com.github.torleifg.semanticsearch.book.service;
 
+import com.github.torleifg.semanticsearch.book.domain.BookFormat;
 import com.github.torleifg.semanticsearch.book.domain.Contributor;
 import org.junit.jupiter.api.Test;
 
@@ -23,6 +24,7 @@ class BookMapperTests {
         dto.setContributors(List.of(new MetadataDTO.Contributor(List.of(MetadataDTO.Contributor.Role.AUT), "Author")));
         dto.setPublishedYear("2020");
         dto.setDescription("description");
+        dto.setFormat(MetadataDTO.BookFormat.EBOOK);
         dto.setAbout(List.of(new MetadataDTO.Classification("id", "source", "nob", "about")));
         dto.setGenreAndForm(List.of(new MetadataDTO.Classification("id", "source", "nob", "genre")));
         dto.setThumbnailUrl(URI.create("thumbnailUrl"));
@@ -43,6 +45,7 @@ class BookMapperTests {
         assertEquals("Author", metadata.getContributors().getFirst().name());
         assertEquals("2020", metadata.getPublishedYear());
         assertEquals("description", metadata.getDescription());
+        assertEquals(BookFormat.EBOOK, metadata.getFormat());
         assertEquals(1, metadata.getAbout().size());
         assertEquals("id", metadata.getAbout().getFirst().id());
         assertEquals("source", metadata.getAbout().getFirst().source());

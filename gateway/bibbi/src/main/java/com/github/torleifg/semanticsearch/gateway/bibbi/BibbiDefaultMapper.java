@@ -51,7 +51,13 @@ class BibbiDefaultMapper implements BibbiMapper {
                     .map(Creator::getRole)
                     .filter(Objects::nonNull)
                     .map(Creator.RoleEnum::name)
-                    .map(MetadataDTO.Contributor.Role::valueOf)
+                    .map(role -> {
+                        try {
+                            return MetadataDTO.Contributor.Role.valueOf(role);
+                        } catch (IllegalArgumentException e) {
+                            return MetadataDTO.Contributor.Role.OTH;
+                        }
+                    })
                     .distinct()
                     .toList();
 
@@ -68,6 +74,18 @@ class BibbiDefaultMapper implements BibbiMapper {
 
         if (isNotBlank(publication.getDescription())) {
             metadata.setDescription(publication.getDescription());
+        }
+
+        if (publication.getBookFormat() != null) {
+            switch (publication.getBookFormat()) {
+                case EBOOK -> metadata.setFormat(MetadataDTO.BookFormat.EBOOK);
+                case AUDIOBOOKFORMAT -> metadata.setFormat(MetadataDTO.BookFormat.AUDIOBOOK);
+                case HARDCOVER -> metadata.setFormat(MetadataDTO.BookFormat.HARDCOVER);
+                case PAPERBACK -> metadata.setFormat(MetadataDTO.BookFormat.PAPERBACK);
+                default -> metadata.setFormat(MetadataDTO.BookFormat.UNKNOWN);
+            }
+        } else {
+            metadata.setFormat(MetadataDTO.BookFormat.UNKNOWN);
         }
 
         for (final Subject about : publication.getAbout()) {

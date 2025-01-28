@@ -67,6 +67,13 @@
             margin-right: 5px;
         }
 
+        .format-label {
+            font-size: 12px;
+            background-color: #bcd1aa;
+            padding: 3px 8px;
+            border-radius: 10px;
+        }
+
         hr {
             border: none;
             height: 1px;
@@ -127,8 +134,11 @@
     <div class="results">
         <div th:if="${#lists.size(results) > 0}">
             <div th:each="book : ${results}" class="result-item" th:with="metadata=${book.metadata}">
-                <p><strong
-                        th:text="${metadata.publishedYear == null ? metadata.title : metadata.title + ' (' + metadata.publishedYear + ')'}"></strong>
+                <p><strong th:text="${metadata.title + ' (' + metadata.publishedYear + ')'}"></strong>
+                    <span th:if="${metadata.format != null and metadata.format != metadata.format.UNKNOWN}"
+                          class="format-label">
+                        <span th:text="${metadata.format.label}"></span>
+                    </span>
                 </p>
                 <img th:src="${metadata.thumbnailUrl != null ? metadata.thumbnailUrl : 'fallback.png'}"
                      alt=""/>

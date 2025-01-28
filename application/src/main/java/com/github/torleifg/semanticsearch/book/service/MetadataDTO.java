@@ -22,6 +22,8 @@ public class MetadataDTO {
     private String publishedYear;
     private String description;
 
+    private BookFormat format;
+
     private List<Classification> about = new ArrayList<>();
     private List<Classification> genreAndForm = new ArrayList<>();
 
@@ -29,6 +31,14 @@ public class MetadataDTO {
     }
 
     private URI thumbnailUrl;
+
+    public enum BookFormat {
+        AUDIOBOOK,
+        EBOOK,
+        HARDCOVER,
+        PAPERBACK,
+        UNKNOWN;
+    }
 
     public record Contributor(List<Role> roles, String name) {
 

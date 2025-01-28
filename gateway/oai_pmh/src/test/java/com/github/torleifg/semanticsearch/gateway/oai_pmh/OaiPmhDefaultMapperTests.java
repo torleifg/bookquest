@@ -17,50 +17,51 @@ class OaiPmhDefaultMapperTests {
     void mapRecordTest() {
         var isbn = new DataFieldImpl("020", ' ', ' ');
         isbn.addSubfield(new SubfieldImpl('a', "isbn"));
+        isbn.addSubfield(new SubfieldImpl('q', "innbundet"));
 
-        var entry = new DataFieldImpl("100", ' ', ' ');
+        var entry = new DataFieldImpl("100", '1', ' ');
         entry.addSubfield(new SubfieldImpl('4', "aut"));
         entry.addSubfield(new SubfieldImpl('4', "ill"));
-        entry.addSubfield(new SubfieldImpl('a', "entry"));
+        entry.addSubfield(new SubfieldImpl('a', "lastname, firstname"));
 
-        var title = new DataFieldImpl("245", ' ', ' ');
+        var title = new DataFieldImpl("245", '1', '0');
         title.addSubfield(new SubfieldImpl('a', "title"));
         title.addSubfield(new SubfieldImpl('b', "remainder of title"));
 
-        var publisher = new DataFieldImpl("264", ' ', ' ');
+        var publisher = new DataFieldImpl("264", ' ', '1');
         publisher.addSubfield(new SubfieldImpl('b', "publisher"));
 
-        var publishedYear = new DataFieldImpl("264", ' ', ' ');
+        var publishedYear = new DataFieldImpl("264", ' ', '1');
         publishedYear.addSubfield(new SubfieldImpl('c', "1970"));
 
         var description = new DataFieldImpl("520", ' ', ' ');
         description.addSubfield(new SubfieldImpl('a', "description"));
 
-        var aboutNob = new DataFieldImpl("650", ' ', ' ');
+        var aboutNob = new DataFieldImpl("650", '2', '7');
         aboutNob.addSubfield(new SubfieldImpl('0', "id"));
         aboutNob.addSubfield(new SubfieldImpl('2', "aja"));
         aboutNob.addSubfield(new SubfieldImpl('9', "nob"));
         aboutNob.addSubfield(new SubfieldImpl('a', "about"));
 
-        var aboutNno = new DataFieldImpl("650", ' ', ' ');
+        var aboutNno = new DataFieldImpl("650", '2', '7');
         aboutNno.addSubfield(new SubfieldImpl('0', "id"));
         aboutNno.addSubfield(new SubfieldImpl('2', "aja"));
         aboutNno.addSubfield(new SubfieldImpl('9', "nno"));
         aboutNno.addSubfield(new SubfieldImpl('a', "about"));
 
-        var genreNob = new DataFieldImpl("655", ' ', ' ');
+        var genreNob = new DataFieldImpl("655", ' ', '7');
         genreNob.addSubfield(new SubfieldImpl('0', "id"));
         genreNob.addSubfield(new SubfieldImpl('2', "ntsf"));
         genreNob.addSubfield(new SubfieldImpl('9', "nob"));
         genreNob.addSubfield(new SubfieldImpl('a', "genre"));
 
-        var genreEng = new DataFieldImpl("655", ' ', ' ');
+        var genreEng = new DataFieldImpl("655", ' ', '7');
         genreEng.addSubfield(new SubfieldImpl('0', "id"));
         genreEng.addSubfield(new SubfieldImpl('2', "ntsf"));
         genreEng.addSubfield(new SubfieldImpl('9', "eng"));
         genreEng.addSubfield(new SubfieldImpl('a', "genre"));
 
-        var thumbnailUrl = new DataFieldImpl("856", ' ', ' ');
+        var thumbnailUrl = new DataFieldImpl("856", '4', '1');
         thumbnailUrl.addSubfield(new SubfieldImpl('u', "http://thumbnailUrl"));
 
         var record = new RecordImpl();
@@ -77,9 +78,10 @@ class OaiPmhDefaultMapperTests {
         assertEquals(2, metadata.getContributors().getFirst().roles().size());
         assertEquals(MetadataDTO.Contributor.Role.AUT, metadata.getContributors().getFirst().roles().getFirst());
         assertEquals(MetadataDTO.Contributor.Role.ILL, metadata.getContributors().getFirst().roles().getLast());
-        assertEquals("entry", metadata.getContributors().getFirst().name());
+        assertEquals("lastname, firstname", metadata.getContributors().getFirst().name());
         assertEquals("1970", metadata.getPublishedYear());
         assertEquals("description", metadata.getDescription());
+        assertEquals(MetadataDTO.BookFormat.HARDCOVER, metadata.getFormat());
         assertEquals(2, metadata.getAbout().size());
         assertEquals("id", metadata.getAbout().getFirst().id());
         assertEquals("aja", metadata.getAbout().getFirst().source());

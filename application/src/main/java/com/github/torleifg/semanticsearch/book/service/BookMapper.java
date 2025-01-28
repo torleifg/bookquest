@@ -1,9 +1,6 @@
 package com.github.torleifg.semanticsearch.book.service;
 
-import com.github.torleifg.semanticsearch.book.domain.Book;
-import com.github.torleifg.semanticsearch.book.domain.Classification;
-import com.github.torleifg.semanticsearch.book.domain.Contributor;
-import com.github.torleifg.semanticsearch.book.domain.Metadata;
+import com.github.torleifg.semanticsearch.book.domain.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -32,6 +29,12 @@ public class BookMapper {
 
         metadata.setPublishedYear(dto.getPublishedYear());
         metadata.setDescription(dto.getDescription());
+
+        if (dto.getFormat() != null) {
+            metadata.setFormat(BookFormat.valueOf(dto.getFormat().name()));
+        } else {
+            metadata.setFormat(BookFormat.UNKNOWN);
+        }
 
         for (final MetadataDTO.Classification classification : dto.getAbout()) {
             metadata.getAbout().add(new Classification(classification.id(), classification.source(), classification.language(), classification.term()));
