@@ -9,7 +9,6 @@ import java.util.stream.Stream;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.apache.commons.lang3.StringUtils.trim;
 
 class BibbiDefaultMapper implements BibbiMapper {
 
@@ -75,6 +74,18 @@ class BibbiDefaultMapper implements BibbiMapper {
 
         if (isNotBlank(publication.getDescription())) {
             metadata.setDescription(publication.getDescription());
+        }
+
+        if (publication.getBookFormat() != null) {
+            switch (publication.getBookFormat()) {
+                case EBOOK -> metadata.setFormat(MetadataDTO.BookFormat.EBOOK);
+                case AUDIOBOOKFORMAT -> metadata.setFormat(MetadataDTO.BookFormat.AUDIOBOOK);
+                case HARDCOVER -> metadata.setFormat(MetadataDTO.BookFormat.HARDCOVER);
+                case PAPERBACK -> metadata.setFormat(MetadataDTO.BookFormat.PAPERBACK);
+                default -> metadata.setFormat(MetadataDTO.BookFormat.UNKNOWN);
+            }
+        } else {
+            metadata.setFormat(MetadataDTO.BookFormat.UNKNOWN);
         }
 
         for (final Subject about : publication.getAbout()) {

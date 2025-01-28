@@ -37,6 +37,10 @@ class BokbasenDefaultMapper implements BokbasenMapper {
 
         final DescriptiveDetail descriptiveDetail = product.getDescriptiveDetail();
 
+        if (descriptiveDetail == null) {
+            return metadata;
+        }
+
         final Optional<String> title = getTitleContent(descriptiveDetail)
                 .filter(TitleText.class::isInstance)
                 .map(TitleText.class::cast)
@@ -53,8 +57,8 @@ class BokbasenDefaultMapper implements BokbasenMapper {
             metadata.setTitle(title.get() + " : " + remainderOfTitle.get());
         } else title.ifPresent(metadata::setTitle);
 
-        final List<Contributor> contributors = Stream.ofNullable(descriptiveDetail)
-                .map(DescriptiveDetail::getContributor)
+        final List<Contributor> contributors = Optional.ofNullable(descriptiveDetail.getContributor())
+                .stream()
                 .flatMap(Collection::stream)
                 .toList();
 
@@ -95,6 +99,19 @@ class BokbasenDefaultMapper implements BokbasenMapper {
 
             metadata.getContributors().add(new MetadataDTO.Contributor(roles, name.get()));
         }
+
+        Optional.ofNullable(descriptiveDetail.getProductForm())
+                .map(ProductForm::getValue)
+                .map(List150::value)
+                .ifPresentOrElse(productForm -> {
+                    switch (productForm) {
+                        case "BB" -> metadata.setFormat(MetadataDTO.BookFormat.HARDCOVER);
+                        case "BC" -> metadata.setFormat(MetadataDTO.BookFormat.PAPERBACK);
+                        case "ED" -> metadata.setFormat(MetadataDTO.BookFormat.EBOOK);
+                        case "AJ" -> metadata.setFormat(MetadataDTO.BookFormat.AUDIOBOOK);
+                        default -> metadata.setFormat(MetadataDTO.BookFormat.UNKNOWN);
+                    }
+                }, () -> metadata.setFormat(MetadataDTO.BookFormat.UNKNOWN));
 
         final List<Subject> subjects = descriptiveDetail.getSubject();
 
@@ -230,8 +247,8 @@ class BokbasenDefaultMapper implements BokbasenMapper {
     }
 
     private static Stream<Object> getTitleContent(DescriptiveDetail descriptiveDetail) {
-        return Stream.ofNullable(descriptiveDetail)
-                .map(DescriptiveDetail::getTitleDetail)
+        return Optional.ofNullable(descriptiveDetail.getTitleDetail())
+                .stream()
                 .flatMap(Collection::stream)
                 .filter(titleDetail -> titleDetail.getTitleType().getValue() == List15.fromValue("01"))
                 .map(TitleDetail::getTitleElement)

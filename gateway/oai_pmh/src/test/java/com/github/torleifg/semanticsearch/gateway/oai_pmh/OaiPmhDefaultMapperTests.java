@@ -17,6 +17,7 @@ class OaiPmhDefaultMapperTests {
     void mapRecordTest() {
         var isbn = new DataFieldImpl("020", ' ', ' ');
         isbn.addSubfield(new SubfieldImpl('a', "isbn"));
+        isbn.addSubfield(new SubfieldImpl('q', "innbundet"));
 
         var entry = new DataFieldImpl("100", '1', ' ');
         entry.addSubfield(new SubfieldImpl('4', "aut"));
@@ -80,6 +81,7 @@ class OaiPmhDefaultMapperTests {
         assertEquals("lastname, firstname", metadata.getContributors().getFirst().name());
         assertEquals("1970", metadata.getPublishedYear());
         assertEquals("description", metadata.getDescription());
+        assertEquals(MetadataDTO.BookFormat.HARDCOVER, metadata.getFormat());
         assertEquals(2, metadata.getAbout().size());
         assertEquals("id", metadata.getAbout().getFirst().id());
         assertEquals("aja", metadata.getAbout().getFirst().source());

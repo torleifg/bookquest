@@ -33,6 +33,7 @@ class BibbiDefaultMapperTests {
 
         publication.setDatePublished("1970");
         publication.setDescription("description");
+        publication.setBookFormat(GetV1PublicationsHarvest200ResponsePublicationsInner.BookFormatEnum.EBOOK);
 
         var aboutName = new SubjectName();
         aboutName.setNob("about");
@@ -75,6 +76,7 @@ class BibbiDefaultMapperTests {
         assertEquals("creator", metadata.getContributors().getFirst().name());
         assertEquals("1970", metadata.getPublishedYear());
         assertEquals("description", metadata.getDescription());
+        assertEquals(MetadataDTO.BookFormat.EBOOK, metadata.getFormat());
         assertEquals(2, metadata.getAbout().size());
         assertEquals("id", metadata.getAbout().getFirst().id());
         assertEquals("bibbi", metadata.getAbout().getFirst().source());

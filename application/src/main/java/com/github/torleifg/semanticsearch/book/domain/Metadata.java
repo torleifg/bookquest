@@ -18,6 +18,8 @@ public class Metadata {
     private String publishedYear;
     private String description;
 
+    private BookFormat format;
+
     private List<Classification> about = new ArrayList<>();
     private List<Classification> genreAndForm = new ArrayList<>();
 

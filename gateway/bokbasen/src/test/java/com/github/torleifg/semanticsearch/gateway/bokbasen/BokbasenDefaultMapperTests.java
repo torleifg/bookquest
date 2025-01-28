@@ -35,6 +35,10 @@ class BokbasenDefaultMapperTests {
 
         var descriptiveDetail = objectFactory.createDescriptiveDetail();
 
+        var productForm = objectFactory.createProductForm();
+        productForm.setValue(List150.fromValue("BB"));
+        descriptiveDetail.setProductForm(productForm);
+
         var title = objectFactory.createTitleDetail();
 
         var titleType = objectFactory.createTitleType();
@@ -180,6 +184,7 @@ class BokbasenDefaultMapperTests {
         assertEquals(MetadataDTO.Contributor.Role.ILL, metadata.getContributors().getFirst().roles().getLast());
         assertEquals("1970", metadata.getPublishedYear());
         assertEquals("description", metadata.getDescription());
+        assertEquals(MetadataDTO.BookFormat.HARDCOVER, metadata.getFormat());
         assertEquals(1, metadata.getAbout().size());
         assertNull(metadata.getAbout().getFirst().id());
         assertEquals("Bokbasen_Subject", metadata.getAbout().getFirst().source());
