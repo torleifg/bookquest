@@ -27,7 +27,7 @@ class SearchControllerTests {
     void fullTextSearchTest() throws Exception {
         mockMvc.perform(post("/")
                         .param("query", "query string")
-                        .param("searchType", "fullText"))
+                        .param("searchType", "full-text"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("text/html;charset=UTF-8"));
 
@@ -43,6 +43,17 @@ class SearchControllerTests {
                 .andExpect(content().contentType("text/html;charset=UTF-8"));
 
         verify(bookService).semanticSearch("query string");
+    }
+
+    @Test
+    void hybridSearchTest() throws Exception {
+        mockMvc.perform(post("/")
+                        .param("query", "query string")
+                        .param("searchType", "hybrid"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("text/html;charset=UTF-8"));
+
+        verify(bookService).hybridSearch("query string");
     }
 
     @Test

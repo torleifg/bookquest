@@ -111,6 +111,14 @@ class BookRepositoryAdapter implements BookRepository {
     }
 
     @Override
+    public List<Book> hybridSearch(String query, int limit) {
+        final Map<Book, Double> rrf = new ReciprocalRankFusion(query, fullTextSearch(query, limit), semanticSearch(query, limit))
+                .compute();
+
+        return new ArrayList<>(rrf.keySet());
+    }
+
+    @Override
     public List<Book> semanticSimilarity(int limit) {
         final Optional<Document> randomDocument = jdbcClient.sql("""
                         select * from vector_store order by random() limit 1
