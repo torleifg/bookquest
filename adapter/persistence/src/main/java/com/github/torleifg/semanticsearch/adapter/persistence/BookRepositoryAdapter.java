@@ -115,7 +115,10 @@ class BookRepositoryAdapter implements BookRepository {
         final Map<Book, Double> rrf = new ReciprocalRankFusion(query, fullTextSearch(query, limit), semanticSearch(query, limit))
                 .compute();
 
-        return new ArrayList<>(rrf.keySet());
+        return rrf.keySet()
+                .stream()
+                .limit(limit)
+                .toList();
     }
 
     @Override
