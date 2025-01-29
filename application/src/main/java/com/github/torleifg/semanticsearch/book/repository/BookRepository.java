@@ -14,5 +14,7 @@ public interface BookRepository {
 
     List<Book> semanticSearch(String query, int limit);
 
+    List<Book> hybridSearch(String query, int limit);
+
     List<Book> semanticSimilarity(int limit);
 }

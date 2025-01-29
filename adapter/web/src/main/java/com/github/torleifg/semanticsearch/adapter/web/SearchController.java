@@ -5,7 +5,6 @@ import com.github.torleifg.semanticsearch.book.service.BookService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,10 +49,17 @@ class SearchController {
                 books = bookService.semanticSimilarity();
             }
 
-        } else {
+        } else if ("full-text".equals(searchType)) {
             if (query != null && !query.isBlank()) {
                 model.addAttribute("query", query);
                 books = bookService.fullTextSearch(query);
+            } else {
+                books = new ArrayList<>();
+            }
+        } else {
+            if (query != null && !query.isBlank()) {
+                model.addAttribute("query", query);
+                books = bookService.hybridSearch(query);
             } else {
                 books = new ArrayList<>();
             }
