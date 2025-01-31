@@ -53,20 +53,6 @@
             outline: none;
         }
 
-        .radio-group {
-            margin-top: 10px;
-            margin-left: 5px;
-        }
-
-        .radio-group label {
-            margin-right: 15px;
-            font-size: 14px;
-        }
-
-        .radio-group input[type="radio"] {
-            margin-right: 5px;
-        }
-
         .format-label {
             font-size: 12px;
             background-color: #bcd1aa;
@@ -117,21 +103,6 @@
                 <button type="submit" class="search-icon-button" aria-label="Submit search">
                     <i class="fa fa-search"></i>
                 </button>
-            </div>
-            <div class="radio-group">
-                <label>
-                    <input type="radio" name="searchType" value="semantic"
-                           th:checked="${searchType == 'semantic' or searchType == null}"/>
-                    Semantic
-                </label>
-                <label>
-                    <input type="radio" name="searchType" value="full-text" th:checked="${searchType == 'full-text'}"/>
-                    Full-Text
-                </label>
-                <label>
-                    <input type="radio" name="searchType" value="hybrid" th:checked="${searchType == 'hybrid'}"/>
-                    Hybrid
-                </label>
             </div>
         </form>
     </div>

@@ -16,7 +16,7 @@ select b.external_id,
        b.vector_store_id,
        b.deleted,
        b.metadata,
-       ts_rank(
+       ts_rank_cd(
                setweight(to_tsvector('simple', coalesce(b.metadata ->> 'title', '')),
                          'B') ||
                setweight(to_tsvector('simple', coalesce(jsonb_array_to_text(b.metadata -> 'contributors', 'name', 'AUT'), '')),

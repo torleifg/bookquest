@@ -1,11 +1,11 @@
 # Semantic & Full-Text Search Engine for Books
 
-This repository contains code and resources to run a semantic and full-text search engine for books. It utilizes text
-embeddings and supports harvesting book metadata from various sources, using international standards like MARC21 and
-ONIX 3.
+This repository contains code and resources to run a hybrid (semantic and full-text) search engine for books. 
+It utilizes text embeddings and supports harvesting book metadata from various sources, using international standards 
+like MARC21 and ONIX 3.
 
 The application leverages **Multilingual-E5-small** for generating text embeddings and **PostgreSQL** with **pgvector**
-as vector store. This provides multilingual semantic search capabilities.
+as database and vector store. This provides multilingual semantic search capabilities.
 
 ## Technologies
 
@@ -39,6 +39,25 @@ Available options:
 - bibbi
 - bokbasen
 
+**Example:**
+
+```yaml
+scheduler:
+  enabled: true
+  initial-delay: 5
+  fixed-delay: 3600
+
+gateway:
+  type: bibbi
+
+bibbi:
+  service-uri: https://bibliografisk.bs.no/v1/publications/harvest
+  ttl: 5
+  mapper: default
+  limit: 100
+  query: type:(audiobook OR book)
+```
+
 ### 3. Start the Application
 
 The first run may take some time as it will download the necessary embedding models. Once the models are in place, the
@@ -50,9 +69,12 @@ application will be ready for use.
 
 ### 4. Use the search engine
 
-Visit ```http://localhost:8080``` in the browser and watch the results as the metadata harvesting progresses. For
-semantic search enter a search query or leave it blank for a random choice (the first search hit will be the random
-choice and the rest will be semantically similar books). For full-text search enter a search query.
+Visit ```http://localhost:8080``` in the browser and watch the results as the metadata harvesting progresses. Enter a 
+query for hybrid search or leave it blank for semantic similarity search (the first search hit will be a random choice 
+and the rest will be semantically similar books). The hybrid search is based on Reciprocal Rank Fusion (RRF), an 
+algorithm used for combining multiple ranked lists of search results to improve the overall ranking quality, in this
+case to combine full-text and vector search results.
+
 
 Modify weights etc. for full-text search by editing the repeatable migration located at:
 
