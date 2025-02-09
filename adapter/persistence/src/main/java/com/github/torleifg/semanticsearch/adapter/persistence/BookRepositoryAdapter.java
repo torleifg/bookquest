@@ -54,7 +54,7 @@ class BookRepositoryAdapter implements BookRepository {
                     save(existingBook);
                 });
 
-                return;
+                continue;
             }
 
             final Optional<UUID> existingVector = findVectorStoreIdByExternalId(externalId);
@@ -65,8 +65,7 @@ class BookRepositoryAdapter implements BookRepository {
             final UUID newVector = UUID.fromString(document.getId());
             save(book, newVector);
 
-            existingVector
-                    .map(UUID::toString)
+            existingVector.map(UUID::toString)
                     .map(List::of)
                     .ifPresent(vectorStore::delete);
         }
