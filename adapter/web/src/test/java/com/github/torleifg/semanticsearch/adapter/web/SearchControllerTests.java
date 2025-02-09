@@ -9,6 +9,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.Mockito.verify;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -25,7 +26,7 @@ class SearchControllerTests {
 
     @Test
     void hybridSearchTest() throws Exception {
-        mockMvc.perform(post("/")
+        mockMvc.perform(post("/").with(csrf())
                         .param("query", "query string")
                         .param("searchType", "hybrid"))
                 .andExpect(status().isOk())
@@ -36,7 +37,7 @@ class SearchControllerTests {
 
     @Test
     void semanticSimilarityTest() throws Exception {
-        mockMvc.perform(post("/"))
+        mockMvc.perform(post("/").with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("text/html;charset=UTF-8"));
 
