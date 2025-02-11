@@ -1,12 +1,12 @@
 plugins {
-    id 'org.unbroken-dome.xjc' version '2.0.0'
+    id 'org.unbroken-dome.xjc'
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
-    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'
-    implementation 'com.sun.xml.bind:jaxb-impl:4.0.5'
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api'
+    implementation 'com.sun.xml.bind:jaxb-impl'
 
     implementation project(':application')
 
@@ -14,7 +14,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.wiremock.integrations:wiremock-spring-boot:3.6.0'
+    testImplementation 'org.wiremock.integrations:wiremock-spring-boot'
 
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }

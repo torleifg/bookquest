@@ -1,3 +1,18 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        maven { url 'https://repo.spring.io/milestone' }
+    }
+
+    plugins {
+        id 'org.springframework.boot' version '3.4.2'
+        id 'io.spring.dependency-management' version '1.1.7'
+        id 'org.openapi.generator' version '7.6.0'
+        id 'org.unbroken-dome.xjc' version '2.0.0'
+    }
+}
+
 rootProject.name = 'book-reviews-semantic-search'
 
 include 'gateway:bibbi'

@@ -37,7 +37,7 @@ public class MetadataDTO {
         EBOOK,
         HARDCOVER,
         PAPERBACK,
-        UNKNOWN;
+        UNKNOWN
     }
 
     public record Contributor(List<Role> roles, String name) {
