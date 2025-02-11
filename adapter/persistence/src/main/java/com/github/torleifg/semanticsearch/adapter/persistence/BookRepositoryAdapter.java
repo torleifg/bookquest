@@ -74,7 +74,7 @@ class BookRepositoryAdapter implements BookRepository {
     @Override
     public List<Book> lastModified(int limit) {
         return jdbcClient.sql("""
-                        select * from book 
+                        select * from book
                         where deleted is false and metadata ->> 'description' is not null order by modified desc limit ?
                         """)
                 .param(limit)

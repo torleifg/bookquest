@@ -19,7 +19,7 @@ class OaiPmhConfig {
     }
 
     @Bean
-    OaiPmhMapper bibbiMapper(OaiPmhProperties oaiPmhProperties) {
+    OaiPmhMapper oaiPmhMapper(OaiPmhProperties oaiPmhProperties) {
         final String mapper = oaiPmhProperties.getMapper();
 
         /*

@@ -29,7 +29,7 @@ select b.external_id,
                          'D') ||
                setweight(to_tsvector('simple', coalesce(jsonb_array_to_text(b.metadata -> 'genreAndForm', 'term'), '')),
                          'D'),
-               plainto_tsquery('simple', search_query)
+               websearch_to_tsquery('simple', search_query)
        ) as rank
 from book b
 where to_tsvector('simple',
@@ -39,7 +39,7 @@ where to_tsvector('simple',
                   coalesce(jsonb_array_to_text(b.metadata -> 'contributors', 'name'), '') || ' ' ||
                   coalesce(jsonb_array_to_text(b.metadata -> 'about', 'term'), '') || ' ' ||
                   coalesce(jsonb_array_to_text(b.metadata -> 'genreAndForm', 'term'), ''))
-                  @@ plainto_tsquery('simple', search_query)
+                  @@ websearch_to_tsquery('simple', search_query)
 order by rank desc, b.modified desc
 limit result_limit;
 end;
