@@ -22,18 +22,11 @@ class BookServiceTests {
     @Mock
     BookRepository bookRepository;
 
-    @Mock
-    BookMapper bookMapper;
-
     @InjectMocks
     BookService bookService;
 
     @Test
     void findAndSaveBookTest() {
-        var dto = new MetadataDTO();
-        dto.setExternalId("externalId");
-        dto.setDescription("description");
-
         var book = new Book();
         book.setExternalId("externalId");
 
@@ -42,8 +35,7 @@ class BookServiceTests {
 
         book.setMetadata(metadata);
 
-        when(metadataGateway.find()).thenReturn(List.of(dto));
-        when(bookMapper.toBook(dto)).thenReturn(book);
+        when(metadataGateway.find()).thenReturn(List.of(book));
 
         bookService.findAndSave();
 

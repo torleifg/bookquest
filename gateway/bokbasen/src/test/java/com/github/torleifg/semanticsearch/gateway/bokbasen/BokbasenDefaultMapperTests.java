@@ -1,6 +1,8 @@
 package com.github.torleifg.semanticsearch.gateway.bokbasen;
 
-import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
+import com.github.torleifg.semanticsearch.book.domain.BookFormat;
+import com.github.torleifg.semanticsearch.book.domain.Contributor;
+import com.github.torleifg.semanticsearch.book.domain.Language;
 import org.editeur.ns.onix._3_0.reference.*;
 import org.junit.jupiter.api.Test;
 
@@ -73,6 +75,18 @@ class BokbasenDefaultMapperTests {
         contributor.getContent().add(contributorName);
 
         descriptiveDetail.getContributor().add(contributor);
+
+        var language = objectFactory.createLanguage();
+
+        var languageRole = objectFactory.createLanguageRole();
+        languageRole.setValue(List22.fromValue("01"));
+        language.setLanguageRole(languageRole);
+
+        var languageCode = objectFactory.createLanguageCode();
+        languageCode.setValue(List74.fromValue("eng"));
+        language.setLanguageCode(languageCode);
+
+        descriptiveDetail.getLanguage().add(language);
 
         var about = objectFactory.createSubject();
 
@@ -170,21 +184,24 @@ class BokbasenDefaultMapperTests {
 
         product.setCollateralDetail(collateralDetail);
 
-        var metadata = mapper.from(product);
+        var book = mapper.from(product);
+        assertEquals("id", book.getExternalId());
+        assertFalse(book.isDeleted());
 
-        assertFalse(metadata.isDeleted());
+        var metadata = book.getMetadata();
 
-        assertEquals("id", metadata.getExternalId());
         assertEquals("isbn", metadata.getIsbn());
         assertEquals("title : remainder of title", metadata.getTitle());
         assertEquals("publisher", metadata.getPublisher());
         assertEquals(1, metadata.getContributors().size());
         assertEquals(2, metadata.getContributors().getFirst().roles().size());
-        assertEquals(MetadataDTO.Contributor.Role.AUT, metadata.getContributors().getFirst().roles().getFirst());
-        assertEquals(MetadataDTO.Contributor.Role.ILL, metadata.getContributors().getFirst().roles().getLast());
+        assertEquals(Contributor.Role.AUT, metadata.getContributors().getFirst().roles().getFirst());
+        assertEquals(Contributor.Role.ILL, metadata.getContributors().getFirst().roles().getLast());
         assertEquals("1970", metadata.getPublishedYear());
         assertEquals("description", metadata.getDescription());
-        assertEquals(MetadataDTO.BookFormat.HARDCOVER, metadata.getFormat());
+        assertEquals(1, metadata.getLanguages().size());
+        assertEquals(Language.ENG, metadata.getLanguages().getFirst());
+        assertEquals(BookFormat.HARDCOVER, metadata.getFormat());
         assertEquals(1, metadata.getAbout().size());
         assertNull(metadata.getAbout().getFirst().id());
         assertEquals("Bokbasen_Subject", metadata.getAbout().getFirst().source());

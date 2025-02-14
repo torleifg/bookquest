@@ -1,6 +1,9 @@
 package com.github.torleifg.semanticsearch.gateway.bokbasen;
 
-import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
+import com.github.torleifg.semanticsearch.book.domain.Book;
+import com.github.torleifg.semanticsearch.book.domain.BookFormat;
+import com.github.torleifg.semanticsearch.book.domain.Classification;
+import com.github.torleifg.semanticsearch.book.domain.Metadata;
 import org.editeur.ns.onix._3_0.reference.*;
 
 import java.io.Serializable;
@@ -14,19 +17,21 @@ import java.util.stream.Stream;
 class BokbasenDefaultMapper implements BokbasenMapper {
 
     @Override
-    public MetadataDTO from(String id) {
-        final MetadataDTO metadata = new MetadataDTO();
-        metadata.setExternalId(id);
-        metadata.setDeleted(true);
+    public Book from(String id) {
+        final Book book = new Book();
+        book.setExternalId(id);
+        book.setDeleted(true);
 
-        return metadata;
+        return book;
     }
 
     @Override
-    public MetadataDTO from(Product product) {
-        final MetadataDTO metadata = new MetadataDTO();
-        metadata.setExternalId(product.getRecordReference().getValue());
-        metadata.setDeleted(false);
+    public Book from(Product product) {
+        final Book book = new Book();
+        book.setExternalId(product.getRecordReference().getValue());
+        book.setDeleted(false);
+
+        final Metadata metadata = new Metadata();
 
         product.getProductIdentifier().stream()
                 .filter(productIdentifier -> productIdentifier.getProductIDType().getValue() == List5.fromValue("15"))
@@ -38,7 +43,7 @@ class BokbasenDefaultMapper implements BokbasenMapper {
         final DescriptiveDetail descriptiveDetail = product.getDescriptiveDetail();
 
         if (descriptiveDetail == null) {
-            return metadata;
+            return book;
         }
 
         final Optional<String> title = getTitleContent(descriptiveDetail)
@@ -63,7 +68,7 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                 .toList();
 
         for (final Contributor contributor : contributors) {
-            final List<MetadataDTO.Contributor.Role> roles = contributor.getContent().stream()
+            final List<com.github.torleifg.semanticsearch.book.domain.Contributor.Role> roles = contributor.getContent().stream()
                     .filter(ContributorRole.class::isInstance)
                     .map(ContributorRole.class::cast)
                     .map(ContributorRole::getValue)
@@ -97,21 +102,33 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                 continue;
             }
 
-            metadata.getContributors().add(new MetadataDTO.Contributor(roles, name.get()));
+            metadata.getContributors().add(new com.github.torleifg.semanticsearch.book.domain.Contributor(roles, name.get()));
         }
+
+        descriptiveDetail.getLanguage().stream()
+                .filter(language -> language.getLanguageRole().getValue() == List22.fromValue("01"))
+                .map(Language::getLanguageCode)
+                .map(language -> {
+                    try {
+                        return com.github.torleifg.semanticsearch.book.domain.Language.valueOf(language.getValue().value().toUpperCase());
+                    } catch (IllegalArgumentException e) {
+                        return com.github.torleifg.semanticsearch.book.domain.Language.UND;
+                    }
+                })
+                .forEach(language -> metadata.getLanguages().add(language));
 
         Optional.ofNullable(descriptiveDetail.getProductForm())
                 .map(ProductForm::getValue)
                 .map(List150::value)
                 .ifPresentOrElse(productForm -> {
                     switch (productForm) {
-                        case "BB" -> metadata.setFormat(MetadataDTO.BookFormat.HARDCOVER);
-                        case "BC" -> metadata.setFormat(MetadataDTO.BookFormat.PAPERBACK);
-                        case "ED" -> metadata.setFormat(MetadataDTO.BookFormat.EBOOK);
-                        case "AJ" -> metadata.setFormat(MetadataDTO.BookFormat.AUDIOBOOK);
-                        default -> metadata.setFormat(MetadataDTO.BookFormat.UNKNOWN);
+                        case "BB" -> metadata.setFormat(BookFormat.HARDCOVER);
+                        case "BC" -> metadata.setFormat(BookFormat.PAPERBACK);
+                        case "ED" -> metadata.setFormat(BookFormat.EBOOK);
+                        case "AJ" -> metadata.setFormat(BookFormat.AUDIOBOOK);
+                        default -> metadata.setFormat(BookFormat.UNKNOWN);
                     }
-                }, () -> metadata.setFormat(MetadataDTO.BookFormat.UNKNOWN));
+                }, () -> metadata.setFormat(BookFormat.UNKNOWN));
 
         final List<Subject> subjects = descriptiveDetail.getSubject();
 
@@ -154,13 +171,13 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                                 final String name = subjectSchemeName.getValue();
 
                                 if (name.equals("Bokbasen_Subject")) {
-                                    metadata.getAbout().add(new MetadataDTO.Classification(null, "Bokbasen_Subject", language, text));
+                                    metadata.getAbout().add(new Classification(null, "Bokbasen_Subject", language, text));
                                 }
                             }
                         }
 
                         if (isGenreAndForm(subjectSchemeIdentifier)) {
-                            metadata.getGenreAndForm().add(new MetadataDTO.Classification(code, "ntsf", language, text));
+                            metadata.getGenreAndForm().add(new Classification(code, "ntsf", language, text));
                         }
                     }
                 }
@@ -169,73 +186,71 @@ class BokbasenDefaultMapper implements BokbasenMapper {
 
         final PublishingDetail publishingDetail = product.getPublishingDetail();
 
-        Stream.ofNullable(publishingDetail)
-                .map(PublishingDetail::getContent)
-                .flatMap(Collection::stream)
-                .filter(Publisher.class::isInstance)
-                .map(Publisher.class::cast)
-                .map(Publisher::getContent)
-                .flatMap(Collection::stream)
-                .filter(PublisherName.class::isInstance)
-                .map(PublisherName.class::cast)
-                .map(PublisherName::getValue)
-                .findFirst()
-                .ifPresent(metadata::setPublisher);
+        if (publishingDetail != null) {
+            publishingDetail.getContent().stream()
+                    .filter(Publisher.class::isInstance)
+                    .map(Publisher.class::cast)
+                    .map(Publisher::getContent)
+                    .flatMap(Collection::stream)
+                    .filter(PublisherName.class::isInstance)
+                    .map(PublisherName.class::cast)
+                    .map(PublisherName::getValue)
+                    .findFirst()
+                    .ifPresent(metadata::setPublisher);
 
-        Stream.ofNullable(publishingDetail)
-                .map(PublishingDetail::getContent)
-                .flatMap(Collection::stream)
-                .filter(PublishingDate.class::isInstance)
-                .map(PublishingDate.class::cast)
-                .filter(publishingDate -> publishingDate.getPublishingDateRole().getValue() == List163.fromValue("01"))
-                .map(PublishingDate::getDate)
-                .map(Date::getValue)
-                .findFirst()
-                .ifPresent(metadata::setPublishedYear);
+            publishingDetail.getContent().stream()
+                    .filter(PublishingDate.class::isInstance)
+                    .map(PublishingDate.class::cast)
+                    .filter(publishingDate -> publishingDate.getPublishingDateRole().getValue() == List163.fromValue("01"))
+                    .map(PublishingDate::getDate)
+                    .map(Date::getValue)
+                    .findFirst()
+                    .ifPresent(metadata::setPublishedYear);
+        }
 
         final CollateralDetail collateralDetail = product.getCollateralDetail();
 
-        Stream.ofNullable(collateralDetail)
-                .map(CollateralDetail::getTextContent)
-                .flatMap(Collection::stream)
-                .filter(textContent -> textContent.getTextType().getValue() == List153.fromValue("03"))
-                .map(TextContent::getText)
-                .flatMap(Collection::stream)
-                .filter(text -> text.getTextformat().value().equals("06"))
-                .map(Text::getContent)
-                .flatMap(Collection::stream)
-                .map(Serializable::toString)
-                .findFirst()
-                .ifPresent(metadata::setDescription);
+        if (collateralDetail != null) {
+            collateralDetail.getTextContent().stream()
+                    .filter(textContent -> textContent.getTextType().getValue() == List153.fromValue("03"))
+                    .map(TextContent::getText)
+                    .flatMap(Collection::stream)
+                    .filter(text -> text.getTextformat().value().equals("06"))
+                    .map(Text::getContent)
+                    .flatMap(Collection::stream)
+                    .map(Serializable::toString)
+                    .findFirst()
+                    .ifPresent(metadata::setDescription);
 
-        Stream.ofNullable(collateralDetail)
-                .map(CollateralDetail::getSupportingResource)
-                .flatMap(Collection::stream)
-                .filter(supportingResource -> supportingResource.getResourceContentType().getValue() == List158.fromValue("01"))
-                .map(SupportingResource::getResourceVersion)
-                .flatMap(Collection::stream)
-                .filter(resourceVersion -> resourceVersion.getResourceVersionFeature().stream()
-                        .map(ResourceVersionFeature::getFeatureNote)
-                        .flatMap(Collection::stream)
-                        .map(FeatureNote::getContent)
-                        .flatMap(Collection::stream)
-                        .map(Serializable::toString)
-                        .anyMatch("org.jpg"::equals))
-                .map(ResourceVersion::getResourceLink)
-                .flatMap(Collection::stream)
-                .map(ResourceLink::getValue)
-                .map(uri -> {
-                    try {
-                        return URI.create(uri);
-                    } catch (IllegalArgumentException e) {
-                        return null;
-                    }
-                })
-                .filter(Objects::nonNull)
-                .findFirst()
-                .ifPresent(metadata::setThumbnailUrl);
+            collateralDetail.getSupportingResource().stream()
+                    .filter(supportingResource -> supportingResource.getResourceContentType().getValue() == List158.fromValue("01"))
+                    .map(SupportingResource::getResourceVersion)
+                    .flatMap(Collection::stream)
+                    .filter(resourceVersion -> resourceVersion.getResourceVersionFeature().stream()
+                            .map(ResourceVersionFeature::getFeatureNote)
+                            .flatMap(Collection::stream)
+                            .map(FeatureNote::getContent)
+                            .flatMap(Collection::stream)
+                            .map(Serializable::toString)
+                            .anyMatch("org.jpg"::equals))
+                    .map(ResourceVersion::getResourceLink)
+                    .flatMap(Collection::stream)
+                    .map(ResourceLink::getValue)
+                    .map(uri -> {
+                        try {
+                            return URI.create(uri);
+                        } catch (IllegalArgumentException e) {
+                            return null;
+                        }
+                    })
+                    .filter(Objects::nonNull)
+                    .findFirst()
+                    .ifPresent(metadata::setThumbnailUrl);
+        }
 
-        return metadata;
+        book.setMetadata(metadata);
+
+        return book;
     }
 
     private static boolean isProprietary(SubjectSchemeIdentifier subjectSchemeIdentifier) {

@@ -1,10 +1,10 @@
 package com.github.torleifg.semanticsearch.gateway.bibbi;
 
-import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
+import com.github.torleifg.semanticsearch.book.domain.Book;
 import no.bs.bibliografisk.model.GetV1PublicationsHarvest200ResponsePublicationsInner;
 
 interface BibbiMapper {
-    MetadataDTO from(GetV1PublicationsHarvest200ResponsePublicationsInner publication);
+    Book from(GetV1PublicationsHarvest200ResponsePublicationsInner publication);
 
-    MetadataDTO from(String id);
+    Book from(String id);
 }
