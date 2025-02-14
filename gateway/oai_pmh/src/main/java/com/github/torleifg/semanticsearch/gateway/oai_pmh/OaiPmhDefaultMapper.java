@@ -1,6 +1,7 @@
 package com.github.torleifg.semanticsearch.gateway.oai_pmh;
 
-import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
+import com.github.torleifg.semanticsearch.book.domain.*;
+import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Record;
 import org.marc4j.marc.Subfield;
@@ -14,20 +15,21 @@ import static java.util.stream.Collectors.toList;
 class OaiPmhDefaultMapper implements OaiPmhMapper {
 
     @Override
-    public MetadataDTO from(String id) {
-        final MetadataDTO metadata = new MetadataDTO();
-        metadata.setExternalId(id);
-        metadata.setDeleted(true);
-        metadata.setFormat(MetadataDTO.BookFormat.UNKNOWN);
+    public Book from(String id) {
+        final Book book = new Book();
+        book.setExternalId(id);
+        book.setDeleted(true);
 
-        return metadata;
+        return book;
     }
 
     @Override
-    public MetadataDTO from(String id, Record record) {
-        final MetadataDTO metadata = new MetadataDTO();
-        metadata.setExternalId(id);
-        metadata.setDeleted(false);
+    public Book from(String id, Record record) {
+        final Book book = new Book();
+        book.setExternalId(id);
+        book.setDeleted(false);
+
+        final Metadata metadata = new Metadata();
 
         final Map<String, List<DataField>> dataFieldsByTag = record.getDataFields().stream()
                 .collect(groupingBy(DataField::getTag, LinkedHashMap::new, toList()));
@@ -78,14 +80,14 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
                 continue;
             }
 
-            final List<MetadataDTO.Contributor.Role> roles = dataField.getSubfields('4').stream()
+            final List<Contributor.Role> roles = dataField.getSubfields('4').stream()
                     .filter(Objects::nonNull)
                     .map(Subfield::getData)
                     .map(role -> {
                         try {
-                            return MetadataDTO.Contributor.Role.valueOf(role.toUpperCase());
+                            return Contributor.Role.valueOf(role.toUpperCase());
                         } catch (IllegalArgumentException e) {
-                            return MetadataDTO.Contributor.Role.OTH;
+                            return Contributor.Role.OTH;
                         }
                     })
                     .distinct()
@@ -95,7 +97,7 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
                 continue;
             }
 
-            metadata.getContributors().add(new MetadataDTO.Contributor(roles, name.get()));
+            metadata.getContributors().add(new Contributor(roles, name.get()));
         }
 
         dataFieldsByTag.getOrDefault("264", List.of()).stream()
@@ -112,6 +114,35 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
                 .findFirst()
                 .ifPresent(metadata::setDescription);
 
+        record.getControlFields().stream()
+                .filter(controlField -> controlField.getTag().equals("008"))
+                .map(ControlField::getData)
+                .filter(data -> data.length() > 38)
+                .map(data -> data.substring(35, 38))
+                .map(language -> {
+                    try {
+                        return Language.valueOf(language.toUpperCase());
+                    } catch (IllegalArgumentException e) {
+                        return Language.UND;
+                    }
+                })
+                .forEach(metadata.getLanguages()::add);
+
+        dataFieldsByTag.getOrDefault("041", List.of()).stream()
+                .map(dataField -> dataField.getSubfields('a'))
+                .flatMap(Collection::stream)
+                .filter(Objects::nonNull)
+                .map(Subfield::getData)
+                .map(language -> {
+                    try {
+                        return Language.valueOf(language.toUpperCase());
+                    } catch (IllegalArgumentException e) {
+                        return Language.UND;
+                    }
+                })
+                .filter(language -> !metadata.getLanguages().contains(language))
+                .forEach(metadata.getLanguages()::add);
+
         dataFieldsByTag.getOrDefault("020", List.of()).stream()
                 .map(dataField -> dataField.getSubfield('q'))
                 .filter(Objects::nonNull)
@@ -119,9 +150,9 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
                 .findFirst()
                 .ifPresent(format -> {
                     if (format.equals("innbundet")) {
-                        metadata.setFormat(MetadataDTO.BookFormat.HARDCOVER);
+                        metadata.setFormat(BookFormat.HARDCOVER);
                     } else if (format.equals("heftet")) {
-                        metadata.setFormat(MetadataDTO.BookFormat.PAPERBACK);
+                        metadata.setFormat(BookFormat.PAPERBACK);
                     }
                 });
 
@@ -132,14 +163,14 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
                 .findFirst()
                 .ifPresent(fileType -> {
                     if (fileType.equals("http://rdaregistry.info/termList/fileType/1001")) {
-                        metadata.setFormat(MetadataDTO.BookFormat.AUDIOBOOK);
+                        metadata.setFormat(BookFormat.AUDIOBOOK);
                     } else if (fileType.equals("http://rdaregistry.info/termList/fileType/1002")) {
-                        metadata.setFormat(MetadataDTO.BookFormat.EBOOK);
+                        metadata.setFormat(BookFormat.EBOOK);
                     }
                 });
 
         if (metadata.getFormat() == null) {
-            metadata.setFormat(MetadataDTO.BookFormat.UNKNOWN);
+            metadata.setFormat(BookFormat.UNKNOWN);
         }
 
         dataFieldsByTag.getOrDefault("650", List.of()).stream()
@@ -164,10 +195,12 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
                 .filter(Objects::nonNull)
                 .forEach(metadata::setThumbnailUrl);
 
-        return metadata;
+        book.setMetadata(metadata);
+
+        return book;
     }
 
-    private static MetadataDTO.Classification createClassification(DataField dataField) {
+    private static Classification createClassification(DataField dataField) {
         final String id = Optional.ofNullable(dataField.getSubfield('0'))
                 .map(Subfield::getData)
                 .orElse(null);
@@ -184,6 +217,6 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
                 .map(Subfield::getData)
                 .orElse(null);
 
-        return new MetadataDTO.Classification(id, source, language, term);
+        return new Classification(id, source, language, term);
     }
 }

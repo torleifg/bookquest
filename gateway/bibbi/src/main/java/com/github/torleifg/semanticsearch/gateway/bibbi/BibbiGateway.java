@@ -1,9 +1,9 @@
 package com.github.torleifg.semanticsearch.gateway.bibbi;
 
+import com.github.torleifg.semanticsearch.book.domain.Book;
 import com.github.torleifg.semanticsearch.book.repository.LastModifiedRepository;
 import com.github.torleifg.semanticsearch.book.repository.ResumptionToken;
 import com.github.torleifg.semanticsearch.book.repository.ResumptionTokenRepository;
-import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
 import com.github.torleifg.semanticsearch.book.service.MetadataGateway;
 import lombok.extern.slf4j.Slf4j;
 import no.bs.bibliografisk.model.BibliographicRecordMetadata;
@@ -37,7 +37,7 @@ class BibbiGateway implements MetadataGateway {
     }
 
     @Override
-    public List<MetadataDTO> find() {
+    public List<Book> find() {
         final String serviceUri = bibbiProperties.getServiceUri();
         final String requestUri = createRequestUri(serviceUri);
 
@@ -63,7 +63,7 @@ class BibbiGateway implements MetadataGateway {
 
         log.info("Received {} publications from {}", publications.size(), requestUri);
 
-        final List<MetadataDTO> metadata = new ArrayList<>();
+        final List<Book> books = new ArrayList<>();
 
         for (final var publication : publications) {
             if (isBlank(publication.getId())) {
@@ -71,9 +71,9 @@ class BibbiGateway implements MetadataGateway {
             }
 
             if (publication.getDeleted() != null) {
-                metadata.add(bibbiMapper.from(publication.getId()));
+                books.add(bibbiMapper.from(publication.getId()));
             } else {
-                metadata.add(bibbiMapper.from(publication));
+                books.add(bibbiMapper.from(publication));
             }
         }
 
@@ -83,7 +83,7 @@ class BibbiGateway implements MetadataGateway {
                 .map(OffsetDateTime::toInstant)
                 .ifPresent(lastModified -> lastModifiedRepository.save(serviceUri, lastModified.plusSeconds(1L)));
 
-        return metadata;
+        return books;
     }
 
     private String createRequestUri(String serviceUri) {

@@ -108,57 +108,46 @@
     </div>
     <div class="results">
         <div th:if="${#lists.size(results) > 0}">
-            <div th:each="book : ${results}" class="result-item" th:with="metadata=${book.metadata}">
-                <p><strong th:text="${metadata.title + ' (' + metadata.publishedYear + ')'}"></strong>
-                    <span th:if="${metadata.format != null and metadata.format != metadata.format.UNKNOWN}"
+            <div th:each="book : ${results}" class="result-item">
+                <p><strong th:text="${book.title + ' (' + book.publishedYear + ')'}"></strong>
+                    <span th:if="${book.format != null}"
                           class="format-label">
-                        <span th:text="${metadata.format.label}"></span>
+                        <span th:text="${book.format}"></span>
                     </span>
                 </p>
-                <img th:src="${metadata.thumbnailUrl != null ? metadata.thumbnailUrl : 'fallback.png'}"
+                <img th:src="${book.thumbnailUrl != null ? book.thumbnailUrl : 'fallback.png'}"
                      alt=""/>
-                <p th:if="${#lists.size(metadata.contributors) > 0}">
-                    <span th:each="contributor, iterStat : ${metadata.contributors}">
-                        <span th:text="${contributor.name}"></span>
-                            (
-                            <span th:each="role, roleIterStat : ${contributor.roles}">
-                                <span th:text="${role.term}"></span>
-                                <span th:if="${!roleIterStat.last}">, </span>
-                            </span>
-                            )
-                        <span th:if="${!iterStat.last}">; </span>
-                    </span>
+                <p th:if="${book.contributors != null and !book.contributors.isBlank()}">
+                    <span th:text="${book.contributors}"></span>
                 </p>
-                <p th:if="${#lists.size(metadata.contributors) == 0}">
-                    <span>Contributor information is missing</span>
+                <p th:if="${book.contributors == null or book.contributors.isBlank()}">
+                    <span th:text="#{contributors}"></span>
                 </p>
-                <p th:if="${metadata.description != null}">
-                    <span th:text="${metadata.description}"></span>
+                <p th:if="${book.description != null}">
+                    <span th:text="${book.description}"></span>
                 </p>
                 <details>
-                    <summary>Details</summary>
+                    <summary th:text="#{details}"></summary>
                     <ul>
-                        <li th:if="${metadata.isbn != null}">
-                            <strong>ISBN: </strong>
-                            <span th:text="${metadata.isbn}"></span>
+                        <li th:if="${book.isbn != null}">
+                            <strong th:text="#{isbn}"></strong>
+                            <span th:text="${book.isbn}"></span>
                         </li>
-                        <li th:if="${metadata.publisher != null}">
-                            <strong>Publisher: </strong>
-                            <span th:text="${metadata.publisher}"></span>
+                        <li th:if="${book.languages != null and !book.languages.isBlank()}">
+                            <strong th:text="#{language}"></strong>
+                            <span th:text="${book.languages}"></span>
                         </li>
-                        <li th:if="${#lists.size(metadata.about) > 0}">
-                            <strong>About: </strong>
-                            <span th:each="about, iterStat : ${metadata.about}">
-                                <span th:text="${about.term}"></span>
-                                <span th:if="${!iterStat.last}">; </span>
-                            </span>
+                        <li th:if="${book.publisher != null}">
+                            <strong th:text="#{publisher}"></strong>
+                            <span th:text="${book.publisher}"></span>
                         </li>
-                        <li th:if="${#lists.size(metadata.genreAndForm) > 0}">
-                            <strong>Genre and form: </strong>
-                            <span th:each="genreAndForm, iterStat : ${metadata.genreAndForm}">
-                                <span th:text="${genreAndForm.term}"></span>
-                                <span th:if="${!iterStat.last}">; </span>
-                            </span>
+                        <li th:if="${book.about != null and !book.about.isBlank()}">
+                            <strong th:text="#{about}"></strong>
+                            <span th:text="${book.about}"></span>
+                        </li>
+                        <li th:if="${book.genreAndForm != null and !book.genreAndForm.isBlank()}">
+                            <strong th:text="#{genreAndForm}"></strong>
+                            <span th:text="${book.genreAndForm}"></span>
                         </li>
                     </ul>
                 </details>
@@ -166,7 +155,7 @@
             </div>
         </div>
         <div th:if="${#lists.size(results) == 0}">
-            <p>No results found. Please try a different query</p>
+            <p th:text="#{results}"></p>
         </div>
     </div>
 </div>

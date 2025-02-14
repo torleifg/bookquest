@@ -1,9 +1,9 @@
 package com.github.torleifg.semanticsearch.gateway.oai_pmh;
 
+import com.github.torleifg.semanticsearch.book.domain.Book;
 import com.github.torleifg.semanticsearch.book.repository.LastModifiedRepository;
 import com.github.torleifg.semanticsearch.book.repository.ResumptionToken;
 import com.github.torleifg.semanticsearch.book.repository.ResumptionTokenRepository;
-import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
 import com.github.torleifg.semanticsearch.book.service.MetadataGateway;
 import lombok.extern.slf4j.Slf4j;
 import org.marc4j.MarcXmlReader;
@@ -53,7 +53,7 @@ class OaiPmhGateway implements MetadataGateway {
     }
 
     @Override
-    public List<MetadataDTO> find() {
+    public List<Book> find() {
         final String serviceUri = oaiPmhProperties.getServiceUri();
         final String requestUri = createRequestUri(serviceUri);
 
@@ -94,13 +94,13 @@ class OaiPmhGateway implements MetadataGateway {
 
         log.info("Received {} record(s) from {}", oaiPmhrecords.size(), requestUri);
 
-        final List<MetadataDTO> metadata = new ArrayList<>();
+        final List<Book> books = new ArrayList<>();
 
         for (final var oaiPmhRecord : oaiPmhrecords) {
             final String identifier = oaiPmhRecord.getHeader().getIdentifier();
 
             if (oaiPmhRecord.getHeader().getStatus() == StatusType.DELETED) {
-                metadata.add(oaiPmhMapper.from(identifier));
+                books.add(oaiPmhMapper.from(identifier));
 
                 continue;
             }
@@ -125,7 +125,7 @@ class OaiPmhGateway implements MetadataGateway {
             while (marcXmlReader.hasNext()) {
                 final Record record = marcXmlReader.next();
 
-                metadata.add(oaiPmhMapper.from(identifier, record));
+                books.add(oaiPmhMapper.from(identifier, record));
             }
         }
 
@@ -135,7 +135,7 @@ class OaiPmhGateway implements MetadataGateway {
                 .map(Instant::parse)
                 .ifPresent(lastModified -> lastModifiedRepository.save(serviceUri, lastModified.plusSeconds(1L)));
 
-        return metadata;
+        return books;
     }
 
     private String createRequestUri(String serviceUri) {

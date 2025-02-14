@@ -7,40 +7,38 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Locale;
 
 @Slf4j
 @Service
 public class BookService {
     private final MetadataGateway metadataGateway;
-
     private final BookRepository bookRepository;
-    private final BookMapper bookMapper;
+    private final SearchMapper searchMapper;
 
-    public BookService(MetadataGateway metadataGateway, BookRepository bookRepository, BookMapper bookMapper) {
+    public BookService(MetadataGateway metadataGateway, BookRepository bookRepository, SearchMapper searchMapper) {
         this.metadataGateway = metadataGateway;
         this.bookRepository = bookRepository;
-        this.bookMapper = bookMapper;
+        this.searchMapper = searchMapper;
     }
 
     @Transactional
     public boolean findAndSave() {
-        final List<MetadataDTO> dtos = metadataGateway.find();
+        final List<Book> books = metadataGateway.find();
 
-        if (dtos.isEmpty()) {
+        if (books.isEmpty()) {
             return false;
         }
-
-        final List<Book> books = dtos.stream()
-                .map(bookMapper::toBook)
-                .toList();
 
         bookRepository.save(books);
 
         return true;
     }
 
-    public List<Book> lastModified() {
-        return bookRepository.lastModified(20);
+    public List<SearchDTO> lastModified(Locale locale) {
+        return bookRepository.lastModified(20).stream()
+                .map(book -> searchMapper.from(book, locale))
+                .toList();
     }
 
     public List<Book> fullTextSearch(String query) {
@@ -51,11 +49,16 @@ public class BookService {
         return bookRepository.semanticSearch(query, 20);
     }
 
-    public List<Book> hybridSearch(String query) {
-        return bookRepository.hybridSearch(query, 20);
+    public List<SearchDTO> hybridSearch(String query, Locale locale) {
+        return bookRepository.hybridSearch(query, 30).stream()
+                .map(book -> searchMapper.from(book, locale))
+                .toList();
     }
 
-    public List<Book> semanticSimilarity() {
-        return bookRepository.semanticSimilarity(20);
+    public List<SearchDTO> semanticSimilarity(Locale locale) {
+        return bookRepository.semanticSimilarity(20)
+                .stream()
+                .map(book -> searchMapper.from(book, locale))
+                .toList();
     }
 }

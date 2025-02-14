@@ -1,8 +1,8 @@
 package com.github.torleifg.semanticsearch.gateway.bokbasen;
 
+import com.github.torleifg.semanticsearch.book.domain.Book;
 import com.github.torleifg.semanticsearch.book.repository.ResumptionToken;
 import com.github.torleifg.semanticsearch.book.repository.ResumptionTokenRepository;
-import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
 import com.github.torleifg.semanticsearch.book.service.MetadataGateway;
 import lombok.extern.slf4j.Slf4j;
 import org.editeur.ns.onix._3_0.reference.*;
@@ -31,7 +31,7 @@ class BokbasenGateway implements MetadataGateway {
     }
 
     @Override
-    public List<MetadataDTO> find() {
+    public List<Book> find() {
         final String serviceUri = bokbasenProperties.getServiceUri();
         final String requestUri = createRequestUri(serviceUri);
 
@@ -54,7 +54,7 @@ class BokbasenGateway implements MetadataGateway {
 
         log.info("Received {} product(s) from {}", products.size(), requestUri);
 
-        final List<MetadataDTO> metadata = new ArrayList<>();
+        final List<Book> books = new ArrayList<>();
 
         for (final var product : products) {
             final DescriptiveDetail descriptiveDetail = product.getDescriptiveDetail();
@@ -64,13 +64,13 @@ class BokbasenGateway implements MetadataGateway {
             }
 
             if (isDeleted(product.getNotificationType())) {
-                metadata.add(bokbasenMapper.from(product.getRecordReference().getValue()));
+                books.add(bokbasenMapper.from(product.getRecordReference().getValue()));
             }
 
-            metadata.add(bokbasenMapper.from(product));
+            books.add(bokbasenMapper.from(product));
         }
 
-        return metadata;
+        return books;
     }
 
     private String createRequestUri(String serviceUri) {

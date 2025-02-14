@@ -1,7 +1,10 @@
 package com.github.torleifg.semanticsearch.gateway.oai_pmh;
 
-import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
+import com.github.torleifg.semanticsearch.book.domain.BookFormat;
+import com.github.torleifg.semanticsearch.book.domain.Contributor;
+import com.github.torleifg.semanticsearch.book.domain.Language;
 import org.junit.jupiter.api.Test;
+import org.marc4j.marc.impl.ControlFieldImpl;
 import org.marc4j.marc.impl.DataFieldImpl;
 import org.marc4j.marc.impl.RecordImpl;
 import org.marc4j.marc.impl.SubfieldImpl;
@@ -15,6 +18,8 @@ class OaiPmhDefaultMapperTests {
 
     @Test
     void mapRecordTest() {
+        var fixedLengthDataElements = new ControlFieldImpl("008", "211210r20222022no     eo||||||0| 1 nob|d");
+
         var isbn = new DataFieldImpl("020", ' ', ' ');
         isbn.addSubfield(new SubfieldImpl('a', "isbn"));
         isbn.addSubfield(new SubfieldImpl('q', "innbundet"));
@@ -36,6 +41,9 @@ class OaiPmhDefaultMapperTests {
 
         var description = new DataFieldImpl("520", ' ', ' ');
         description.addSubfield(new SubfieldImpl('a', "description"));
+
+        var language = new DataFieldImpl("041", '0', ' ');
+        language.addSubfield(new SubfieldImpl('a', "eng"));
 
         var aboutNob = new DataFieldImpl("650", '2', '7');
         aboutNob.addSubfield(new SubfieldImpl('0', "id"));
@@ -65,23 +73,27 @@ class OaiPmhDefaultMapperTests {
         thumbnailUrl.addSubfield(new SubfieldImpl('u', "http://thumbnailUrl"));
 
         var record = new RecordImpl();
-        record.getDataFields().addAll(List.of(isbn, title, publisher, entry, publishedYear, description, aboutNob, aboutNno, genreNob, genreEng, thumbnailUrl));
+        record.getControlFields().add(fixedLengthDataElements);
+        record.getDataFields().addAll(List.of(isbn, title, publisher, entry, publishedYear, description, language, aboutNob, aboutNno, genreNob, genreEng, thumbnailUrl));
 
-        var metadata = mapper.from("id", record);
+        var book = mapper.from("id", record);
+        assertEquals("id", book.getExternalId());
+        assertFalse(book.isDeleted());
 
-        assertFalse(metadata.isDeleted());
-
-        assertEquals("id", metadata.getExternalId());
+        var metadata = book.getMetadata();
         assertEquals("isbn", metadata.getIsbn());
         assertEquals("title : remainder of title", metadata.getTitle());
         assertEquals("publisher", metadata.getPublisher());
         assertEquals(2, metadata.getContributors().getFirst().roles().size());
-        assertEquals(MetadataDTO.Contributor.Role.AUT, metadata.getContributors().getFirst().roles().getFirst());
-        assertEquals(MetadataDTO.Contributor.Role.ILL, metadata.getContributors().getFirst().roles().getLast());
+        assertEquals(Contributor.Role.AUT, metadata.getContributors().getFirst().roles().getFirst());
+        assertEquals(Contributor.Role.ILL, metadata.getContributors().getFirst().roles().getLast());
         assertEquals("lastname, firstname", metadata.getContributors().getFirst().name());
         assertEquals("1970", metadata.getPublishedYear());
         assertEquals("description", metadata.getDescription());
-        assertEquals(MetadataDTO.BookFormat.HARDCOVER, metadata.getFormat());
+        assertEquals(2, metadata.getLanguages().size());
+        assertEquals(Language.NOB, metadata.getLanguages().getFirst());
+        assertEquals(Language.ENG, metadata.getLanguages().getLast());
+        assertEquals(BookFormat.HARDCOVER, metadata.getFormat());
         assertEquals(2, metadata.getAbout().size());
         assertEquals("id", metadata.getAbout().getFirst().id());
         assertEquals("aja", metadata.getAbout().getFirst().source());

@@ -1,10 +1,10 @@
 package com.github.torleifg.semanticsearch.gateway.oai_pmh;
 
-import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
+import com.github.torleifg.semanticsearch.book.domain.Book;
 import org.marc4j.marc.Record;
 
 interface OaiPmhMapper {
-    MetadataDTO from(String id, Record record);
+    Book from(String id, Record record);
 
-    MetadataDTO from(String id);
+    Book from(String id);
 }

@@ -1,14 +1,15 @@
 package com.github.torleifg.semanticsearch.gateway.bibbi;
 
-import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
+import com.github.torleifg.semanticsearch.book.domain.BookFormat;
+import com.github.torleifg.semanticsearch.book.domain.Contributor;
+import com.github.torleifg.semanticsearch.book.domain.Language;
 import no.bs.bibliografisk.model.*;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class BibbiDefaultMapperTests {
     final BibbiDefaultMapper mapper = new BibbiDefaultMapper();
@@ -33,6 +34,7 @@ class BibbiDefaultMapperTests {
 
         publication.setDatePublished("1970");
         publication.setDescription("description");
+        publication.setInLanguage("eng");
         publication.setBookFormat(GetV1PublicationsHarvest200ResponsePublicationsInner.BookFormatEnum.EBOOK);
 
         var aboutName = new SubjectName();
@@ -63,20 +65,24 @@ class BibbiDefaultMapperTests {
 
         publication.setImage(publicationImage);
 
-        var metadata = mapper.from(publication);
+        var book = mapper.from(publication);
+        assertEquals("id", book.getExternalId());
+        assertFalse(book.isDeleted());
 
-        assertEquals("id", metadata.getExternalId());
+        var metadata = book.getMetadata();
         assertEquals("isbn", metadata.getIsbn());
         assertEquals("title", metadata.getTitle());
         assertEquals("publisher", metadata.getPublisher());
         assertEquals(1, metadata.getContributors().size());
         assertEquals(2, metadata.getContributors().getFirst().roles().size());
-        assertEquals(MetadataDTO.Contributor.Role.AUT, metadata.getContributors().getFirst().roles().getFirst());
-        assertEquals(MetadataDTO.Contributor.Role.ILL, metadata.getContributors().getFirst().roles().getLast());
+        assertEquals(Contributor.Role.AUT, metadata.getContributors().getFirst().roles().getFirst());
+        assertEquals(Contributor.Role.ILL, metadata.getContributors().getFirst().roles().getLast());
         assertEquals("creator", metadata.getContributors().getFirst().name());
         assertEquals("1970", metadata.getPublishedYear());
         assertEquals("description", metadata.getDescription());
-        assertEquals(MetadataDTO.BookFormat.EBOOK, metadata.getFormat());
+        assertEquals(1, metadata.getLanguages().size());
+        assertEquals(Language.ENG, metadata.getLanguages().getFirst());
+        assertEquals(BookFormat.EBOOK, metadata.getFormat());
         assertEquals(2, metadata.getAbout().size());
         assertEquals("id", metadata.getAbout().getFirst().id());
         assertEquals("bibbi", metadata.getAbout().getFirst().source());

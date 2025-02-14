@@ -1,11 +1,12 @@
 package com.github.torleifg.semanticsearch.gateway.bibbi;
 
-import com.github.torleifg.semanticsearch.book.service.MetadataDTO;
+import com.github.torleifg.semanticsearch.book.domain.*;
 import no.bs.bibliografisk.model.*;
 
 import java.util.*;
 import java.util.stream.Stream;
 
+import static com.github.torleifg.semanticsearch.book.domain.BookFormat.*;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -13,19 +14,21 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 class BibbiDefaultMapper implements BibbiMapper {
 
     @Override
-    public MetadataDTO from(String id) {
-        final MetadataDTO metadata = new MetadataDTO();
-        metadata.setExternalId(id);
-        metadata.setDeleted(true);
+    public Book from(String id) {
+        final Book book = new Book();
+        book.setExternalId(id);
+        book.setDeleted(true);
 
-        return metadata;
+        return book;
     }
 
     @Override
-    public MetadataDTO from(GetV1PublicationsHarvest200ResponsePublicationsInner publication) {
-        final MetadataDTO metadata = new MetadataDTO();
-        metadata.setExternalId(publication.getId());
-        metadata.setDeleted(false);
+    public Book from(GetV1PublicationsHarvest200ResponsePublicationsInner publication) {
+        final Book book = new Book();
+        book.setExternalId(publication.getId());
+        book.setDeleted(false);
+
+        final Metadata metadata = new Metadata();
 
         if (isNotBlank(publication.getIsbn())) {
             metadata.setIsbn(publication.getIsbn());
@@ -47,15 +50,15 @@ class BibbiDefaultMapper implements BibbiMapper {
         for (final var entry : creatorsByName.entrySet()) {
             final String name = entry.getKey();
 
-            final List<MetadataDTO.Contributor.Role> roles = entry.getValue().stream()
+            final List<Contributor.Role> roles = entry.getValue().stream()
                     .map(Creator::getRole)
                     .filter(Objects::nonNull)
                     .map(Creator.RoleEnum::name)
                     .map(role -> {
                         try {
-                            return MetadataDTO.Contributor.Role.valueOf(role);
+                            return Contributor.Role.valueOf(role);
                         } catch (IllegalArgumentException e) {
-                            return MetadataDTO.Contributor.Role.OTH;
+                            return Contributor.Role.OTH;
                         }
                     })
                     .distinct()
@@ -65,7 +68,7 @@ class BibbiDefaultMapper implements BibbiMapper {
                 continue;
             }
 
-            metadata.getContributors().add(new MetadataDTO.Contributor(roles, name));
+            metadata.getContributors().add(new Contributor(roles, name));
         }
 
         if (isNotBlank(publication.getDatePublished())) {
@@ -76,16 +79,24 @@ class BibbiDefaultMapper implements BibbiMapper {
             metadata.setDescription(publication.getDescription());
         }
 
+        if (isNotBlank(publication.getInLanguage())) {
+            try {
+                metadata.setLanguages(List.of(Language.valueOf(publication.getInLanguage().toUpperCase())));
+            } catch (IllegalArgumentException ignored) {
+                metadata.setLanguages(List.of(Language.UND));
+            }
+        }
+
         if (publication.getBookFormat() != null) {
             switch (publication.getBookFormat()) {
-                case EBOOK -> metadata.setFormat(MetadataDTO.BookFormat.EBOOK);
-                case AUDIOBOOKFORMAT -> metadata.setFormat(MetadataDTO.BookFormat.AUDIOBOOK);
-                case HARDCOVER -> metadata.setFormat(MetadataDTO.BookFormat.HARDCOVER);
-                case PAPERBACK -> metadata.setFormat(MetadataDTO.BookFormat.PAPERBACK);
-                default -> metadata.setFormat(MetadataDTO.BookFormat.UNKNOWN);
+                case EBOOK -> metadata.setFormat(BookFormat.EBOOK);
+                case AUDIOBOOKFORMAT -> metadata.setFormat(AUDIOBOOK);
+                case HARDCOVER -> metadata.setFormat(HARDCOVER);
+                case PAPERBACK -> metadata.setFormat(PAPERBACK);
+                default -> metadata.setFormat(UNKNOWN);
             }
         } else {
-            metadata.setFormat(MetadataDTO.BookFormat.UNKNOWN);
+            metadata.setFormat(BookFormat.UNKNOWN);
         }
 
         for (final Subject about : publication.getAbout()) {
@@ -94,10 +105,10 @@ class BibbiDefaultMapper implements BibbiMapper {
             final String id = about.getId();
             final String source = about.getVocabulary().getValue();
 
-            metadata.getAbout().add(new MetadataDTO.Classification(id, source, "nob", name.getNob()));
+            metadata.getAbout().add(new Classification(id, source, "nob", name.getNob()));
 
             if (name.getNno() != null) {
-                metadata.getAbout().add(new MetadataDTO.Classification(id, source, "nno", name.getNno()));
+                metadata.getAbout().add(new Classification(id, source, "nno", name.getNno()));
             }
         }
 
@@ -111,12 +122,12 @@ class BibbiDefaultMapper implements BibbiMapper {
                     .orElse(null);
 
             metadata.getGenreAndForm().addAll(List.of(
-                    new MetadataDTO.Classification(id, source, "nob", name.getNob()),
-                    new MetadataDTO.Classification(id, source, "nno", name.getNno())
+                    new Classification(id, source, "nob", name.getNob()),
+                    new Classification(id, source, "nno", name.getNno())
             ));
 
             if (name.getEng() != null) {
-                metadata.getGenreAndForm().add(new MetadataDTO.Classification(id, source, "eng", name.getEng()));
+                metadata.getGenreAndForm().add(new Classification(id, source, "eng", name.getEng()));
             }
         }
 
@@ -124,6 +135,8 @@ class BibbiDefaultMapper implements BibbiMapper {
                 .map(PublicationImage::getThumbnailUrl)
                 .ifPresent(metadata::setThumbnailUrl);
 
-        return metadata;
+        book.setMetadata(metadata);
+
+        return book;
     }
 }
