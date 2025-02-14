@@ -2,7 +2,6 @@ package com.github.torleifg.semanticsearch.adapter.web;
 
 import com.github.torleifg.semanticsearch.book.service.BookService;
 import com.github.torleifg.semanticsearch.book.service.SearchDTO;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,17 +15,12 @@ import java.util.Locale;
 class SearchController {
     private final BookService bookService;
 
-    @Value("${language}")
-    private String langauge;
-
     SearchController(BookService bookService) {
         this.bookService = bookService;
     }
 
     @GetMapping
-    public String search(Model model) {
-        final Locale locale = Locale.of(langauge);
-
+    public String search(Model model, Locale locale) {
         final List<SearchDTO> dtos = bookService.lastModified(locale);
 
         model.addAttribute("results", dtos);
@@ -35,11 +29,9 @@ class SearchController {
     }
 
     @PostMapping
-    public String search(Model model, @RequestParam(required = false) String query) {
-        final Locale locale = Locale.of(langauge);
-
+    public String search(Model model, @RequestParam(required = false) String query, Locale locale) {
         final List<SearchDTO> dtos;
-        
+
         if (query != null && !query.isBlank()) {
             model.addAttribute("query", query);
 

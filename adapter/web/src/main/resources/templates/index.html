@@ -121,32 +121,32 @@
                     <span th:text="${book.contributors}"></span>
                 </p>
                 <p th:if="${book.contributors == null or book.contributors.isBlank()}">
-                    <span>Contributor information is missing</span>
+                    <span th:text="#{contributors}"></span>
                 </p>
                 <p th:if="${book.description != null}">
                     <span th:text="${book.description}"></span>
                 </p>
                 <details>
-                    <summary th:text="#{details}">Details</summary>
+                    <summary th:text="#{details}"></summary>
                     <ul>
                         <li th:if="${book.isbn != null}">
-                            <strong>ISBN: </strong>
+                            <strong th:text="#{isbn}"></strong>
                             <span th:text="${book.isbn}"></span>
                         </li>
                         <li th:if="${book.languages != null and !book.languages.isBlank()}">
-                            <strong th:text="#{language}">Language: </strong>
+                            <strong th:text="#{language}"></strong>
                             <span th:text="${book.languages}"></span>
                         </li>
                         <li th:if="${book.publisher != null}">
-                            <strong th:text="#{publisher}">Publisher: </strong>
+                            <strong th:text="#{publisher}"></strong>
                             <span th:text="${book.publisher}"></span>
                         </li>
                         <li th:if="${book.about != null and !book.about.isBlank()}">
-                            <strong th:text="#{about}">About: </strong>
+                            <strong th:text="#{about}"></strong>
                             <span th:text="${book.about}"></span>
                         </li>
                         <li th:if="${book.genreAndForm != null and !book.genreAndForm.isBlank()}">
-                            <strong th:text="#{genreAndForm}">Genre and form: </strong>
+                            <strong th:text="#{genreAndForm}"></strong>
                             <span th:text="${book.genreAndForm}"></span>
                         </li>
                     </ul>
@@ -155,7 +155,7 @@
             </div>
         </div>
         <div th:if="${#lists.size(results) == 0}">
-            <p th:text="#{results}">No results found. Please try a different query</p>
+            <p th:text="#{results}"></p>
         </div>
     </div>
 </div>

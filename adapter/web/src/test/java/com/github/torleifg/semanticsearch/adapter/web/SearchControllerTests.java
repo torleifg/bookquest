@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(value = SearchController.class, properties = "language=nb")
+@WebMvcTest(value = SearchController.class)
 @ContextConfiguration(classes = {SearchController.class, SecurityConfig.class})
 class SearchControllerTests {
 
@@ -33,7 +33,7 @@ class SearchControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("text/html;charset=UTF-8"));
 
-        verify(bookService).hybridSearch("query string", Locale.of("nb"));
+        verify(bookService).hybridSearch("query string", Locale.of("en"));
     }
 
     @Test
@@ -42,6 +42,6 @@ class SearchControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("text/html;charset=UTF-8"));
 
-        verify(bookService).semanticSimilarity(Locale.of("nb"));
+        verify(bookService).semanticSimilarity(Locale.of("en"));
     }
 }
