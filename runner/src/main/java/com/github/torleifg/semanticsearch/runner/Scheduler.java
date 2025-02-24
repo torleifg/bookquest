@@ -11,14 +11,14 @@ import java.util.concurrent.TimeUnit;
 public class Scheduler {
     private final BookService bookService;
 
-    @Value("${scheduler.enabled}")
+    @Value("${harvesting.enabled}")
     private boolean enabled;
 
     public Scheduler(BookService bookService) {
         this.bookService = bookService;
     }
 
-    @Scheduled(initialDelayString = "${scheduler.initial-delay}", fixedDelayString = "${scheduler.fixed-delay}", timeUnit = TimeUnit.SECONDS)
+    @Scheduled(initialDelayString = "${harvesting.initial-delay}", fixedDelayString = "${harvesting.fixed-delay}", timeUnit = TimeUnit.SECONDS)
     public void poll() {
         if (!enabled) {
             return;

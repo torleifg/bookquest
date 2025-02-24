@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @EnableWireMock
 @RestClientTest(BokbasenClient.class)
-@TestPropertySource(properties = "gateway.type=bokbasen")
+@TestPropertySource(properties = "harvesting.gateway=bokbasen")
 @ContextConfiguration(classes = {BokbasenConfig.class, BokbasenClientTests.BokbasenTestConfig.class})
 class BokbasenClientTests {
 

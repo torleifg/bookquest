@@ -10,7 +10,7 @@ import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.web.client.RestClient;
 
 @Configuration
-@ConditionalOnProperty(prefix = "gateway", name = "type", havingValue = "oai-pmh")
+@ConditionalOnProperty(prefix = "harvesting", name = "gateway", havingValue = "oai-pmh")
 class OaiPmhConfig {
 
     @Bean
