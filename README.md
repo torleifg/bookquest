@@ -42,13 +42,11 @@ Available options:
 **Example:**
 
 ```yaml
-scheduler:
+harvesting:
   enabled: true
+  gateway: bibbi
   initial-delay: 5
   fixed-delay: 3600
-
-gateway:
-  type: bibbi
 
 bibbi:
   service-uri: https://bibliografisk.bs.no/v1/publications/harvest

@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @EnableWireMock
 @RestClientTest(BibbiClient.class)
-@TestPropertySource(properties = "gateway.type=bibbi")
+@TestPropertySource(properties = "harvesting.gateway=bibbi")
 @ContextConfiguration(classes = {BibbiConfig.class, BibbiClientTests.BibbiTestConfig.class})
 class BibbiClientTests {
 

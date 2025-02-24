@@ -10,7 +10,7 @@ import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.web.client.RestClient;
 
 @Configuration
-@ConditionalOnProperty(prefix = "gateway", name = "type", havingValue = "bibbi")
+@ConditionalOnProperty(prefix = "harvesting", name = "gateway", havingValue = "bibbi")
 class BibbiConfig {
 
     @Bean

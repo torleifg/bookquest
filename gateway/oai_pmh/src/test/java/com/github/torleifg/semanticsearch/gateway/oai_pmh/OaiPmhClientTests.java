@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @EnableWireMock
 @RestClientTest(OaiPmhClient.class)
-@TestPropertySource(properties = "gateway.type=oai-pmh")
+@TestPropertySource(properties = "harvesting.gateway=oai-pmh")
 @ContextConfiguration(classes = {OaiPmhConfig.class, OaiPmhClientTests.OaiPmhTestConfig.class})
 class OaiPmhClientTests {
 

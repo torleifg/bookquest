@@ -16,7 +16,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
 
 @Configuration
-@ConditionalOnProperty(prefix = "gateway", name = "type", havingValue = "bokbasen")
+@ConditionalOnProperty(prefix = "harvesting", name = "gateway", havingValue = "bokbasen")
 class BokbasenConfig {
 
     @Bean
