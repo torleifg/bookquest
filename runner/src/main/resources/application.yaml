@@ -37,11 +37,6 @@ spring:
           auth0:
             token-uri: https://login.bokbasen.io/oauth/token
 
-  messages:
-    basename: messages
-    encoding: utf-8
-    always-use-message-format: true
-
 server:
   port: 8080
 

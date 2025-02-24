@@ -19,6 +19,11 @@ class SearchController {
         this.bookService = bookService;
     }
 
+    @GetMapping("/change-language")
+    public String changeLanguage() {
+        return "redirect:/";
+    }
+
     @GetMapping
     public String search(Model model, Locale locale) {
         final List<SearchDTO> dtos = bookService.lastModified(locale);
