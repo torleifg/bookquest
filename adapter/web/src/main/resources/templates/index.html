@@ -15,13 +15,11 @@
             font-size: 14px;
             margin-top: 20px;
         }
-
         .input-container {
             position: relative;
             width: 100%;
             display: inline-block;
         }
-
         .input-container input[type="search"] {
             font-size: inherit;
             width: 100%;
@@ -33,7 +31,6 @@
             box-sizing: border-box;
             background-color: #fff;
         }
-
         .input-container .search-icon-button {
             position: absolute;
             top: 50%;
@@ -48,50 +45,44 @@
             box-shadow: none;
             appearance: none;
         }
-
         .input-container .search-icon-button:focus {
             outline: none;
         }
-
         .format-label {
             font-size: 12px;
             background-color: #bcd1aa;
             padding: 3px 8px;
             border-radius: 10px;
         }
-
         hr {
             border: none;
             height: 1px;
             background-color: #bcd1aa;
         }
-
         .result-item img {
             width: 150px;
             height: auto;
         }
-
         details {
             background-color: transparent;
             border: none;
             margin: 0;
             padding: 0;
         }
-
         summary {
+            border: none;
             list-style-type: '+ ';
         }
-
         details[open] > summary {
+            border: none;
             list-style-type: '- ';
         }
-
-        ul {
-            list-style-type: none;
-            margin-left: 0;
-            padding-left: 0;
+        .details-table tbody {
+            border: none;
         }
-
+        .details-table td {
+            padding: 2px 10px;
+        }
     </style>
 </head>
 <body>
@@ -128,28 +119,28 @@
                 </p>
                 <details>
                     <summary th:text="#{details}"></summary>
-                    <ul>
-                        <li th:if="${book.isbn != null}">
-                            <strong th:text="#{isbn}"></strong>
-                            <span th:text="${book.isbn}"></span>
-                        </li>
-                        <li th:if="${book.languages != null and !book.languages.isBlank()}">
-                            <strong th:text="#{language}"></strong>
-                            <span th:text="${book.languages}"></span>
-                        </li>
-                        <li th:if="${book.publisher != null}">
-                            <strong th:text="#{publisher}"></strong>
-                            <span th:text="${book.publisher}"></span>
-                        </li>
-                        <li th:if="${book.about != null and !book.about.isBlank()}">
-                            <strong th:text="#{about}"></strong>
-                            <span th:text="${book.about}"></span>
-                        </li>
-                        <li th:if="${book.genreAndForm != null and !book.genreAndForm.isBlank()}">
-                            <strong th:text="#{genreAndForm}"></strong>
-                            <span th:text="${book.genreAndForm}"></span>
-                        </li>
-                    </ul>
+                    <table class="details-table">
+                        <tr th:if="${book.isbn != null}">
+                            <td><strong th:text="#{isbn}"></strong></td>
+                            <td th:text="${book.isbn}"></td>
+                        </tr>
+                        <tr th:if="${book.languages != null and !book.languages.isBlank()}">
+                            <td><strong th:text="#{language}"></strong></td>
+                            <td th:text="${book.languages}"></td>
+                        </tr>
+                        <tr th:if="${book.publisher != null}">
+                            <td><strong th:text="#{publisher}"></strong></td>
+                            <td th:text="${book.publisher}"></td>
+                        </tr>
+                        <tr th:if="${book.about != null and !book.about.isBlank()}">
+                            <td><strong th:text="#{about}"></strong></td>
+                            <td th:text="${book.about}"></td>
+                        </tr>
+                        <tr th:if="${book.genreAndForm != null and !book.genreAndForm.isBlank()}">
+                            <td><strong th:text="#{genreAndForm}"></strong></td>
+                            <td th:text="${book.genreAndForm}"></td>
+                        </tr>
+                    </table>
                 </details>
                 <hr/>
             </div>
