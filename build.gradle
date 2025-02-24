@@ -3,8 +3,8 @@ plugins {
 }
 
 ext {
-    springBootVersion = '3.4.2'
-    springAiVersion = '1.0.0-M5'
+    springBootVersion = '3.4.3'
+    springAiVersion = '1.0.0-M6'
     marc4jVersion = '2.9.6'
     swaggerParserVersion = '2.1.22'
     jaxbVersion = '4.0.2'
