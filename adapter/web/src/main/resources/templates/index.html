@@ -161,7 +161,7 @@
                     </span>
                 </p>
                 <img th:src="${book.thumbnailUrl != null ? book.thumbnailUrl : 'fallback.png'}"
-                     alt=""/>
+                     alt="" loading="lazy"/>
                 <p th:if="${book.contributors != null and !book.contributors.isBlank()}">
                     <span th:text="${book.contributors}"></span>
                 </p>
