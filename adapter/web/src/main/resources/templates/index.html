@@ -141,7 +141,7 @@
     </div>
     <!-- Search -->
     <div class="search-form">
-        <form th:action="@{/}" method="post">
+        <form th:action="@{/search}" method="get">
             <div class="input-container">
                 <input type="search" name="query" th:value="${query}" aria-label="Enter search query"/>
                 <button type="submit" class="search-icon-button" aria-label="Submit search">

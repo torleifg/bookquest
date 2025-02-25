@@ -5,7 +5,6 @@ import com.github.torleifg.semanticsearch.book.service.SearchDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -25,7 +24,7 @@ class SearchController {
     }
 
     @GetMapping
-    public String search(Model model, Locale locale) {
+    public String lastModified(Model model, Locale locale) {
         final List<SearchDTO> dtos = bookService.lastModified(locale);
 
         model.addAttribute("results", dtos);
@@ -33,7 +32,7 @@ class SearchController {
         return "index";
     }
 
-    @PostMapping
+    @GetMapping("/search")
     public String search(Model model, @RequestParam(required = false) String query, Locale locale) {
         final List<SearchDTO> dtos;
 
