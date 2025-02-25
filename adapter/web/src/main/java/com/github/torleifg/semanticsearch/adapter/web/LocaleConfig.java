@@ -1,5 +1,6 @@
 package com.github.torleifg.semanticsearch.adapter.web;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.LocaleResolver;
@@ -15,9 +16,9 @@ import java.util.Locale;
 public class LocaleConfig implements WebMvcConfigurer {
 
     @Bean
-    public LocaleResolver localeResolver() {
+    public LocaleResolver localeResolver(@Value("${default-locale}") String defaultLocale) {
         final CookieLocaleResolver resolver = new CookieLocaleResolver("LOCALE_COOKIE");
-        resolver.setDefaultLocale(Locale.forLanguageTag("nb"));
+        resolver.setDefaultLocale(Locale.forLanguageTag(defaultLocale));
         resolver.setCookiePath("/");
         resolver.setCookieMaxAge(Duration.ofDays(1L));
 

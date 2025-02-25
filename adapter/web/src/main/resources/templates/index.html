@@ -141,7 +141,7 @@
     </div>
     <!-- Search -->
     <div class="search-form">
-        <form th:action="@{/}" method="post">
+        <form th:action="@{/search}" method="get">
             <div class="input-container">
                 <input type="search" name="query" th:value="${query}" aria-label="Enter search query"/>
                 <button type="submit" class="search-icon-button" aria-label="Submit search">
@@ -161,7 +161,7 @@
                     </span>
                 </p>
                 <img th:src="${book.thumbnailUrl != null ? book.thumbnailUrl : 'fallback.png'}"
-                     alt=""/>
+                     alt="" loading="lazy"/>
                 <p th:if="${book.contributors != null and !book.contributors.isBlank()}">
                     <span th:text="${book.contributors}"></span>
                 </p>

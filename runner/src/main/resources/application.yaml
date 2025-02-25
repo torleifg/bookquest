@@ -40,6 +40,8 @@ spring:
 server:
   port: 8080
 
+default-locale: nb
+
 harvesting:
   enabled: false
   gateway: oai-pmh
