@@ -20,7 +20,7 @@ Follow Run as Docker Compose **or** Run as Spring Boot to configure and run the 
 
 ### Run as Docker Compose
 
-Configure the appropriate gateway for harvesting metadata by editing
+Configure a gateway for harvesting metadata by editing
 ```compose-app.yml```.
 
 Available options:
@@ -28,10 +28,19 @@ Available options:
 - oai-pmh
 - bibbi
 - bokbasen
+ 
+**Example:**
 
 ```
 HARVESTING_ENABLED: true
 HARVESTING_GATEWAY: oai-pmh
+HARVESTING_INITIAL_DELAY: 5
+HARVESTING_FIXED_DELAY: 3600
+OAI_PMH_SERVICE_URI: https://oai.aja.bs.no/mlnb
+OAI_PMH_TTL: 5
+OAI_PMH_MAPPER: default
+OAI_PMH_VERB: ListRecords
+OAI_PMH_METADATA_PREFIX: marc21
 ```
 
 Run the following command in the project directory:
@@ -46,7 +55,7 @@ application will be ready for use.
 
 ### Run as Spring Boot
 
-Configure the appropriate gateway for harvesting metadata by editing
+Configure a gateway for harvesting metadata by editing
 ```application/src/main/resources/application.yaml```.
 
 Available options:
