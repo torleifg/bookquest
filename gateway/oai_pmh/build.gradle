@@ -10,7 +10,7 @@ dependencies {
 
     implementation 'org.marc4j:marc4j'
 
-    implementation project(':application')
+    implementation project(':core')
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'

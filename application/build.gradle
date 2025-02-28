@@ -1,10 +1,16 @@
+plugins {
+    id 'org.springframework.boot'
+}
+
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation project(':core')
+    implementation project(':gateway:bibbi')
+    implementation project(':gateway:bokbasen')
+    implementation project(':gateway:oai_pmh')
+    implementation project(':adapter:persistence')
+    implementation project(':adapter:web')
 }
