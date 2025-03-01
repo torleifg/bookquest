@@ -33,11 +33,14 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build Docker image
-        run: docker build -t ghcr.io/${{ github.repository_owner }}/bookquest:${{ env.VERSION }} .
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      - name: Push Docker image to GitHub Container Registry
-        run: |
-          docker push ghcr.io/${{ github.repository_owner }}/bookquest:${{ env.VERSION }}
-          docker tag ghcr.io/${{ github.repository_owner }}/bookquest:${{ env.VERSION }} ghcr.io/${{ github.repository_owner }}/bookquest:latest
-          docker push ghcr.io/${{ github.repository_owner }}/bookquest:latest
+      - name: Build and push multi-architecture image
+        uses: docker/build-push-action@v6
+        with:
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/bookquest:${{ env.VERSION }}
+            ghcr.io/${{ github.repository_owner }}/bookquest:latest
