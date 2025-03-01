@@ -81,11 +81,13 @@ oai-pmh:
   metadataPrefix: marc21
 ```
 
-Run the following commands in the project directory:
+Run the following command in the project directory:
 
 ```shell
 docker compose up
 ```
+
+Open and run the application in your IDE or run the following command in the project directory:
 
 ```shell
 ./gradlew bootRun
