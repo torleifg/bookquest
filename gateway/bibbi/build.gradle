@@ -7,7 +7,7 @@ dependencies {
 
     implementation 'io.swagger.parser.v3:swagger-parser'
 
-    implementation project(':application')
+    implementation project(':core')
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'

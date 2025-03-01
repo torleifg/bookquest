@@ -13,12 +13,12 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'book-reviews-semantic-search'
+rootProject.name = 'bookquest'
 
 include 'gateway:bibbi'
 include 'gateway:bokbasen'
 include 'gateway:oai_pmh'
 include 'adapter:persistence'
 include 'adapter:web'
+include 'core'
 include 'application'
-include 'runner'

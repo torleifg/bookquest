@@ -1,0 +1,37 @@
+services:
+  searchquest-app:
+    image: ghcr.io/torleifg/searchquest:latest
+    ports:
+      - '8080:8080'
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://pgvector-db:5432/postgres
+      SPRING_DATASOURCE_USERNAME: username
+      SPRING_DATASOURCE_PASSWORD: password
+      DEFAULT_LOCALE: nb
+      HARVESTING_ENABLED: true
+      HARVESTING_GATEWAY: oai-pmh
+      HARVESTING_INITIAL_DELAY: 5
+      HARVESTING_FIXED_DELAY: 3600
+      OAI_PMH_SERVICE_URI: https://oai.aja.bs.no/mlnb
+      OAI_PMH_TTL: 5
+      OAI_PMH_MAPPER: default
+      OAI_PMH_VERB: ListRecords
+      OAI_PMH_METADATA_PREFIX: marc21
+    depends_on:
+      - pgvector-db
+
+  pgvector-db:
+    image: pgvector/pgvector:pg17
+    container_name: pgvector-db
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

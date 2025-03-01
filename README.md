@@ -16,22 +16,47 @@ as database and vector store. This provides multilingual semantic search capabil
 
 ## Getting Started
 
-Follow these steps to set up and run the application:
+Follow Run as Docker Compose **or** Run as Spring Boot to configure and run the application.
 
-### 1. Create and run PostgreSQL database
+### Run as Docker Compose
+
+Configure a gateway for harvesting metadata by editing
+```compose-app.yml```.
+
+Available options:
+
+- oai-pmh
+- bibbi
+- bokbasen
+ 
+**Example:**
+
+```
+HARVESTING_ENABLED: true
+HARVESTING_GATEWAY: oai-pmh
+HARVESTING_INITIAL_DELAY: 5
+HARVESTING_FIXED_DELAY: 3600
+OAI_PMH_SERVICE_URI: https://oai.aja.bs.no/mlnb
+OAI_PMH_TTL: 5
+OAI_PMH_MAPPER: default
+OAI_PMH_VERB: ListRecords
+OAI_PMH_METADATA_PREFIX: marc21
+```
 
 Run the following command in the project directory:
 
 ```shell
-docker compose up
+docker compose -f compose-app.yml up 
 ```
 
-This will start the PostgreSQL database with pgvector enabled.
+**Note**: 
+The first run may take some time as it will download the necessary embedding models. Once the models are in place, the
+application will be ready for use.
 
-### 2. Configure the Gateway
+### Run as Spring Boot
 
-Select and configure the appropriate gateway and service-uri for harvesting metadata by editing 
-```runner/src/main/resources/application.yaml```.
+Configure a gateway for harvesting metadata by editing
+```application/src/main/resources/application.yaml```.
 
 Available options:
 
@@ -44,28 +69,33 @@ Available options:
 ```yaml
 harvesting:
   enabled: true
-  gateway: bibbi
+  gateway: oai-pmh
   initial-delay: 5
   fixed-delay: 3600
 
-bibbi:
-  service-uri: https://bibliografisk.bs.no/v1/publications/harvest
+oai-pmh:
+  service-uri: https://oai.aja.bs.no/mlnb
   ttl: 5
   mapper: default
-  limit: 100
-  query: type:(audiobook OR book)
+  verb: ListRecords
+  metadataPrefix: marc21
 ```
 
-### 3. Start the Application
+Run the following commands in the project directory:
 
-The first run may take some time as it will download the necessary embedding models. Once the models are in place, the
-application will be ready for use.
+```shell
+docker compose up
+```
 
 ```shell
 ./gradlew bootRun
 ```
 
-### 4. Use the search engine
+**Note**:
+The first run may take some time as it will download the necessary embedding models. Once the models are in place, the
+application will be ready for use.
+
+## Use the search engine
 
 Visit ```http://localhost:8080``` in the browser and watch the results as the metadata harvesting progresses. Enter a 
 query for hybrid search or leave it blank for semantic similarity search (the first search hit will be a random choice 
@@ -73,19 +103,11 @@ and the rest will be semantically similar books). The hybrid search is based on 
 algorithm used for combining multiple ranked lists of search results to improve the overall ranking quality, in this
 case to combine full-text and vector search results.
 
-
-Modify weights etc. for full-text search by editing the repeatable migration located at:
-
-```shell
-adapter/persistence/src/main/resources/db/migration/R__search_function.sql
-```
-
 ## Gateway
 
 The gateway abstracts away the details of the external services and transforms metadata from the external services into
 a common model. The application supports three gateways: OAI-PMH (MARC21), Bokbasen (ONIX) and Bibbi. Custom mappers can
-be implemented as needed, configured in the config class of the respective gateway and activated by configuring the 
-appropriate values in ```runner/src/main/resources/application.yaml```.
+be implemented as needed.
 
 ### OAI-PMH
 
@@ -102,7 +124,6 @@ Additional documentation for OAI-PMH from Biblioteksentralen (https://www.bibsen
 Additional documentation for OAI-PMH from Nasjonalbiblioteket (https://www.nb.no/):
 
 - **[Nasjonalbibliografien og spesialbibliografiene OAI-PMH API](https://bibliotekutvikling.no/kunnskapsorganisering/metadata-fra-nasjonalbiblioteket/hosting-av-nasjonalbibliografien-og-spesialbibliografien/)** (requires no authentication)
-
 
 ### Bokbasen
 
