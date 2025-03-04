@@ -1,4 +1,4 @@
-package com.github.torleifg.bookquest.application.service;
+package com.github.torleifg.bookquest.adapter.web.gui;
 
 import com.github.torleifg.bookquest.application.domain.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class SearchMapperTests {
+class SearchGuiMapperTests {
 
     @Mock
     MessageSource languageSource;
@@ -27,11 +27,11 @@ class SearchMapperTests {
     @Mock
     MessageSource formatSource;
 
-    SearchMapper searchMapper;
+    SearchViewMapper searchViewMapper;
 
     @BeforeEach
     void setUp() {
-        searchMapper = new SearchMapper(languageSource, contributorSource, formatSource);
+        searchViewMapper = new SearchViewMapper(languageSource, contributorSource, formatSource);
     }
 
     @Test
@@ -42,7 +42,7 @@ class SearchMapperTests {
         metadata.setIsbn("isbn");
         metadata.setTitle("title");
         metadata.setPublisher("publisher");
-        metadata.setContributors(List.of(new Contributor(List.of(Contributor.Role.AUT), "contributor")));
+        metadata.setContributors(List.of(new Contributor(List.of(Role.AUT), "contributor")));
         metadata.setPublishedYear("2025");
         metadata.setDescription("description");
         metadata.setLanguages(List.of(Language.NOB));
@@ -59,18 +59,18 @@ class SearchMapperTests {
         when(languageSource.getMessage("NOB", null, locale)).thenReturn("bokmål");
         when(formatSource.getMessage("HARDCOVER", null, locale)).thenReturn("innbundet");
 
-        var searchDTO = searchMapper.from(book, locale);
+        var searchView = searchViewMapper.from(book, locale);
 
-        assertEquals("isbn", searchDTO.getIsbn());
-        assertEquals("title", searchDTO.getTitle());
-        assertEquals("publisher", searchDTO.getPublisher());
-        assertEquals("contributor (author)", searchDTO.getContributors());
-        assertEquals("2025", searchDTO.getPublishedYear());
-        assertEquals("description", searchDTO.getDescription());
-        assertEquals("bokmål", searchDTO.getLanguages());
-        assertEquals("innbundet", searchDTO.getFormat());
-        assertEquals("om", searchDTO.getAbout());
-        assertEquals("sjanger", searchDTO.getGenreAndForm());
-        assertEquals("http://thumbnailUrl", searchDTO.getThumbnailUrl());
+        assertEquals("isbn", searchView.getIsbn());
+        assertEquals("title", searchView.getTitle());
+        assertEquals("publisher", searchView.getPublisher());
+        assertEquals("contributor (author)", searchView.getContributors());
+        assertEquals("2025", searchView.getPublishedYear());
+        assertEquals("description", searchView.getDescription());
+        assertEquals("bokmål", searchView.getLanguages());
+        assertEquals("innbundet", searchView.getBookFormat());
+        assertEquals("om", searchView.getAbout());
+        assertEquals("sjanger", searchView.getGenreAndForm());
+        assertEquals("http://thumbnailUrl", searchView.getThumbnailUrl());
     }
 }

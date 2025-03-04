@@ -1,4 +1,4 @@
-package com.github.torleifg.bookquest.adapter.web;
+package com.github.torleifg.bookquest.adapter.web.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package com.github.torleifg.bookquest.application.service;
+package com.github.torleifg.bookquest.adapter.web.gui;
 
 import com.github.torleifg.bookquest.application.domain.Book;
 import com.github.torleifg.bookquest.application.domain.BookFormat;
@@ -13,26 +13,26 @@ import java.util.Locale;
 import static java.util.stream.Collectors.joining;
 
 @Component
-public class SearchMapper {
+public class SearchViewMapper {
     private final MessageSource languageSource;
     private final MessageSource contributorSource;
     private final MessageSource formatSource;
 
-    public SearchMapper(@Qualifier("languageSource") MessageSource languageSource,
-                        @Qualifier("contributorSource") MessageSource contributorSource,
-                        @Qualifier("formatSource") MessageSource formatSource) {
+    public SearchViewMapper(@Qualifier("languageSource") MessageSource languageSource,
+                            @Qualifier("contributorSource") MessageSource contributorSource,
+                            @Qualifier("formatSource") MessageSource formatSource) {
         this.languageSource = languageSource;
         this.contributorSource = contributorSource;
         this.formatSource = formatSource;
     }
 
-    public SearchDTO from(Book book, Locale locale) {
+    public SearchView from(Book book, Locale locale) {
         final Metadata metadata = book.getMetadata();
 
-        final SearchDTO searchDTO = new SearchDTO();
-        searchDTO.setIsbn(metadata.getIsbn());
-        searchDTO.setTitle(metadata.getTitle());
-        searchDTO.setPublisher(metadata.getPublisher());
+        final SearchView searchView = new SearchView();
+        searchView.setIsbn(metadata.getIsbn());
+        searchView.setTitle(metadata.getTitle());
+        searchView.setPublisher(metadata.getPublisher());
 
         final String contributors = metadata.getContributors().stream()
                 .map(contributor -> {
@@ -44,19 +44,19 @@ public class SearchMapper {
                 })
                 .collect(joining(" ; "));
 
-        searchDTO.setContributors(contributors);
+        searchView.setContributors(contributors);
 
-        searchDTO.setPublishedYear(metadata.getPublishedYear());
-        searchDTO.setDescription(metadata.getDescription());
+        searchView.setPublishedYear(metadata.getPublishedYear());
+        searchView.setDescription(metadata.getDescription());
 
         final String languages = metadata.getLanguages().stream()
                 .map(language -> languageSource.getMessage(language.name(), null, locale))
                 .collect(joining(", "));
 
-        searchDTO.setLanguages(languages);
+        searchView.setLanguages(languages);
 
         if (metadata.getFormat() != null && metadata.getFormat() != BookFormat.UNKNOWN) {
-            searchDTO.setFormat(formatSource.getMessage(metadata.getFormat().name(), null, locale));
+            searchView.setBookFormat(formatSource.getMessage(metadata.getFormat().name(), null, locale));
         }
 
         final String about = metadata.getAbout().stream()
@@ -64,19 +64,19 @@ public class SearchMapper {
                 .map(Classification::term)
                 .collect(joining(", "));
 
-        searchDTO.setAbout(about);
+        searchView.setAbout(about);
 
         final String genreAndForm = metadata.getGenreAndForm().stream()
                 .filter(classification -> classification.language().equals(locale.getISO3Language()))
                 .map(Classification::term)
                 .collect(joining(", "));
 
-        searchDTO.setGenreAndForm(genreAndForm);
+        searchView.setGenreAndForm(genreAndForm);
 
         if (metadata.getThumbnailUrl() != null) {
-            searchDTO.setThumbnailUrl(metadata.getThumbnailUrl().toString());
+            searchView.setThumbnailUrl(metadata.getThumbnailUrl().toString());
         }
 
-        return searchDTO;
+        return searchView;
     }
 }

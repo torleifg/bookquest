@@ -49,15 +49,15 @@ class BibbiDefaultMapper implements BibbiMapper {
         for (final var entry : creatorsByName.entrySet()) {
             final String name = entry.getKey();
 
-            final List<Contributor.Role> roles = entry.getValue().stream()
+            final List<Role> roles = entry.getValue().stream()
                     .map(Creator::getRole)
                     .filter(Objects::nonNull)
                     .map(Creator.RoleEnum::name)
                     .map(role -> {
                         try {
-                            return Contributor.Role.valueOf(role);
+                            return Role.valueOf(role);
                         } catch (IllegalArgumentException e) {
-                            return Contributor.Role.OTH;
+                            return Role.OTH;
                         }
                     })
                     .distinct()

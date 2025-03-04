@@ -1,8 +1,8 @@
 package com.github.torleifg.bookquest.gateway.bokbasen;
 
 import com.github.torleifg.bookquest.application.domain.BookFormat;
-import com.github.torleifg.bookquest.application.domain.Contributor;
 import com.github.torleifg.bookquest.application.domain.Language;
+import com.github.torleifg.bookquest.application.domain.Role;
 import org.editeur.ns.onix._3_0.reference.*;
 import org.junit.jupiter.api.Test;
 
@@ -195,8 +195,8 @@ class BokbasenDefaultMapperTests {
         assertEquals("publisher", metadata.getPublisher());
         assertEquals(1, metadata.getContributors().size());
         assertEquals(2, metadata.getContributors().getFirst().roles().size());
-        assertEquals(Contributor.Role.AUT, metadata.getContributors().getFirst().roles().getFirst());
-        assertEquals(Contributor.Role.ILL, metadata.getContributors().getFirst().roles().getLast());
+        assertEquals(Role.AUT, metadata.getContributors().getFirst().roles().getFirst());
+        assertEquals(Role.ILL, metadata.getContributors().getFirst().roles().getLast());
         assertEquals("1970", metadata.getPublishedYear());
         assertEquals("description", metadata.getDescription());
         assertEquals(1, metadata.getLanguages().size());

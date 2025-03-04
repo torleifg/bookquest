@@ -1,9 +1,6 @@
 package com.github.torleifg.bookquest.adapter.persistence;
 
-import com.github.torleifg.bookquest.application.domain.Book;
-import com.github.torleifg.bookquest.application.domain.Classification;
-import com.github.torleifg.bookquest.application.domain.Contributor;
-import com.github.torleifg.bookquest.application.domain.Metadata;
+import com.github.torleifg.bookquest.application.domain.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -34,7 +31,7 @@ class DocumentMapperTests {
         var metadata = new Metadata();
         metadata.setTitle("title");
         metadata.setDescription("description");
-        metadata.setContributors(List.of(new Contributor(List.of(Contributor.Role.AUT), "author")));
+        metadata.setContributors(List.of(new Contributor(List.of(Role.AUT), "author")));
         metadata.setAbout(List.of(new Classification("id", "source", "language", "term")));
         metadata.setGenreAndForm(List.of(new Classification("id", "source", "language", "term")));
 
@@ -52,7 +49,7 @@ class DocumentMapperTests {
         var metadata = new Metadata();
         metadata.setTitle("title");
         metadata.setDescription("description a b c d e f g h i j k l m n o p q r s t u u v w x y");
-        metadata.setContributors(List.of(new Contributor(List.of(Contributor.Role.AUT), "author"), new Contributor(List.of(Contributor.Role.ILL), "illustator")));
+        metadata.setContributors(List.of(new Contributor(List.of(Role.AUT), "author"), new Contributor(List.of(Role.ILL), "illustator")));
         metadata.setAbout(List.of(new Classification("id", "source", "language", "term1"), new Classification("id", "source", "language", "term2")));
         metadata.setGenreAndForm(List.of(new Classification("id", "source", "language", "term")));
 

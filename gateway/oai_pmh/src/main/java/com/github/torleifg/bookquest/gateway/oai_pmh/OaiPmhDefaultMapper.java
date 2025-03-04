@@ -80,14 +80,14 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
                 continue;
             }
 
-            final List<Contributor.Role> roles = dataField.getSubfields('4').stream()
+            final List<Role> roles = dataField.getSubfields('4').stream()
                     .filter(Objects::nonNull)
                     .map(Subfield::getData)
                     .map(role -> {
                         try {
-                            return Contributor.Role.valueOf(role.toUpperCase());
+                            return Role.valueOf(role.toUpperCase());
                         } catch (IllegalArgumentException e) {
-                            return Contributor.Role.OTH;
+                            return Role.OTH;
                         }
                     })
                     .distinct()
