@@ -1,9 +1,6 @@
 package com.github.torleifg.bookquest.adapter.persistence;
 
-import com.github.torleifg.bookquest.application.domain.Book;
-import com.github.torleifg.bookquest.application.domain.Classification;
-import com.github.torleifg.bookquest.application.domain.Contributor;
-import com.github.torleifg.bookquest.application.domain.Metadata;
+import com.github.torleifg.bookquest.application.domain.*;
 import org.springframework.ai.document.Document;
 import org.springframework.stereotype.Component;
 
@@ -51,7 +48,7 @@ class DocumentMapper {
 
     private String getAuthorsAsString(List<Contributor> contributors) {
         return contributors.stream()
-                .filter(contributor -> contributor.roles().contains(Contributor.Role.AUT))
+                .filter(contributor -> contributor.roles().contains(Role.AUT))
                 .map(Contributor::name)
                 .collect(joining(", "));
     }

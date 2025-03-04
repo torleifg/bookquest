@@ -141,7 +141,7 @@
     </div>
     <!-- Search -->
     <div class="search-form">
-        <form th:action="@{/search}" method="get">
+        <form th:action="@{/}" method="get">
             <div class="input-container">
                 <input type="search" name="query" th:value="${query}" aria-label="Enter search query"/>
                 <button type="submit" class="search-icon-button" aria-label="Submit search">
@@ -155,9 +155,9 @@
         <div th:if="${#lists.size(results) > 0}">
             <div th:each="book : ${results}" class="result-item">
                 <p><strong th:text="${book.title + ' (' + book.publishedYear + ')'}"></strong>
-                    <span th:if="${book.format != null}"
+                    <span th:if="${book.bookFormat != null}"
                           class="format-label">
-                        <span th:text="${book.format}"></span>
+                        <span th:text="${book.bookFormat}"></span>
                     </span>
                 </p>
                 <img th:src="${book.thumbnailUrl != null ? book.thumbnailUrl : 'fallback.png'}"

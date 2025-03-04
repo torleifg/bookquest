@@ -37,6 +37,10 @@ spring:
           auth0:
             token-uri: https://login.bokbasen.io/oauth/token
 
+  mvc:
+    problemdetails:
+      enabled: true
+
 server:
   port: 8080
 

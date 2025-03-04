@@ -1,5 +1,6 @@
-package com.github.torleifg.bookquest.adapter.web;
+package com.github.torleifg.bookquest.adapter.web.gui;
 
+import com.github.torleifg.bookquest.adapter.web.config.SecurityConfig;
 import com.github.torleifg.bookquest.application.service.BookService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,40 +9,52 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Locale;
+import java.util.List;
 
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(value = SearchController.class)
-@ContextConfiguration(classes = {SearchController.class, SecurityConfig.class})
-class SearchControllerTests {
+@WebMvcTest(value = SearchGuiController.class)
+@ContextConfiguration(classes = {SearchGuiController.class, SecurityConfig.class})
+class SearchGuiControllerTests {
 
     @Autowired
     MockMvc mockMvc;
 
     @MockitoBean
+    SearchViewMapper searchViewMapper;
+
+    @MockitoBean
     BookService bookService;
 
     @Test
+    void latestTest() throws Exception {
+        mockMvc.perform(get("/latest").with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("text/html;charset=UTF-8"));
+
+        when(bookService.lastModified()).thenReturn(List.of());
+    }
+
+    @Test
     void hybridSearchTest() throws Exception {
-        mockMvc.perform(get("/search").with(csrf())
+        mockMvc.perform(get("/").with(csrf())
                         .param("query", "query string"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("text/html;charset=UTF-8"));
 
-        verify(bookService).hybridSearch("query string", Locale.of("en"));
+        when(bookService.hybridSearch("query string")).thenReturn(List.of());
     }
 
     @Test
     void semanticSimilarityTest() throws Exception {
-        mockMvc.perform(get("/search").with(csrf()))
+        mockMvc.perform(get("/").with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("text/html;charset=UTF-8"));
 
-        verify(bookService).semanticSimilarity(Locale.of("en"));
+        when(bookService.semanticSimilarity()).thenReturn(List.of());
     }
 }

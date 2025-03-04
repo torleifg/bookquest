@@ -68,7 +68,7 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                 .toList();
 
         for (final Contributor contributor : contributors) {
-            final List<com.github.torleifg.bookquest.application.domain.Contributor.Role> roles = contributor.getContent().stream()
+            final List<com.github.torleifg.bookquest.application.domain.Role> roles = contributor.getContent().stream()
                     .filter(ContributorRole.class::isInstance)
                     .map(ContributorRole.class::cast)
                     .map(ContributorRole::getValue)

@@ -14,7 +14,7 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class BookServiceTests {
+class MetadataServiceTests {
 
     @Mock
     MetadataGateway metadataGateway;
@@ -23,7 +23,7 @@ class BookServiceTests {
     BookRepository bookRepository;
 
     @InjectMocks
-    BookService bookService;
+    MetadataService metadataService;
 
     @Test
     void findAndSaveBookTest() {
@@ -37,7 +37,7 @@ class BookServiceTests {
 
         when(metadataGateway.find()).thenReturn(List.of(book));
 
-        bookService.findAndSave();
+        metadataService.findAndSave();
 
         verify(bookRepository, times(1)).save(List.of(book));
     }

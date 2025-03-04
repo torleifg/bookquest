@@ -1,6 +1,6 @@
 package com.github.torleifg.bookquest.application;
 
-import com.github.torleifg.bookquest.application.service.BookService;
+import com.github.torleifg.bookquest.application.service.MetadataService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -8,14 +8,14 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.TimeUnit;
 
 @Component
-public class Scheduler {
-    private final BookService bookService;
+public class Harvester {
+    private final MetadataService metadataService;
 
     @Value("${harvesting.enabled}")
     private boolean enabled;
 
-    public Scheduler(BookService bookService) {
-        this.bookService = bookService;
+    public Harvester(MetadataService metadataService) {
+        this.metadataService = metadataService;
     }
 
     @Scheduled(initialDelayString = "${harvesting.initial-delay}", fixedDelayString = "${harvesting.fixed-delay}", timeUnit = TimeUnit.SECONDS)
@@ -25,7 +25,7 @@ public class Scheduler {
         }
 
         while (true) {
-            final boolean continuePoll = bookService.findAndSave();
+            final boolean continuePoll = metadataService.findAndSave();
 
             if (!continuePoll) {
                 break;

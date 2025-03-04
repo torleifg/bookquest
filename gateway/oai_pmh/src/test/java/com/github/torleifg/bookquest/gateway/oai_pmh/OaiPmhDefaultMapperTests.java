@@ -1,8 +1,8 @@
 package com.github.torleifg.bookquest.gateway.oai_pmh;
 
 import com.github.torleifg.bookquest.application.domain.BookFormat;
-import com.github.torleifg.bookquest.application.domain.Contributor;
 import com.github.torleifg.bookquest.application.domain.Language;
+import com.github.torleifg.bookquest.application.domain.Role;
 import org.junit.jupiter.api.Test;
 import org.marc4j.marc.impl.ControlFieldImpl;
 import org.marc4j.marc.impl.DataFieldImpl;
@@ -85,8 +85,8 @@ class OaiPmhDefaultMapperTests {
         assertEquals("title : remainder of title", metadata.getTitle());
         assertEquals("publisher", metadata.getPublisher());
         assertEquals(2, metadata.getContributors().getFirst().roles().size());
-        assertEquals(Contributor.Role.AUT, metadata.getContributors().getFirst().roles().getFirst());
-        assertEquals(Contributor.Role.ILL, metadata.getContributors().getFirst().roles().getLast());
+        assertEquals(Role.AUT, metadata.getContributors().getFirst().roles().getFirst());
+        assertEquals(Role.ILL, metadata.getContributors().getFirst().roles().getLast());
         assertEquals("lastname, firstname", metadata.getContributors().getFirst().name());
         assertEquals("1970", metadata.getPublishedYear());
         assertEquals("description", metadata.getDescription());
