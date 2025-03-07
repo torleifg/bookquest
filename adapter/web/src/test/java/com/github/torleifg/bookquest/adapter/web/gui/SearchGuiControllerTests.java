@@ -32,7 +32,7 @@ class SearchGuiControllerTests {
 
     @Test
     void latestTest() throws Exception {
-        mockMvc.perform(get("/latest").with(csrf()))
+        mockMvc.perform(get("/").with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("text/html;charset=UTF-8"));
 
@@ -41,7 +41,7 @@ class SearchGuiControllerTests {
 
     @Test
     void hybridSearchTest() throws Exception {
-        mockMvc.perform(get("/").with(csrf())
+        mockMvc.perform(get("/search").with(csrf())
                         .param("query", "query string"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("text/html;charset=UTF-8"));
@@ -51,7 +51,7 @@ class SearchGuiControllerTests {
 
     @Test
     void semanticSimilarityTest() throws Exception {
-        mockMvc.perform(get("/").with(csrf()))
+        mockMvc.perform(get("/search").with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("text/html;charset=UTF-8"));
 

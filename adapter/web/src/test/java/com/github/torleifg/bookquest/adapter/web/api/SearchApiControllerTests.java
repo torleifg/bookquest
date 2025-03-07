@@ -53,11 +53,12 @@ class SearchApiControllerTests {
 
     @Test
     void semanticSimilarityTest() throws Exception {
-        mockMvc.perform(get("/api/search").with(csrf())
-                        .param("language", "en"))
+        mockMvc.perform(get("/api/search/similar").with(csrf())
+                        .param("language", "en")
+                        .param("isbn", "12345"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
 
-        when(bookService.semanticSimilarity()).thenReturn(List.of());
+        when(bookService.semanticSimilarity("12345")).thenReturn(List.of());
     }
 }
