@@ -130,12 +130,31 @@ class BookRepositoryAdapter implements BookRepository {
                 .query((resultSet, rowNum) -> new Document(resultSet.getString("content")))
                 .optional();
 
-        if (randomDocument.isEmpty()) {
+        return semanticSimilarity(randomDocument, limit);
+    }
+
+    @Override
+    public List<Book> semanticSimilarity(String isbn, int limit) {
+        final Optional<Document> document = jdbcClient.sql("""
+                        select * from vector_store
+                        join book on book.vector_store_id = vector_store.id
+                        where book.metadata ->> 'isbn' = ? 
+                        limit 1
+                        """)
+                .param(isbn)
+                .query((resultSet, rowNum) -> new Document(resultSet.getString("content")))
+                .optional();
+
+        return semanticSimilarity(document, limit);
+    }
+
+    private List<Book> semanticSimilarity(Optional<Document> document, int limit) {
+        if (document.isEmpty()) {
             return List.of();
         }
 
         final SearchRequest searchRequest = SearchRequest.builder()
-                .query("passage: " + randomDocument.get().getText())
+                .query("passage: " + document.get().getText())
                 .similarityThreshold(0.8)
                 .topK(limit)
                 .build();

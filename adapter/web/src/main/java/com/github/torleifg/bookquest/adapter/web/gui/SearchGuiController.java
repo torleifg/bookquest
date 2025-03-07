@@ -19,12 +19,7 @@ class SearchGuiController {
         this.searchViewMapper = searchViewMapper;
     }
 
-    @GetMapping("/change-language")
-    public String changeLanguage() {
-        return "redirect:/latest";
-    }
-
-    @GetMapping("/latest")
+    @GetMapping
     public String lastModified(Model model, Locale locale) {
         final List<SearchView> dtos = bookService.lastModified().stream()
                 .map(book -> searchViewMapper.from(book, locale))
@@ -35,7 +30,13 @@ class SearchGuiController {
         return "search";
     }
 
-    @GetMapping
+    @GetMapping("/change-language")
+    public String changeLanguage() {
+        return "redirect:/";
+    }
+
+
+    @GetMapping("/search")
     public String search(Model model, @RequestParam(required = false) String query, Locale locale) {
         final List<SearchView> dtos;
 

@@ -5,7 +5,7 @@ plugins {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    implementation 'io.swagger.parser.v3:swagger-parser'
+    implementation 'org.apache.commons:commons-lang3'
 
     implementation project(':core')
 

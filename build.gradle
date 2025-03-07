@@ -6,9 +6,10 @@ ext {
     springBootVersion = '3.4.3'
     springAiVersion = '1.0.0-M6'
     marc4jVersion = '2.9.6'
-    swaggerParserVersion = '2.1.22'
     jaxbVersion = '4.0.2'
     wiremockVersion = '3.7.0'
+    commonsLangVersion = '3.17.0'
+    springdocVersion = '2.8.5'
 }
 
 allprojects {
@@ -38,11 +39,12 @@ subprojects {
             mavenBom "org.springframework.ai:spring-ai-bom:${springAiVersion}"
         }
         dependencies {
+            dependency "org.apache.commons:commons-lang3:${commonsLangVersion}"
             dependency "org.marc4j:marc4j:${marc4jVersion}"
-            dependency "io.swagger.parser.v3:swagger-parser:${swaggerParserVersion}"
             dependency "jakarta.xml.bind:jakarta.xml.bind-api:${jaxbVersion}"
             dependency "com.sun.xml.bind:jaxb-impl:${jaxbVersion}"
             dependency "org.wiremock.integrations:wiremock-spring-boot:${wiremockVersion}"
+            dependency "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocVersion}"
         }
     }
 
