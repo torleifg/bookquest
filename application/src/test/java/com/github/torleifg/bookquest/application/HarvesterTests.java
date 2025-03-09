@@ -1,8 +1,9 @@
-package com.github.torleifg.bookquest.application.service;
+package com.github.torleifg.bookquest.application;
 
 import com.github.torleifg.bookquest.application.domain.Book;
 import com.github.torleifg.bookquest.application.domain.Metadata;
-import com.github.torleifg.bookquest.application.repository.BookRepository;
+import com.github.torleifg.bookquest.application.service.BookService;
+import com.github.torleifg.bookquest.application.service.MetadataGateway;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,19 +15,19 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class MetadataServiceTests {
+class HarvesterTests {
 
     @Mock
     MetadataGateway metadataGateway;
 
     @Mock
-    BookRepository bookRepository;
+    BookService bookService;
 
     @InjectMocks
-    MetadataService metadataService;
+    Harvester harvester;
 
     @Test
-    void findAndSaveBookTest() {
+    void upsertTest() {
         var book = new Book();
         book.setExternalId("externalId");
 
@@ -37,8 +38,8 @@ class MetadataServiceTests {
 
         when(metadataGateway.find()).thenReturn(List.of(book));
 
-        metadataService.findAndSave();
+        harvester.upsert();
 
-        verify(bookRepository, times(1)).save(List.of(book));
+        verify(bookService, times(1)).save(List.of(book));
     }
 }

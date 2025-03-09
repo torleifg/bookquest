@@ -23,17 +23,9 @@ class SearchApiController {
         this.searchDetailMapper = searchDetailMapper;
     }
 
-    @GetMapping("/latest")
-    public List<SearchDetail> getLastModified(@RequestParam String language) {
-        final Locale locale = Locale.forLanguageTag(language);
-
-        return bookService.lastModified().stream()
-                .map(book -> searchDetailMapper.from(book, locale))
-                .toList();
-    }
-
     @GetMapping
-    public List<SearchDetail> search(@RequestParam @NotBlank(message = "Required parameter 'query' is blank.") String query, @RequestParam String language) {
+    public List<SearchDetail> hybridSearch(@RequestParam @NotBlank(message = "Required parameter 'query' is blank.") String query,
+                                           @RequestParam @NotBlank(message = "Required parameter 'language' is blank.") String language) {
         final Locale locale = Locale.forLanguageTag(language);
 
         return bookService.hybridSearch(query).stream()
@@ -41,8 +33,38 @@ class SearchApiController {
                 .toList();
     }
 
+    @GetMapping("/fullText")
+    public List<SearchDetail> fullTextSearch(@RequestParam @NotBlank(message = "Required parameter 'query' is blank.") String query,
+                                             @RequestParam @NotBlank(message = "Required parameter 'language' is blank.") String language) {
+        final Locale locale = Locale.forLanguageTag(language);
+
+        return bookService.fullTextSearch(query).stream()
+                .map(book -> searchDetailMapper.from(book, locale))
+                .toList();
+    }
+
+    @GetMapping("/semantic")
+    public List<SearchDetail> semanticSearch(@RequestParam @NotBlank(message = "Required parameter 'query' is blank.") String query,
+                                             @RequestParam @NotBlank(message = "Required parameter 'language' is blank.") String language) {
+        final Locale locale = Locale.forLanguageTag(language);
+
+        return bookService.semanticSearch(query).stream()
+                .map(book -> searchDetailMapper.from(book, locale))
+                .toList();
+    }
+
+    @GetMapping("/latest")
+    public List<SearchDetail> lastModified(@RequestParam String language) {
+        final Locale locale = Locale.forLanguageTag(language);
+
+        return bookService.lastModified().stream()
+                .map(book -> searchDetailMapper.from(book, locale))
+                .toList();
+    }
+
     @GetMapping("/similar")
-    public List<SearchDetail> similar(@RequestParam @NotBlank(message = "Required parameter 'isbn' is blank.") String isbn, @RequestParam String language) {
+    public List<SearchDetail> similar(@RequestParam @NotBlank(message = "Required parameter 'isbn' is blank.") String isbn,
+                                      @RequestParam @NotBlank(message = "Required parameter 'language' is blank.") String language) {
         final Locale locale = Locale.forLanguageTag(language);
 
         return bookService.semanticSimilarity(isbn).stream()

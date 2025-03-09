@@ -31,17 +31,7 @@ class SearchApiControllerTests {
     BookService bookService;
 
     @Test
-    void latestTest() throws Exception {
-        mockMvc.perform(get("/api/search/latest").with(csrf())
-                        .param("language", "en"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"));
-
-        when(bookService.lastModified()).thenReturn(List.of());
-    }
-
-    @Test
-    void hybridSearchTest() throws Exception {
+    void hybridTest() throws Exception {
         mockMvc.perform(get("/api/search").with(csrf())
                         .param("language", "en")
                         .param("query", "query string"))
@@ -52,7 +42,39 @@ class SearchApiControllerTests {
     }
 
     @Test
-    void semanticSimilarityTest() throws Exception {
+    void fullTextTest() throws Exception {
+        mockMvc.perform(get("/api/search/fullText").with(csrf())
+                        .param("language", "en")
+                        .param("query", "query string"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"));
+
+        when(bookService.fullTextSearch("query string")).thenReturn(List.of());
+    }
+
+    @Test
+    void semanticTest() throws Exception {
+        mockMvc.perform(get("/api/search/semantic").with(csrf())
+                        .param("language", "en")
+                        .param("query", "query string"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"));
+
+        when(bookService.lastModified()).thenReturn(List.of());
+    }
+
+    @Test
+    void latestTest() throws Exception {
+        mockMvc.perform(get("/api/search/latest").with(csrf())
+                        .param("language", "en"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"));
+
+        when(bookService.lastModified()).thenReturn(List.of());
+    }
+
+    @Test
+    void similarTest() throws Exception {
         mockMvc.perform(get("/api/search/similar").with(csrf())
                         .param("language", "en")
                         .param("isbn", "12345"))
