@@ -1,6 +1,6 @@
 package com.github.torleifg.bookquest.adapter.web.gui;
 
-import com.github.torleifg.bookquest.application.domain.*;
+import com.github.torleifg.bookquest.core.domain.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,9 +1,10 @@
 package com.github.torleifg.bookquest.gateway.bokbasen;
 
-import com.github.torleifg.bookquest.application.domain.Book;
-import com.github.torleifg.bookquest.application.domain.BookFormat;
-import com.github.torleifg.bookquest.application.domain.Classification;
-import com.github.torleifg.bookquest.application.domain.Metadata;
+import com.github.torleifg.bookquest.core.domain.Book;
+import com.github.torleifg.bookquest.core.domain.BookFormat;
+import com.github.torleifg.bookquest.core.domain.Classification;
+import com.github.torleifg.bookquest.core.domain.Metadata;
+import com.github.torleifg.bookquest.core.domain.Role;
 import org.editeur.ns.onix._3_0.reference.*;
 
 import java.io.Serializable;
@@ -68,7 +69,7 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                 .toList();
 
         for (final Contributor contributor : contributors) {
-            final List<com.github.torleifg.bookquest.application.domain.Role> roles = contributor.getContent().stream()
+            final List<Role> roles = contributor.getContent().stream()
                     .filter(ContributorRole.class::isInstance)
                     .map(ContributorRole.class::cast)
                     .map(ContributorRole::getValue)
@@ -102,7 +103,7 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                 continue;
             }
 
-            metadata.getContributors().add(new com.github.torleifg.bookquest.application.domain.Contributor(roles, name.get()));
+            metadata.getContributors().add(new com.github.torleifg.bookquest.core.domain.Contributor(roles, name.get()));
         }
 
         descriptiveDetail.getLanguage().stream()
@@ -110,9 +111,9 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                 .map(Language::getLanguageCode)
                 .map(language -> {
                     try {
-                        return com.github.torleifg.bookquest.application.domain.Language.valueOf(language.getValue().value().toUpperCase());
+                        return com.github.torleifg.bookquest.core.domain.Language.valueOf(language.getValue().value().toUpperCase());
                     } catch (IllegalArgumentException e) {
-                        return com.github.torleifg.bookquest.application.domain.Language.UND;
+                        return com.github.torleifg.bookquest.core.domain.Language.UND;
                     }
                 })
                 .forEach(language -> metadata.getLanguages().add(language));

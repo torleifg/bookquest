@@ -1,8 +1,8 @@
 package com.github.torleifg.bookquest.gateway.oai_pmh;
 
-import com.github.torleifg.bookquest.application.repository.LastModifiedRepository;
-import com.github.torleifg.bookquest.application.repository.ResumptionToken;
-import com.github.torleifg.bookquest.application.repository.ResumptionTokenRepository;
+import com.github.torleifg.bookquest.core.repository.LastModifiedRepository;
+import com.github.torleifg.bookquest.core.repository.ResumptionToken;
+import com.github.torleifg.bookquest.core.repository.ResumptionTokenRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

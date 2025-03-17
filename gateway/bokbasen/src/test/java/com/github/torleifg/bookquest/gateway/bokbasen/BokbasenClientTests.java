@@ -1,6 +1,6 @@
 package com.github.torleifg.bookquest.gateway.bokbasen;
 
-import com.github.torleifg.bookquest.application.repository.ResumptionTokenRepository;
+import com.github.torleifg.bookquest.core.repository.ResumptionTokenRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

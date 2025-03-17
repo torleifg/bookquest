@@ -1,6 +1,6 @@
 package com.github.torleifg.bookquest.adapter.web.gui;
 
-import com.github.torleifg.bookquest.application.service.BookService;
+import com.github.torleifg.bookquest.core.service.BookService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

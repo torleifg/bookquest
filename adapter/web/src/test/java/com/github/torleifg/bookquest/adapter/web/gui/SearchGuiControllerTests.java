@@ -1,7 +1,7 @@
 package com.github.torleifg.bookquest.adapter.web.gui;
 
 import com.github.torleifg.bookquest.adapter.web.config.SecurityConfig;
-import com.github.torleifg.bookquest.application.service.BookService;
+import com.github.torleifg.bookquest.core.service.BookService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

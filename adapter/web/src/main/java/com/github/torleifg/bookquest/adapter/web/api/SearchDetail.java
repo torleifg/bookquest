@@ -1,6 +1,6 @@
 package com.github.torleifg.bookquest.adapter.web.api;
 
-import com.github.torleifg.bookquest.application.domain.Role;
+import com.github.torleifg.bookquest.core.domain.Role;
 import lombok.Data;
 
 import java.net.URI;
@@ -33,10 +33,10 @@ public class SearchDetail {
     public record ContributorRole(Role role, String label) {
     }
 
-    public record Language(com.github.torleifg.bookquest.application.domain.Language language, String label) {
+    public record Language(com.github.torleifg.bookquest.core.domain.Language language, String label) {
     }
 
-    public record BookFormat(com.github.torleifg.bookquest.application.domain.BookFormat format, String label) {
+    public record BookFormat(com.github.torleifg.bookquest.core.domain.BookFormat format, String label) {
     }
 
     public record Classification(String id, String term) {

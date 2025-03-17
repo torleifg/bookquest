@@ -1,9 +1,8 @@
-package com.github.torleifg.bookquest.application.service;
+package com.github.torleifg.bookquest.core.service;
 
-import com.github.torleifg.bookquest.application.domain.Book;
-import com.github.torleifg.bookquest.application.repository.BookRepository;
+import com.github.torleifg.bookquest.core.domain.Book;
+import com.github.torleifg.bookquest.core.repository.BookRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,7 +14,6 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    @Transactional
     public void save(List<Book> books) {
         bookRepository.save(books);
     }

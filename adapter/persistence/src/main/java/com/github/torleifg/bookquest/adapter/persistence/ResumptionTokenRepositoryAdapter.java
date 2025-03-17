@@ -1,7 +1,7 @@
 package com.github.torleifg.bookquest.adapter.persistence;
 
-import com.github.torleifg.bookquest.application.repository.ResumptionToken;
-import com.github.torleifg.bookquest.application.repository.ResumptionTokenRepository;
+import com.github.torleifg.bookquest.core.repository.ResumptionToken;
+import com.github.torleifg.bookquest.core.repository.ResumptionTokenRepository;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 

@@ -1,6 +1,6 @@
 package com.github.torleifg.bookquest.adapter.persistence;
 
-import com.github.torleifg.bookquest.application.domain.*;
+import com.github.torleifg.bookquest.core.domain.*;
 import org.springframework.ai.document.Document;
 import org.springframework.stereotype.Component;
 

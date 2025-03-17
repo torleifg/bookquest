@@ -1,7 +1,7 @@
 package com.github.torleifg.bookquest.gateway.bokbasen;
 
-import com.github.torleifg.bookquest.application.repository.ResumptionToken;
-import com.github.torleifg.bookquest.application.repository.ResumptionTokenRepository;
+import com.github.torleifg.bookquest.core.repository.ResumptionToken;
+import com.github.torleifg.bookquest.core.repository.ResumptionTokenRepository;
 import org.editeur.ns.onix._3_0.reference.ONIXMessage;
 import org.editeur.ns.onix._3_0.reference.ObjectFactory;
 import org.junit.jupiter.api.Test;

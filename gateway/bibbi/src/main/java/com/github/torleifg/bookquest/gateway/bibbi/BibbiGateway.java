@@ -1,10 +1,10 @@
 package com.github.torleifg.bookquest.gateway.bibbi;
 
-import com.github.torleifg.bookquest.application.domain.Book;
-import com.github.torleifg.bookquest.application.repository.LastModifiedRepository;
-import com.github.torleifg.bookquest.application.repository.ResumptionToken;
-import com.github.torleifg.bookquest.application.repository.ResumptionTokenRepository;
-import com.github.torleifg.bookquest.application.service.MetadataGateway;
+import com.github.torleifg.bookquest.core.domain.Book;
+import com.github.torleifg.bookquest.core.repository.LastModifiedRepository;
+import com.github.torleifg.bookquest.core.repository.ResumptionToken;
+import com.github.torleifg.bookquest.core.repository.ResumptionTokenRepository;
+import com.github.torleifg.bookquest.core.service.MetadataGateway;
 import lombok.extern.slf4j.Slf4j;
 import no.bs.bibliografisk.model.BibliographicRecordMetadata;
 import no.bs.bibliografisk.model.GetV1PublicationsHarvest200ResponsePublicationsInner;

@@ -1,6 +1,6 @@
 package com.github.torleifg.bookquest.adapter.persistence;
 
-import com.github.torleifg.bookquest.application.domain.Book;
+import com.github.torleifg.bookquest.core.domain.Book;
 
 import java.util.*;
 import java.util.stream.Collectors;

@@ -1,4 +1,4 @@
-package com.github.torleifg.bookquest.application.domain;
+package com.github.torleifg.bookquest.core.domain;
 
 import lombok.Data;
 
