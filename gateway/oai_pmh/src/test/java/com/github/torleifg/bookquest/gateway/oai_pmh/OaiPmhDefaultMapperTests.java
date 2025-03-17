@@ -1,8 +1,8 @@
 package com.github.torleifg.bookquest.gateway.oai_pmh;
 
-import com.github.torleifg.bookquest.application.domain.BookFormat;
-import com.github.torleifg.bookquest.application.domain.Language;
-import com.github.torleifg.bookquest.application.domain.Role;
+import com.github.torleifg.bookquest.core.domain.BookFormat;
+import com.github.torleifg.bookquest.core.domain.Language;
+import com.github.torleifg.bookquest.core.domain.Role;
 import org.junit.jupiter.api.Test;
 import org.marc4j.marc.impl.ControlFieldImpl;
 import org.marc4j.marc.impl.DataFieldImpl;

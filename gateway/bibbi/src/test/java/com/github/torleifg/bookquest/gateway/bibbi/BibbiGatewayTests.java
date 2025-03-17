@@ -1,8 +1,8 @@
 package com.github.torleifg.bookquest.gateway.bibbi;
 
-import com.github.torleifg.bookquest.application.repository.LastModifiedRepository;
-import com.github.torleifg.bookquest.application.repository.ResumptionToken;
-import com.github.torleifg.bookquest.application.repository.ResumptionTokenRepository;
+import com.github.torleifg.bookquest.core.repository.LastModifiedRepository;
+import com.github.torleifg.bookquest.core.repository.ResumptionToken;
+import com.github.torleifg.bookquest.core.repository.ResumptionTokenRepository;
 import no.bs.bibliografisk.model.GetV1PublicationsHarvest200Response;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

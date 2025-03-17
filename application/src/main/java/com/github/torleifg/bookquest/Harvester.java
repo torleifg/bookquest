@@ -1,11 +1,12 @@
-package com.github.torleifg.bookquest.application;
+package com.github.torleifg.bookquest;
 
-import com.github.torleifg.bookquest.application.domain.Book;
-import com.github.torleifg.bookquest.application.service.BookService;
-import com.github.torleifg.bookquest.application.service.MetadataGateway;
+import com.github.torleifg.bookquest.core.domain.Book;
+import com.github.torleifg.bookquest.core.service.BookService;
+import com.github.torleifg.bookquest.core.service.MetadataGateway;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -23,6 +24,7 @@ class Harvester {
         this.bookService = bookService;
     }
 
+    @Transactional
     @Scheduled(initialDelayString = "${harvesting.initial-delay}", fixedDelayString = "${harvesting.fixed-delay}", timeUnit = TimeUnit.SECONDS)
     void poll() {
         if (!enabled) {

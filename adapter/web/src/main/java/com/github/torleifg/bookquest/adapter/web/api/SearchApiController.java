@@ -1,6 +1,6 @@
 package com.github.torleifg.bookquest.adapter.web.api;
 
-import com.github.torleifg.bookquest.application.service.BookService;
+import com.github.torleifg.bookquest.core.service.BookService;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.HttpStatus;

@@ -1,6 +1,6 @@
 package com.github.torleifg.bookquest.gateway.oai_pmh;
 
-import com.github.torleifg.bookquest.application.domain.*;
+import com.github.torleifg.bookquest.core.domain.*;
 import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Record;

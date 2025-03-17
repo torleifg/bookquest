@@ -1,6 +1,6 @@
 package com.github.torleifg.bookquest.gateway.bibbi;
 
-import com.github.torleifg.bookquest.application.domain.*;
+import com.github.torleifg.bookquest.core.domain.*;
 import no.bs.bibliografisk.model.*;
 
 import java.util.*;

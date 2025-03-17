@@ -1,6 +1,6 @@
-package com.github.torleifg.bookquest.application.repository;
+package com.github.torleifg.bookquest.core.repository;
 
-import com.github.torleifg.bookquest.application.domain.Book;
+import com.github.torleifg.bookquest.core.domain.Book;
 
 import java.util.List;
 

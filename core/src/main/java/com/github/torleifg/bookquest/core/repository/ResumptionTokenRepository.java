@@ -1,4 +1,4 @@
-package com.github.torleifg.bookquest.application.repository;
+package com.github.torleifg.bookquest.core.repository;
 
 import java.util.Optional;
 

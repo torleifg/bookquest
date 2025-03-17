@@ -1,7 +1,7 @@
 package com.github.torleifg.bookquest.gateway.bokbasen;
 
-import com.github.torleifg.bookquest.application.repository.ResumptionTokenRepository;
-import com.github.torleifg.bookquest.application.service.MetadataGateway;
+import com.github.torleifg.bookquest.core.repository.ResumptionTokenRepository;
+import com.github.torleifg.bookquest.core.service.MetadataGateway;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

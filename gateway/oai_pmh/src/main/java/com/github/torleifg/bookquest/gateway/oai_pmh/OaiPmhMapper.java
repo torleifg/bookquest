@@ -1,6 +1,6 @@
 package com.github.torleifg.bookquest.gateway.oai_pmh;
 
-import com.github.torleifg.bookquest.application.domain.Book;
+import com.github.torleifg.bookquest.core.domain.Book;
 import org.marc4j.marc.Record;
 
 interface OaiPmhMapper {

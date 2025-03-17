@@ -1,6 +1,6 @@
 package com.github.torleifg.bookquest.adapter.persistence;
 
-import com.github.torleifg.bookquest.application.repository.LastModifiedRepository;
+import com.github.torleifg.bookquest.core.repository.LastModifiedRepository;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 

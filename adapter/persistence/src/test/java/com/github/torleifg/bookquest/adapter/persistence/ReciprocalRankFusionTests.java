@@ -1,7 +1,7 @@
 package com.github.torleifg.bookquest.adapter.persistence;
 
-import com.github.torleifg.bookquest.application.domain.Book;
-import com.github.torleifg.bookquest.application.domain.Metadata;
+import com.github.torleifg.bookquest.core.domain.Book;
+import com.github.torleifg.bookquest.core.domain.Metadata;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

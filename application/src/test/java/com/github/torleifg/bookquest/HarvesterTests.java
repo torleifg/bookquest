@@ -1,9 +1,9 @@
-package com.github.torleifg.bookquest.application;
+package com.github.torleifg.bookquest;
 
-import com.github.torleifg.bookquest.application.domain.Book;
-import com.github.torleifg.bookquest.application.domain.Metadata;
-import com.github.torleifg.bookquest.application.service.BookService;
-import com.github.torleifg.bookquest.application.service.MetadataGateway;
+import com.github.torleifg.bookquest.core.domain.Book;
+import com.github.torleifg.bookquest.core.domain.Metadata;
+import com.github.torleifg.bookquest.core.service.BookService;
+import com.github.torleifg.bookquest.core.service.MetadataGateway;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

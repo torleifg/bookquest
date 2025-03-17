@@ -1,9 +1,9 @@
 package com.github.torleifg.bookquest.adapter.web.gui;
 
-import com.github.torleifg.bookquest.application.domain.Book;
-import com.github.torleifg.bookquest.application.domain.BookFormat;
-import com.github.torleifg.bookquest.application.domain.Classification;
-import com.github.torleifg.bookquest.application.domain.Metadata;
+import com.github.torleifg.bookquest.core.domain.Book;
+import com.github.torleifg.bookquest.core.domain.BookFormat;
+import com.github.torleifg.bookquest.core.domain.Classification;
+import com.github.torleifg.bookquest.core.domain.Metadata;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;

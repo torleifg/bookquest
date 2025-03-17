@@ -1,8 +1,8 @@
 package com.github.torleifg.bookquest.gateway.bibbi;
 
-import com.github.torleifg.bookquest.application.domain.BookFormat;
-import com.github.torleifg.bookquest.application.domain.Language;
-import com.github.torleifg.bookquest.application.domain.Role;
+import com.github.torleifg.bookquest.core.domain.BookFormat;
+import com.github.torleifg.bookquest.core.domain.Language;
+import com.github.torleifg.bookquest.core.domain.Role;
 import no.bs.bibliografisk.model.*;
 import org.junit.jupiter.api.Test;
 
