@@ -14,16 +14,16 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.wiremock.spring.EnableWireMock;
+
+import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @EnableWireMock
 @RestClientTest(BokbasenClient.class)
-@TestPropertySource(properties = "harvesting.gateway=bokbasen")
 @ContextConfiguration(classes = {BokbasenConfig.class, BokbasenClientTests.BokbasenTestConfig.class})
 class BokbasenClientTests {
 
@@ -93,9 +93,13 @@ class BokbasenClientTests {
         @Bean
         BokbasenProperties bokbasenProperties() {
             var bokbasenProperties = new BokbasenProperties();
-            bokbasenProperties.setMapper("default");
             bokbasenProperties.setClient("bokbasen");
             bokbasenProperties.setAudience("https://api.bokbasen.io/metadata/");
+
+            var gatewayConfig = new BokbasenProperties.GatewayConfig();
+            gatewayConfig.setMapper("default");
+
+            bokbasenProperties.setGateways(List.of(gatewayConfig));
 
             return bokbasenProperties;
         }

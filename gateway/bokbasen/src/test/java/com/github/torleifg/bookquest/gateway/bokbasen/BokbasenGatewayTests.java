@@ -27,7 +27,7 @@ class BokbasenGatewayTests {
     BokbasenMapper bokbasenMapper;
 
     @Mock
-    BokbasenProperties bokbasenProperties;
+    BokbasenProperties.GatewayConfig gatewayConfig;
 
     @Mock
     ResumptionTokenRepository resumptionTokenRepository;
@@ -39,10 +39,10 @@ class BokbasenGatewayTests {
 
     @Test
     void findAllTest() {
-        when(bokbasenProperties.getServiceUri()).thenReturn("/harvest");
-        when(bokbasenProperties.getSubscription()).thenReturn("extended");
-        when(bokbasenProperties.getPagesize()).thenReturn(100);
-        when(bokbasenProperties.getAfter()).thenReturn("19700101090000");
+        when(gatewayConfig.getServiceUri()).thenReturn("/harvest");
+        when(gatewayConfig.getSubscription()).thenReturn("extended");
+        when(gatewayConfig.getPagesize()).thenReturn(100);
+        when(gatewayConfig.getAfter()).thenReturn("19700101090000");
 
         var response = createResponse();
 
@@ -54,9 +54,9 @@ class BokbasenGatewayTests {
 
     @Test
     void findFromResumptionTokenTest() {
-        when(bokbasenProperties.getServiceUri()).thenReturn("/harvest");
-        when(bokbasenProperties.getSubscription()).thenReturn("extended");
-        when(bokbasenProperties.getPagesize()).thenReturn(100);
+        when(gatewayConfig.getServiceUri()).thenReturn("/harvest");
+        when(gatewayConfig.getSubscription()).thenReturn("extended");
+        when(gatewayConfig.getPagesize()).thenReturn(100);
 
         var resumptionToken = "token";
         when(resumptionTokenRepository.get("/harvest")).thenReturn(Optional.of(new ResumptionToken(resumptionToken, Instant.now())));

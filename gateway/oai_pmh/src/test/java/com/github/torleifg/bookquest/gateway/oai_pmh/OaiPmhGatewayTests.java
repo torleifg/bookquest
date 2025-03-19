@@ -28,7 +28,7 @@ class OaiPmhGatewayTests {
     OaiPmhMapper oaiPmhMapper;
 
     @Mock
-    OaiPmhProperties oaiPmhProperties;
+    OaiPmhProperties.GatewayConfig gatewayConfig;
 
     @Mock
     ResumptionTokenRepository resumptionTokenRepository;
@@ -43,9 +43,9 @@ class OaiPmhGatewayTests {
 
     @Test
     void findAllTest() {
-        when(oaiPmhProperties.getServiceUri()).thenReturn("/harvest");
-        when(oaiPmhProperties.getVerb()).thenReturn("ListRecords");
-        when(oaiPmhProperties.getMetadataPrefix()).thenReturn("marc21");
+        when(gatewayConfig.getServiceUri()).thenReturn("/harvest");
+        when(gatewayConfig.getVerb()).thenReturn("ListRecords");
+        when(gatewayConfig.getMetadataPrefix()).thenReturn("marc21");
 
         var response = createResponse();
         when(oaiPmhClient.get("/harvest?verb=ListRecords&metadataPrefix=marc21")).thenReturn(response);
@@ -57,9 +57,9 @@ class OaiPmhGatewayTests {
 
     @Test
     void findFromResumptionTokenTest() {
-        when(oaiPmhProperties.getServiceUri()).thenReturn("/harvest");
-        when(oaiPmhProperties.getVerb()).thenReturn("ListRecords");
-        when(oaiPmhProperties.getTtl()).thenReturn(5L);
+        when(gatewayConfig.getServiceUri()).thenReturn("/harvest");
+        when(gatewayConfig.getVerb()).thenReturn("ListRecords");
+        when(gatewayConfig.getTtl()).thenReturn(5L);
 
         var resumptionToken = "token";
         when(resumptionTokenRepository.get("/harvest")).thenReturn(Optional.of(new ResumptionToken(resumptionToken, Instant.now())));
@@ -73,9 +73,9 @@ class OaiPmhGatewayTests {
 
     @Test
     void findFromLastModifiedTest() {
-        when(oaiPmhProperties.getServiceUri()).thenReturn("/harvest");
-        when(oaiPmhProperties.getVerb()).thenReturn("ListRecords");
-        when(oaiPmhProperties.getMetadataPrefix()).thenReturn("marc21");
+        when(gatewayConfig.getServiceUri()).thenReturn("/harvest");
+        when(gatewayConfig.getVerb()).thenReturn("ListRecords");
+        when(gatewayConfig.getMetadataPrefix()).thenReturn("marc21");
 
         var lastModified = Instant.now();
         when(lastModifiedRepository.get("/harvest")).thenReturn(Optional.of(lastModified));

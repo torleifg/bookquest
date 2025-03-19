@@ -4,7 +4,7 @@ import com.github.torleifg.bookquest.core.domain.Book;
 import com.github.torleifg.bookquest.core.repository.LastModifiedRepository;
 import com.github.torleifg.bookquest.core.repository.ResumptionToken;
 import com.github.torleifg.bookquest.core.repository.ResumptionTokenRepository;
-import com.github.torleifg.bookquest.core.service.MetadataGateway;
+import com.github.torleifg.bookquest.core.service.GatewayService;
 import lombok.extern.slf4j.Slf4j;
 import no.bs.bibliografisk.model.BibliographicRecordMetadata;
 import no.bs.bibliografisk.model.GetV1PublicationsHarvest200ResponsePublicationsInner;
@@ -19,18 +19,20 @@ import static java.time.format.DateTimeFormatter.ISO_INSTANT;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Slf4j
-class BibbiGateway implements MetadataGateway {
+class BibbiGateway implements GatewayService {
+    private final BibbiProperties.GatewayConfig gatewayConfig;
+
     private final BibbiClient bibbiClient;
     private final BibbiMapper bibbiMapper;
-    private final BibbiProperties bibbiProperties;
 
     private final ResumptionTokenRepository resumptionTokenRepository;
     private final LastModifiedRepository lastModifiedRepository;
 
-    BibbiGateway(BibbiClient bibbiClient, BibbiMapper bibbiMapper, BibbiProperties bibbiProperties, ResumptionTokenRepository resumptionTokenRepository, LastModifiedRepository lastModifiedRepository) {
+    BibbiGateway(BibbiProperties.GatewayConfig gatewayConfig, BibbiClient bibbiClient, BibbiMapper bibbiMapper, ResumptionTokenRepository resumptionTokenRepository, LastModifiedRepository lastModifiedRepository) {
+        this.gatewayConfig = gatewayConfig;
+
         this.bibbiClient = bibbiClient;
         this.bibbiMapper = bibbiMapper;
-        this.bibbiProperties = bibbiProperties;
 
         this.resumptionTokenRepository = resumptionTokenRepository;
         this.lastModifiedRepository = lastModifiedRepository;
@@ -38,7 +40,7 @@ class BibbiGateway implements MetadataGateway {
 
     @Override
     public List<Book> find() {
-        final String serviceUri = bibbiProperties.getServiceUri();
+        final String serviceUri = gatewayConfig.getServiceUri();
         final String requestUri = createRequestUri(serviceUri);
 
         final BibbiResponse response = BibbiResponse.from(bibbiClient.get(requestUri));
@@ -49,7 +51,7 @@ class BibbiGateway implements MetadataGateway {
             resumptionTokenRepository.save(serviceUri, resumptionToken.get());
         } else {
             resumptionTokenRepository.get(serviceUri)
-                    .filter(token -> token.isNotExpired(bibbiProperties.getTtl()))
+                    .filter(token -> token.isNotExpired(gatewayConfig.getTtl()))
                     .ifPresent(token -> resumptionTokenRepository.save(serviceUri, token.value()));
         }
 
@@ -89,11 +91,11 @@ class BibbiGateway implements MetadataGateway {
     private String createRequestUri(String serviceUri) {
         final StringBuilder requestUri = new StringBuilder(serviceUri)
                 .append("?limit=")
-                .append(bibbiProperties.getLimit());
+                .append(gatewayConfig.getLimit());
 
         final Optional<ResumptionToken> resumptionToken = resumptionTokenRepository.get(serviceUri);
 
-        if (resumptionToken.isPresent() && resumptionToken.get().isNotExpired(bibbiProperties.getTtl())) {
+        if (resumptionToken.isPresent() && resumptionToken.get().isNotExpired(gatewayConfig.getTtl())) {
             return requestUri.append("&resumption_token=")
                     .append(resumptionToken.get().value())
                     .toString();
@@ -103,13 +105,13 @@ class BibbiGateway implements MetadataGateway {
 
         if (lastModified.isPresent()) {
             return requestUri.append("&query=")
-                    .append(bibbiProperties.getQuery())
+                    .append(gatewayConfig.getQuery())
                     .append(String.format(" AND modified:[%s TO *]", ISO_INSTANT.format(lastModified.get())))
                     .toString();
         }
 
         return requestUri.append("&query=")
-                .append(bibbiProperties.getQuery())
+                .append(gatewayConfig.getQuery())
                 .toString();
     }
 }

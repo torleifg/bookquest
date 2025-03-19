@@ -2,31 +2,36 @@ package com.github.torleifg.bookquest.gateway.oai_pmh;
 
 import com.github.torleifg.bookquest.core.repository.LastModifiedRepository;
 import com.github.torleifg.bookquest.core.repository.ResumptionTokenRepository;
-import com.github.torleifg.bookquest.core.service.MetadataGateway;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import com.github.torleifg.bookquest.core.service.GatewayService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.web.client.RestClient;
 
+import java.util.List;
+
 @Configuration
-@ConditionalOnProperty(prefix = "harvesting", name = "gateway", havingValue = "oai-pmh")
 class OaiPmhConfig {
 
     @Bean
-    MetadataGateway metadataGateway(OaiPmhClient oaiPmhClient, OaiPmhMapper oaiPmhMapper, OaiPmhProperties oaiPmhProperties, ResumptionTokenRepository resumptionTokenRepository, LastModifiedRepository lastModifiedRepository) {
-        return new OaiPmhGateway(oaiPmhClient, oaiPmhMapper, oaiPmhProperties, resumptionTokenRepository, lastModifiedRepository);
+    List<GatewayService> oaiPmhGateways(OaiPmhClient oaiPmhClient, OaiPmhProperties oaiPmhProperties, ResumptionTokenRepository resumptionTokenRepository, LastModifiedRepository lastModifiedRepository) {
+        return oaiPmhProperties.getGateways().stream()
+                .filter(OaiPmhProperties.GatewayConfig::isEnabled)
+                .map(config -> createGateway(config, oaiPmhClient, resumptionTokenRepository, lastModifiedRepository))
+                .map(GatewayService.class::cast)
+                .toList();
     }
 
-    @Bean
-    OaiPmhMapper oaiPmhMapper(OaiPmhProperties oaiPmhProperties) {
-        final String mapper = oaiPmhProperties.getMapper();
+    private OaiPmhGateway createGateway(OaiPmhProperties.GatewayConfig gatewayConfig, OaiPmhClient oaiPmhClient, ResumptionTokenRepository resumptionTokenRepository, LastModifiedRepository lastModifiedRepository) {
+        final String mapper = gatewayConfig.getMapper();
 
         /*
         Mapper factory
          */
 
-        return new OaiPmhDefaultMapper();
+        final OaiPmhMapper oaiPmhMapper = new OaiPmhDefaultMapper();
+
+        return new OaiPmhGateway(gatewayConfig, oaiPmhClient, oaiPmhMapper, resumptionTokenRepository, lastModifiedRepository);
     }
 
     @Bean

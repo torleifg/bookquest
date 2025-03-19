@@ -10,16 +10,16 @@ import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.wiremock.spring.EnableWireMock;
+
+import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @EnableWireMock
 @RestClientTest(OaiPmhClient.class)
-@TestPropertySource(properties = "harvesting.gateway=oai-pmh")
 @ContextConfiguration(classes = {OaiPmhConfig.class, OaiPmhClientTests.OaiPmhTestConfig.class})
 class OaiPmhClientTests {
 
@@ -58,7 +58,11 @@ class OaiPmhClientTests {
         @Bean
         OaiPmhProperties oaiPmhProperties() {
             var oaiPmhProperties = new OaiPmhProperties();
-            oaiPmhProperties.setMapper("default");
+
+            var gatewayConfig = new OaiPmhProperties.GatewayConfig();
+            gatewayConfig.setMapper("default");
+
+            oaiPmhProperties.setGateways(List.of(gatewayConfig));
 
             return oaiPmhProperties;
         }
