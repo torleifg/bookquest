@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "harvesting.bibbi")
+@ConfigurationProperties(value = "harvesting.bibbi")
 class BibbiProperties {
     private List<GatewayConfig> gateways = new ArrayList<>();
 

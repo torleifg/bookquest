@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "harvesting.bokbasen")
+@ConfigurationProperties(value = "harvesting.bokbasen")
 class BokbasenProperties {
     private String audience;
     private String client;

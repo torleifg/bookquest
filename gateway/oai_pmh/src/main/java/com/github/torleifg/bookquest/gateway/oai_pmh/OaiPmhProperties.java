@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "harvesting.oai-pmh")
+@ConfigurationProperties(value = "harvesting.oai-pmh")
 class OaiPmhProperties {
     private List<GatewayConfig> gateways = new ArrayList<>();
 

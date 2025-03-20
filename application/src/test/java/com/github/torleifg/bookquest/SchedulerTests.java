@@ -34,7 +34,7 @@ public class SchedulerTests {
     }
 
     @Test
-    void runStopPollingTest() {
+    void stopPollingTest() {
         when(harvester.poll(firstGateway)).thenReturn(false);
         when(harvester.poll(secondGateway)).thenReturn(false);
 
@@ -45,7 +45,7 @@ public class SchedulerTests {
     }
 
     @Test
-    void runContinuePollingTest() {
+    void continuePollingTest() {
         when(harvester.poll(firstGateway)).thenReturn(true, false);
         when(harvester.poll(secondGateway)).thenReturn(true, false);
 
