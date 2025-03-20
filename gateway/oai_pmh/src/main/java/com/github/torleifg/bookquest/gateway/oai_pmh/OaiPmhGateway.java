@@ -4,7 +4,7 @@ import com.github.torleifg.bookquest.core.domain.Book;
 import com.github.torleifg.bookquest.core.repository.LastModifiedRepository;
 import com.github.torleifg.bookquest.core.repository.ResumptionToken;
 import com.github.torleifg.bookquest.core.repository.ResumptionTokenRepository;
-import com.github.torleifg.bookquest.core.service.MetadataGateway;
+import com.github.torleifg.bookquest.core.service.GatewayService;
 import lombok.extern.slf4j.Slf4j;
 import org.marc4j.MarcXmlReader;
 import org.marc4j.marc.Record;
@@ -25,10 +25,11 @@ import java.util.Optional;
 import static java.time.format.DateTimeFormatter.ISO_INSTANT;
 
 @Slf4j
-class OaiPmhGateway implements MetadataGateway {
+class OaiPmhGateway implements GatewayService {
+    private final OaiPmhProperties.GatewayConfig gatewayConfig;
+
     private final OaiPmhClient oaiPmhClient;
     private final OaiPmhMapper oaiPmhMapper;
-    private final OaiPmhProperties oaiPmhProperties;
 
     private final ResumptionTokenRepository resumptionTokenRepository;
     private final LastModifiedRepository lastModifiedRepository;
@@ -43,10 +44,11 @@ class OaiPmhGateway implements MetadataGateway {
         }
     }
 
-    OaiPmhGateway(OaiPmhClient oaiPmhClient, OaiPmhMapper oaiPmhMapper, OaiPmhProperties oaiPmhProperties, ResumptionTokenRepository resumptionTokenRepository, LastModifiedRepository lastModifiedRepository) {
+    OaiPmhGateway(OaiPmhProperties.GatewayConfig gatewayConfig, OaiPmhClient oaiPmhClient, OaiPmhMapper oaiPmhMapper, ResumptionTokenRepository resumptionTokenRepository, LastModifiedRepository lastModifiedRepository) {
+        this.gatewayConfig = gatewayConfig;
+
         this.oaiPmhClient = oaiPmhClient;
         this.oaiPmhMapper = oaiPmhMapper;
-        this.oaiPmhProperties = oaiPmhProperties;
 
         this.resumptionTokenRepository = resumptionTokenRepository;
         this.lastModifiedRepository = lastModifiedRepository;
@@ -54,7 +56,7 @@ class OaiPmhGateway implements MetadataGateway {
 
     @Override
     public List<Book> find() {
-        final String serviceUri = oaiPmhProperties.getServiceUri();
+        final String serviceUri = gatewayConfig.getServiceUri();
         final String requestUri = createRequestUri(serviceUri);
 
         final OaiPmhResponse response = OaiPmhResponse.from(oaiPmhClient.get(requestUri));
@@ -80,7 +82,7 @@ class OaiPmhGateway implements MetadataGateway {
             resumptionTokenRepository.save(serviceUri, resumptionToken.get());
         } else {
             resumptionTokenRepository.get(serviceUri)
-                    .filter(token -> token.isNotExpired(oaiPmhProperties.getTtl()))
+                    .filter(token -> token.isNotExpired(gatewayConfig.getTtl()))
                     .ifPresent(token -> resumptionTokenRepository.save(serviceUri, token.value()));
         }
 
@@ -141,21 +143,21 @@ class OaiPmhGateway implements MetadataGateway {
     private String createRequestUri(String serviceUri) {
         final StringBuilder requestUri = new StringBuilder(serviceUri)
                 .append("?verb=")
-                .append(oaiPmhProperties.getVerb());
+                .append(gatewayConfig.getVerb());
 
         final Optional<ResumptionToken> resumptionToken = resumptionTokenRepository.get(serviceUri);
 
-        if (resumptionToken.isPresent() && resumptionToken.get().isNotExpired(oaiPmhProperties.getTtl())) {
+        if (resumptionToken.isPresent() && resumptionToken.get().isNotExpired(gatewayConfig.getTtl())) {
             return requestUri.append("&resumptionToken=")
                     .append(resumptionToken.get().value())
                     .toString();
         }
 
         requestUri.append("&metadataPrefix=")
-                .append(oaiPmhProperties.getMetadataPrefix());
+                .append(gatewayConfig.getMetadataPrefix());
 
-        if (oaiPmhProperties.getSet() != null && !oaiPmhProperties.getSet().isBlank()) {
-            requestUri.append("&set=").append(oaiPmhProperties.getSet());
+        if (gatewayConfig.getSet() != null && !gatewayConfig.getSet().isBlank()) {
+            requestUri.append("&set=").append(gatewayConfig.getSet());
         }
 
         final Optional<Instant> lastModified = lastModifiedRepository.get(serviceUri);

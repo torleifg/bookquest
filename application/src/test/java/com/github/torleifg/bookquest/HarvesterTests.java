@@ -3,7 +3,7 @@ package com.github.torleifg.bookquest;
 import com.github.torleifg.bookquest.core.domain.Book;
 import com.github.torleifg.bookquest.core.domain.Metadata;
 import com.github.torleifg.bookquest.core.service.BookService;
-import com.github.torleifg.bookquest.core.service.MetadataGateway;
+import com.github.torleifg.bookquest.core.service.GatewayService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
 class HarvesterTests {
 
     @Mock
-    MetadataGateway metadataGateway;
+    GatewayService gateway;
 
     @Mock
     BookService bookService;
@@ -27,7 +27,7 @@ class HarvesterTests {
     Harvester harvester;
 
     @Test
-    void upsertTest() {
+    void pollTest() {
         var book = new Book();
         book.setExternalId("externalId");
 
@@ -36,9 +36,9 @@ class HarvesterTests {
 
         book.setMetadata(metadata);
 
-        when(metadataGateway.find()).thenReturn(List.of(book));
+        when(gateway.find()).thenReturn(List.of(book));
 
-        harvester.upsert();
+        harvester.poll(gateway);
 
         verify(bookService, times(1)).save(List.of(book));
     }

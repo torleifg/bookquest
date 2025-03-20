@@ -4,15 +4,24 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "bokbasen")
+@ConfigurationProperties(value = "harvesting.bokbasen")
 class BokbasenProperties {
-    private String serviceUri;
-    private String after;
-    private String subscription;
-    private String mapper;
-    private String client;
     private String audience;
-    private int pagesize;
+    private String client;
+    private List<GatewayConfig> gateways = new ArrayList<>();
+
+    @Data
+    static class GatewayConfig {
+        private boolean enabled;
+        private String serviceUri;
+        private String mapper;
+        private String subscription;
+        private String after;
+        private Integer pagesize;
+    }
 }

@@ -20,7 +20,7 @@ Follow Run as Docker Compose **or** Run as Spring Boot to configure and run the 
 
 ### Run as Docker Compose
 
-Configure a gateway for harvesting metadata by editing
+Configure one or more gateways for harvesting metadata by editing
 ```compose-app.yml```.
 
 Available options:
@@ -32,15 +32,15 @@ Available options:
 **Example:**
 
 ```
-HARVESTING_ENABLED: true
-HARVESTING_GATEWAY: oai-pmh
-HARVESTING_INITIAL_DELAY: 5
-HARVESTING_FIXED_DELAY: 3600
-OAI_PMH_SERVICE_URI: https://oai.aja.bs.no/mlnb
-OAI_PMH_TTL: 5
-OAI_PMH_MAPPER: default
-OAI_PMH_VERB: ListRecords
-OAI_PMH_METADATA_PREFIX: marc21
+SCHEDULER_ENABLED: true
+SCHEDULER_INITIAL_DELAY: 5
+SCHEDULER_FIXED_DELAY: 3600
+HARVESTING_OAI_PMH_GATEWAYS_0_ENABLED: true
+HARVESTING_OAI_PMH_GATEWAYS_0_SERVICE_URI: https://oai.aja.bs.no/mlnb
+HARVESTING_OAI_PMH_GATEWAYS_0_TTL: 5
+HARVESTING_OAI_PMH_GATEWAYS_0_MAPPER: default
+HARVESTING_OAI_PMH_GATEWAYS_0_VERB: ListRecords
+HARVESTING_OAI_PMH_GATEWAYS_0_METADATA_PREFIX: marc21
 ```
 
 Run the following command in the project directory:
@@ -55,7 +55,7 @@ application will be ready for use.
 
 ### Run as Spring Boot
 
-Configure a gateway for harvesting metadata by editing
+Configure one or more gateways for harvesting metadata by editing
 ```application/src/main/resources/application.yaml```.
 
 Available options:
@@ -67,18 +67,21 @@ Available options:
 **Example:**
 
 ```yaml
-harvesting:
+scheduler:
   enabled: true
-  gateway: oai-pmh
   initial-delay: 5
   fixed-delay: 3600
 
-oai-pmh:
-  service-uri: https://oai.aja.bs.no/mlnb
-  ttl: 5
-  mapper: default
-  verb: ListRecords
-  metadataPrefix: marc21
+harvesting:
+  oai-pmh:
+    gateways:
+      - enabled: true
+        service-uri: https://oai.aja.bs.no/mlnb
+        ttl: 5
+        mapper: default
+        verb: ListRecords
+        metadata-prefix: marc21
+        set:
 ```
 
 Run the following command in the project directory:

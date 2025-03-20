@@ -1,8 +1,7 @@
 package com.github.torleifg.bookquest.gateway.bokbasen;
 
 import com.github.torleifg.bookquest.core.repository.ResumptionTokenRepository;
-import com.github.torleifg.bookquest.core.service.MetadataGateway;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import com.github.torleifg.bookquest.core.service.GatewayService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.JdkClientHttpRequestFactory;
@@ -15,24 +14,30 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
 
+import java.util.List;
+
 @Configuration
-@ConditionalOnProperty(prefix = "harvesting", name = "gateway", havingValue = "bokbasen")
 class BokbasenConfig {
 
     @Bean
-    MetadataGateway metadataGateway(BokbasenClient bokbasenClient, BokbasenMapper bokbasenMapper, BokbasenProperties bokbasenProperties, ResumptionTokenRepository resumptionTokenRepository) {
-        return new BokbasenGateway(bokbasenClient, bokbasenMapper, bokbasenProperties, resumptionTokenRepository);
+    List<GatewayService> bokbasenGateways(BokbasenClient bokbasenClient, BokbasenProperties bokbasenProperties, ResumptionTokenRepository resumptionTokenRepository) {
+        return bokbasenProperties.getGateways().stream()
+                .filter(BokbasenProperties.GatewayConfig::isEnabled)
+                .map(config -> createGateway(config, bokbasenClient, resumptionTokenRepository))
+                .map(GatewayService.class::cast)
+                .toList();
     }
 
-    @Bean
-    BokbasenMapper bokbasenMapper(BokbasenProperties bokbasenProperties) {
-        final String mapper = bokbasenProperties.getMapper();
+    private BokbasenGateway createGateway(BokbasenProperties.GatewayConfig gatewayConfig, BokbasenClient bokbasenClient, ResumptionTokenRepository resumptionTokenRepository) {
+        final String mapper = gatewayConfig.getMapper();
 
         /*
         Mapper factory
          */
 
-        return new BokbasenDefaultMapper();
+        final BokbasenMapper bokbasenMapper = new BokbasenDefaultMapper();
+
+        return new BokbasenGateway(gatewayConfig, bokbasenClient, bokbasenMapper, resumptionTokenRepository);
     }
 
     @Bean

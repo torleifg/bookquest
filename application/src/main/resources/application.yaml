@@ -46,31 +46,37 @@ server:
 
 default-locale: nb
 
-harvesting:
-  enabled: false
-  gateway: oai-pmh
+scheduler:
+  enabled: true
   initial-delay: 5
   fixed-delay: 3600
 
-bibbi:
-  service-uri: https://bibliografisk.bs.no/v1/publications/harvest
-  ttl: 5
-  mapper: default
-  limit: 100
-  query: type:(audiobook OR book)
+harvesting:
+  bibbi:
+    gateways:
+      - enabled: false
+        service-uri: https://bibliografisk.bs.no/v1/publications/harvest
+        ttl: 5
+        mapper: default
+        limit: 100
+        query: type:(audiobook OR book)
 
-oai-pmh:
-  service-uri: https://oai.aja.bs.no/mlnb
-  ttl: 5
-  mapper: default
-  verb: ListRecords
-  metadata-prefix: marc21
-  set:
+  oai-pmh:
+    gateways:
+      - enabled: false
+        service-uri: https://oai.aja.bs.no/mlnb
+        ttl: 5
+        mapper: default
+        verb: ListRecords
+        metadata-prefix: marc21
+        set:
 
-bokbasen:
-  service-uri: https://api.bokbasen.io/metadata/export/onix/v1
-  after: 19700101090000
-  mapper: default
-  client: bokbasen
-  audience: https://api.bokbasen.io/metadata/
-  pagesize: 100
+  bokbasen:
+    audience: https://api.bokbasen.io/metadata/
+    client: bokbasen
+    gateways:
+      - enabled: false
+        service-uri: https://api.bokbasen.io/metadata/export/onix/v1
+        after: 19700101090000
+        mapper: default
+        pagesize: 100

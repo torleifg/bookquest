@@ -27,7 +27,7 @@ class BibbiGatewayTests {
     BibbiMapper bibbiMapper;
 
     @Mock
-    BibbiProperties bibbiProperties;
+    BibbiProperties.GatewayConfig gatewayConfig;
 
     @Mock
     ResumptionTokenRepository resumptionTokenRepository;
@@ -40,9 +40,9 @@ class BibbiGatewayTests {
 
     @Test
     void findAllTest() {
-        when(bibbiProperties.getServiceUri()).thenReturn("/harvest");
-        when(bibbiProperties.getLimit()).thenReturn(100);
-        when(bibbiProperties.getQuery()).thenReturn("type:(audiobook OR book)");
+        when(gatewayConfig.getServiceUri()).thenReturn("/harvest");
+        when(gatewayConfig.getLimit()).thenReturn(100);
+        when(gatewayConfig.getQuery()).thenReturn("type:(audiobook OR book)");
 
         var response = createResponse();
         when(bibbiClient.get("/harvest?limit=100&query=type:(audiobook OR book)")).thenReturn(response);
@@ -53,9 +53,9 @@ class BibbiGatewayTests {
 
     @Test
     void findFromResumptionTokenTest() {
-        when(bibbiProperties.getServiceUri()).thenReturn("/harvest");
-        when(bibbiProperties.getLimit()).thenReturn(100);
-        when(bibbiProperties.getTtl()).thenReturn(5L);
+        when(gatewayConfig.getServiceUri()).thenReturn("/harvest");
+        when(gatewayConfig.getLimit()).thenReturn(100);
+        when(gatewayConfig.getTtl()).thenReturn(5);
 
         var resumptionToken = "token";
         when(resumptionTokenRepository.get("/harvest")).thenReturn(Optional.of(new ResumptionToken(resumptionToken, Instant.now())));
@@ -69,9 +69,9 @@ class BibbiGatewayTests {
 
     @Test
     void findFromLastModifiedTest() {
-        when(bibbiProperties.getServiceUri()).thenReturn("/harvest");
-        when(bibbiProperties.getLimit()).thenReturn(100);
-        when(bibbiProperties.getQuery()).thenReturn("type:(audiobook OR book)");
+        when(gatewayConfig.getServiceUri()).thenReturn("/harvest");
+        when(gatewayConfig.getLimit()).thenReturn(100);
+        when(gatewayConfig.getQuery()).thenReturn("type:(audiobook OR book)");
 
         var lastModified = Instant.now();
         when(lastModifiedRepository.get("/harvest")).thenReturn(Optional.of(lastModified));

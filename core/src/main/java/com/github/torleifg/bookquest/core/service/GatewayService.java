@@ -4,6 +4,7 @@ import com.github.torleifg.bookquest.core.domain.Book;
 
 import java.util.List;
 
-public interface MetadataGateway {
+public interface GatewayService {
+
     List<Book> find();
 }

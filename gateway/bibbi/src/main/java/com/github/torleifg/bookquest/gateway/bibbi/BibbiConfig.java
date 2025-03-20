@@ -2,31 +2,36 @@ package com.github.torleifg.bookquest.gateway.bibbi;
 
 import com.github.torleifg.bookquest.core.repository.LastModifiedRepository;
 import com.github.torleifg.bookquest.core.repository.ResumptionTokenRepository;
-import com.github.torleifg.bookquest.core.service.MetadataGateway;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import com.github.torleifg.bookquest.core.service.GatewayService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.web.client.RestClient;
 
+import java.util.List;
+
 @Configuration
-@ConditionalOnProperty(prefix = "harvesting", name = "gateway", havingValue = "bibbi")
 class BibbiConfig {
 
     @Bean
-    MetadataGateway metadataGateway(BibbiClient bibbiClient, BibbiMapper bibbiMapper, BibbiProperties bibbiProperties, ResumptionTokenRepository resumptionTokenRepository, LastModifiedRepository lastModifiedRepository) {
-        return new BibbiGateway(bibbiClient, bibbiMapper, bibbiProperties, resumptionTokenRepository, lastModifiedRepository);
+    List<GatewayService> bibbiGateways(BibbiProperties bibbiProperties, BibbiClient bibbiClient, ResumptionTokenRepository resumptionTokenRepository, LastModifiedRepository lastModifiedRepository) {
+        return bibbiProperties.getGateways().stream()
+                .filter(BibbiProperties.GatewayConfig::isEnabled)
+                .map(config -> createGateway(config, bibbiClient, resumptionTokenRepository, lastModifiedRepository))
+                .map(GatewayService.class::cast)
+                .toList();
     }
 
-    @Bean
-    BibbiMapper bibbiMapper(BibbiProperties bibbiProperties) {
-        final String mapper = bibbiProperties.getMapper();
+    private BibbiGateway createGateway(BibbiProperties.GatewayConfig gatewayConfig, BibbiClient bibbiClient, ResumptionTokenRepository resumptionTokenRepository, LastModifiedRepository lastModifiedRepository) {
+        final String mapper = gatewayConfig.getMapper();
 
         /*
         Mapper factory
          */
 
-        return new BibbiDefaultMapper();
+        final BibbiMapper bibbiMapper = new BibbiDefaultMapper();
+
+        return new BibbiGateway(gatewayConfig, bibbiClient, bibbiMapper, resumptionTokenRepository, lastModifiedRepository);
     }
 
     @Bean

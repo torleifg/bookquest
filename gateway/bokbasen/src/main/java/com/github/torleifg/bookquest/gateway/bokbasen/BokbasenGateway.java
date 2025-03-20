@@ -3,7 +3,7 @@ package com.github.torleifg.bookquest.gateway.bokbasen;
 import com.github.torleifg.bookquest.core.domain.Book;
 import com.github.torleifg.bookquest.core.repository.ResumptionToken;
 import com.github.torleifg.bookquest.core.repository.ResumptionTokenRepository;
-import com.github.torleifg.bookquest.core.service.MetadataGateway;
+import com.github.torleifg.bookquest.core.service.GatewayService;
 import lombok.extern.slf4j.Slf4j;
 import org.editeur.ns.onix._3_0.reference.*;
 import org.springframework.http.ResponseEntity;
@@ -15,24 +15,26 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @Slf4j
-class BokbasenGateway implements MetadataGateway {
+class BokbasenGateway implements GatewayService {
+    private final BokbasenProperties.GatewayConfig gatewayConfig;
+
     private final BokbasenClient bokbasenClient;
     private final BokbasenMapper bokbasenMapper;
-    private final BokbasenProperties bokbasenProperties;
 
     private final ResumptionTokenRepository resumptionTokenRepository;
 
-    BokbasenGateway(BokbasenClient bokbasenClient, BokbasenMapper bokbasenMapper, BokbasenProperties bokbasenProperties, ResumptionTokenRepository resumptionTokenRepository) {
+    BokbasenGateway(BokbasenProperties.GatewayConfig gatewayConfig, BokbasenClient bokbasenClient, BokbasenMapper bokbasenMapper, ResumptionTokenRepository resumptionTokenRepository) {
+        this.gatewayConfig = gatewayConfig;
+
         this.bokbasenClient = bokbasenClient;
         this.bokbasenMapper = bokbasenMapper;
-        this.bokbasenProperties = bokbasenProperties;
 
         this.resumptionTokenRepository = resumptionTokenRepository;
     }
 
     @Override
     public List<Book> find() {
-        final String serviceUri = bokbasenProperties.getServiceUri();
+        final String serviceUri = gatewayConfig.getServiceUri();
         final String requestUri = createRequestUri(serviceUri);
 
         final ResponseEntity<ONIXMessage> entity = bokbasenClient.get(requestUri);
@@ -76,9 +78,9 @@ class BokbasenGateway implements MetadataGateway {
     private String createRequestUri(String serviceUri) {
         final StringBuilder requestUri = new StringBuilder(serviceUri)
                 .append("?subscription=")
-                .append(bokbasenProperties.getSubscription())
+                .append(gatewayConfig.getSubscription())
                 .append("&pagesize=")
-                .append(bokbasenProperties.getPagesize());
+                .append(gatewayConfig.getPagesize());
 
         final Optional<ResumptionToken> resumptionToken = resumptionTokenRepository.get(serviceUri);
 
@@ -89,7 +91,7 @@ class BokbasenGateway implements MetadataGateway {
         }
 
         return requestUri.append("&after=")
-                .append(bokbasenProperties.getAfter())
+                .append(gatewayConfig.getAfter())
                 .toString();
     }
 

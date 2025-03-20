@@ -4,13 +4,22 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "bibbi")
+@ConfigurationProperties(value = "harvesting.bibbi")
 class BibbiProperties {
-    private String serviceUri;
-    private long ttl;
-    private String mapper;
-    private int limit;
-    private String query;
+    private List<GatewayConfig> gateways = new ArrayList<>();
+
+    @Data
+    static class GatewayConfig {
+        private boolean enabled;
+        private String serviceUri;
+        private String mapper;
+        private Integer ttl;
+        private Integer limit;
+        private String query;
+    }
 }

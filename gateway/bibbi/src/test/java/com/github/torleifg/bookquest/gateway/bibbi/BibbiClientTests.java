@@ -5,13 +5,16 @@ import com.github.torleifg.bookquest.core.repository.ResumptionTokenRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.wiremock.spring.EnableWireMock;
+
+import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -19,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @EnableWireMock
 @RestClientTest(BibbiClient.class)
-@TestPropertySource(properties = "harvesting.gateway=bibbi")
 @ContextConfiguration(classes = {BibbiConfig.class, BibbiClientTests.BibbiTestConfig.class})
 class BibbiClientTests {
 
@@ -56,7 +58,11 @@ class BibbiClientTests {
         @Bean
         BibbiProperties bibbiProperties() {
             var bibbiProperties = new BibbiProperties();
-            bibbiProperties.setMapper("default");
+
+            var gatewayConfig = new BibbiProperties.GatewayConfig();
+            gatewayConfig.setMapper("default");
+
+            bibbiProperties.setGateways(List.of(gatewayConfig));
 
             return bibbiProperties;
         }
