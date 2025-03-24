@@ -162,7 +162,7 @@ Additional documentation for Bibbi from Biblioteksentralen (https://www.bibsent.
 ## Text classification
 
 Instructions for extracting a dataset for fine-tuning a BERT-based model for multi-label classification of book
-reviews: https://github.com/torleifg/book-reviews-genre-classification
+reviews: https://github.com/torleifg/multi-label-bert-classifier
 
 ```shell
 psql -h localhost -p 5433 -U username -d postgres
