@@ -3,7 +3,7 @@ WORKDIR /opt/app
 
 COPY gradlew gradlew
 COPY gradle/wrapper gradle/wrapper
-COPY build.gradle settings.gradle ./
+COPY build.gradle settings.gradle gradle.properties ./
 
 RUN ./gradlew dependencies --no-daemon --stacktrace
 
