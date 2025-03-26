@@ -76,7 +76,7 @@ harvesting:
     client: bokbasen
     gateways:
       - enabled: false
-        service-uri: https://api.bokbasen.io/metadata/export/onix/v1
+        service-uri: https://api.bokbasen.io/metadata/export/onix/v2
         after: 19700101090000
         mapper: default
         pagesize: 100

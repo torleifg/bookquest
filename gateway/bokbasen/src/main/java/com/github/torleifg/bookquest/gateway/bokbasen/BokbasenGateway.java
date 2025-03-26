@@ -5,7 +5,7 @@ import com.github.torleifg.bookquest.core.repository.ResumptionToken;
 import com.github.torleifg.bookquest.core.repository.ResumptionTokenRepository;
 import com.github.torleifg.bookquest.core.service.GatewayService;
 import lombok.extern.slf4j.Slf4j;
-import org.editeur.ns.onix._3_0.reference.*;
+import org.editeur.ns.onix._3_1.reference.*;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;

@@ -138,7 +138,7 @@ class BookRepositoryAdapter implements BookRepository {
         final Optional<Document> document = jdbcClient.sql("""
                         select * from vector_store
                         join book on book.vector_store_id = vector_store.id
-                        where book.metadata ->> 'isbn' = ? 
+                        where book.metadata ->> 'isbn' = ?
                         limit 1
                         """)
                 .param(isbn)
