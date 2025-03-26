@@ -47,7 +47,7 @@ class BokbasenClientTests {
 
         stubFor(get("/onix/v1").willReturn(okXml("""
                 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-                <ONIXMessage xmlns="http://ns.editeur.org/onix/3.0/reference" release="3.0">
+                <ONIXMessage xmlns="http://ns.editeur.org/onix/3.1/reference" release="3.1">
                     <Header>
                         <Sender>
                             <SenderIdentifier>

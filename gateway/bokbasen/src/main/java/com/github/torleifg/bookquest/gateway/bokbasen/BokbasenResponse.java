@@ -1,7 +1,7 @@
 package com.github.torleifg.bookquest.gateway.bokbasen;
 
-import org.editeur.ns.onix._3_0.reference.ONIXMessage;
-import org.editeur.ns.onix._3_0.reference.Product;
+import org.editeur.ns.onix._3_1.reference.ONIXMessage;
+import org.editeur.ns.onix._3_1.reference.Product;
 
 import java.util.Collection;
 import java.util.List;

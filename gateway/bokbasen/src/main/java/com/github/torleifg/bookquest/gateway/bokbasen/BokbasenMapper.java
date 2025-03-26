@@ -2,7 +2,7 @@ package com.github.torleifg.bookquest.gateway.bokbasen;
 
 import com.github.torleifg.bookquest.core.domain.Book;
 import com.github.torleifg.bookquest.core.domain.Role;
-import org.editeur.ns.onix._3_0.reference.Product;
+import org.editeur.ns.onix._3_1.reference.Product;
 
 interface BokbasenMapper {
     Book from(Product product);

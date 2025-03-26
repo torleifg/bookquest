@@ -1,11 +1,9 @@
 package com.github.torleifg.bookquest.gateway.bokbasen;
 
-import com.github.torleifg.bookquest.core.domain.Book;
-import com.github.torleifg.bookquest.core.domain.BookFormat;
-import com.github.torleifg.bookquest.core.domain.Classification;
-import com.github.torleifg.bookquest.core.domain.Metadata;
-import com.github.torleifg.bookquest.core.domain.Role;
-import org.editeur.ns.onix._3_0.reference.*;
+import com.github.torleifg.bookquest.core.domain.*;
+import org.editeur.ns.onix._3_1.reference.*;
+import org.editeur.ns.onix._3_1.reference.Contributor;
+import org.editeur.ns.onix._3_1.reference.Language;
 
 import java.io.Serializable;
 import java.net.URI;

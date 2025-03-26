@@ -3,7 +3,7 @@ package com.github.torleifg.bookquest.gateway.bokbasen;
 import com.github.torleifg.bookquest.core.domain.BookFormat;
 import com.github.torleifg.bookquest.core.domain.Language;
 import com.github.torleifg.bookquest.core.domain.Role;
-import org.editeur.ns.onix._3_0.reference.*;
+import org.editeur.ns.onix._3_1.reference.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

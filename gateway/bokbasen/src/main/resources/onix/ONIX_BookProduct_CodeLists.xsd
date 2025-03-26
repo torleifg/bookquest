@@ -10,48 +10,48 @@
 	*           CODE LIST DATA TYPES MODULE          *
 	*               XML SCHEMA VERSION               *
 	*                                                *
-	*                   ISSUE: 66                    *
+	*                   ISSUE: 69                    *
 	*                                                *
 	*                Status: RELEASED                *
-	*            Release date: 2024-07-16            *
+	*            Release date: 2025-03-20            *
 	*                                                *
 	*  Orig filename ONIX_BookProduct_CodeLists.XSD  *
 	*                                                *
 	*          Original author: Francis Cave         *
 	*                                                *
-	*              (c) 2003-2024 EDItEUR             *
+	*              (c) 2003-2025 EDItEUR             *
 	*             http://www.editeur.org/            *
 	*                                                *
 	**************************************************
 
 	N.B. PRIMARILY DESIGNED FOR USE WITH ONIX SCHEMAS
 
-
-	TERMS AND CONDITIONS OF USE OF THE ONIX for Books PRODUCT INFORMATION FORMAT AND
+	
+	TERMS AND CONDITIONS OF USE OF THE ONIX for Books PRODUCT INFORMATION FORMAT AND 
 	ASSOCIATED XML SCHEMAS
 
-	All ONIX standards and documentation – including this document – are copyright
-	materials, made available free of charge for general use. A full license agreement
-	(DOI: 10.4400/nwgj) that governs their use is available on the EDItEUR website. In
-	particular, if you use any of the ONIX for Books Product Information Format schemas
-	(RNG, XSD or DTD) (‘the schemas’), you will be deemed to have accepted these terms
+	All ONIX standards and documentation – including this document – are copyright 
+	materials, made available free of charge for general use. A full license agreement 
+	(DOI: 10.4400/nwgj) that governs their use is available on the EDItEUR website. In 
+	particular, if you use any of the ONIX for Books Product Information Format schemas 
+	(RNG, XSD or DTD) (‘the schemas’), you will be deemed to have accepted these terms 
 	and conditions:
 
-	1. You agree that you will not add to, delete from, amend or copy for use outside of
+	1. You agree that you will not add to, delete from, amend or copy for use outside of 
 	the schemas any part thereof except for strictly internal use in your own organization.
 
-	2. You agree that if your business would benefit from future additions or amendments
-	to or extracts of the schemas for any purpose that is not strictly internal to your own
-	organisation, you will in the first instance notify EDItEUR and allow EDItEUR to review
-	and comment on your proposed use, in the interest of securing an orderly
+	2. You agree that if your business would benefit from future additions or amendments 
+	to or extracts of the schemas for any purpose that is not strictly internal to your own 
+	organisation, you will in the first instance notify EDItEUR and allow EDItEUR to review 
+	and comment on your proposed use, in the interest of securing an orderly 
 	development of the Schema for the benefit of other users.
 
-	If you do not accept these terms, you must not use any version of the ONIX Product
+	If you do not accept these terms, you must not use any version of the ONIX Product 
 	Information Message Schemas.
 
-	Full copies of all published versions of the latest release of this Schema and all
-	associated documentation are available from the EDItEUR web site, where may also be
-	found details of how to contact EDItEUR for advice on the use of this Schema. The URL
+	Full copies of all published versions of the latest release of this Schema and all 
+	associated documentation are available from the EDItEUR web site, where may also be 
+	found details of how to contact EDItEUR for advice on the use of this Schema. The URL 
 	for the EDItEUR web site is:
 
 	http://www.editeur.org/
@@ -59,193 +59,202 @@
 
 	MODULE REVISION HISTORY (IN REVERSE CHRONOLOGICAL ORDER)
 
-	2024-07-16: Module for public release based upon the ONIX International
+	2025-03-20: Module for public release based upon the ONIX International 
+	            Code lists Issue 69 (March 2025)
+
+	2025-01-20: Module for public release based upon the ONIX International 
+	            Code lists Issue 68 (January 2025)
+
+	2024-10-22: Module for public release based upon the ONIX International 
+	            Code lists Issue 67 (October 2024)
+
+	2024-07-16: Module for public release based upon the ONIX International 
 	            Code lists Issue 66 (July 2024)
 
-	2024-03-19: Module for public release based upon the ONIX International
+	2024-03-19: Module for public release based upon the ONIX International 
 	            Code lists Issue 65 (March 2024)
 
-	2024-01-22: Module for public release based upon the ONIX International
+	2024-01-22: Module for public release based upon the ONIX International 
 	            Code lists Issue 64 (January 2024)
 
-	2023-10-23: Module for public release based upon the ONIX International
+	2023-10-23: Module for public release based upon the ONIX International 
 	            Code lists Issue 63 (October 2023)
 
-	2023-07-27: Module for public release based upon the ONIX International
+	2023-07-27: Module for public release based upon the ONIX International 
 	            Code lists Issue 62 (July 2023)
 
-	2023-04-24: Module for public release based upon the ONIX International
+	2023-04-24: Module for public release based upon the ONIX International 
 	            Code lists Issue 61 (April 2023)
 
-	2023-01-16: Module for public release based upon the ONIX International
+	2023-01-16: Module for public release based upon the ONIX International 
 	            Code lists Issue 60 (January 2023)
 
-	2022-11-01: Module for public release based upon the ONIX International
+	2022-11-01: Module for public release based upon the ONIX International 
 	            Code lists Issue 59 (November 2022)
 
-	2022-07-11: Module for public release based upon the ONIX International
+	2022-07-11: Module for public release based upon the ONIX International 
 	            Code lists Issue 58 (July 2022)
 
-	2022-04-12: Module for public release based upon the ONIX International
+	2022-04-12: Module for public release based upon the ONIX International 
 	            Code lists Issue 57 (April 2022)
 
-	2022-01-21: Module for public release based upon the ONIX International
+	2022-01-21: Module for public release based upon the ONIX International 
 	            Code lists Issue 56 (January 2022)
 
-	2021-10-28: Module for public release based upon the ONIX International
+	2021-10-28: Module for public release based upon the ONIX International 
 	            Code lists Issue 55 (October 2021)
 
-	2021-08-09: Module for public release based upon the ONIX International
+	2021-08-09: Module for public release based upon the ONIX International 
 	            Code lists Issue 54 (August 2021)
 
-	2021-07-06: Module for public release based upon the ONIX International
+	2021-07-06: Module for public release based upon the ONIX International 
 	            Code lists Issue 53a (interim replacement of Issue 53, released July 2021)
 
-	2021-05-04: Module for public release based upon the ONIX International
+	2021-05-04: Module for public release based upon the ONIX International 
 	            Code lists Issue 53 (May 2021)
 
-	2021-01-25: Module for public release based upon the ONIX International
+	2021-01-25: Module for public release based upon the ONIX International 
 	            Code lists Issue 52 (January 2021)
 
-	2020-10-20: Module for public release based upon the ONIX International
+	2020-10-20: Module for public release based upon the ONIX International 
 	            Code lists Issue 51 (October 2020)
 
-	2020-07-09: Module for public release based upon the ONIX International
+	2020-07-09: Module for public release based upon the ONIX International 
 	            Code lists Issue 50 (July 2020)
 
-	2020-03-13: Module for public release based upon the ONIX International
+	2020-03-13: Module for public release based upon the ONIX International 
 	            Code lists Issue 49 (March 2020)
 
-	2020-01-16: Module for public release based upon the ONIX International
+	2020-01-16: Module for public release based upon the ONIX International 
 	            Code lists Issue 48 (January 2020)
 
-	2019-10-31: Module for public release based upon the ONIX International
+	2019-10-31: Module for public release based upon the ONIX International 
 	            Code lists Issue 47 (October 2019)
 
-	2019-07-10: Module for public release based upon the ONIX International
+	2019-07-10: Module for public release based upon the ONIX International 
 	            Code lists Issue 46 (July 2019)
 
-	2019-04-03: Module for public release based upon the ONIX International
+	2019-04-03: Module for public release based upon the ONIX International 
 	            Code lists Issue 45 (April 2019)
 
-	2019-01-16: Module for public release based upon the ONIX International
+	2019-01-16: Module for public release based upon the ONIX International 
 	            Code lists Issue 44 (January 2019)
 
-	2018-10-29: Module for public release based upon the ONIX International
+	2018-10-29: Module for public release based upon the ONIX International 
 	            Code lists Issue 43 (October 2018)
 
-	2018-07-09: Module for public release based upon the ONIX International
+	2018-07-09: Module for public release based upon the ONIX International 
 	            Code lists Issue 42 (July 2018)
 
-	2018-04-16: Module for public release based upon the ONIX International
+	2018-04-16: Module for public release based upon the ONIX International 
 	            Code lists Issue 41 (April 2018)
 
-	2018-01-23: Module for public release based upon the ONIX International
+	2018-01-23: Module for public release based upon the ONIX International 
 	            Code lists Issue 40 (January 2018)
 
-	2017-10-19: Module for public release based upon the ONIX International
+	2017-10-19: Module for public release based upon the ONIX International 
 	            Code lists Issue 39 (October 2017)
 
-	2017-07-10: Module for public release based upon the ONIX International
+	2017-07-10: Module for public release based upon the ONIX International 
 	            Code lists Issue 38 (July 2017)
 
-	2017-04-03: Module for public release based upon the ONIX International
+	2017-04-03: Module for public release based upon the ONIX International 
 	            Code lists Issue 37 (April 2017)
 
-	2017-01-16: Module for public release based upon the ONIX International
+	2017-01-16: Module for public release based upon the ONIX International 
 	            Code lists Issue 36 (January 2017)
 
-	2016-10-25: Module for public release based upon the ONIX International
+	2016-10-25: Module for public release based upon the ONIX International 
 	            Code lists Issue 35 (October 2016)
 
-	2016-07-25: Module for public release based upon the ONIX International
+	2016-07-25: Module for public release based upon the ONIX International 
 	            Code lists Issue 34 (July 2016)
 
-	2016-04-25: Module for public release based upon the ONIX International
+	2016-04-25: Module for public release based upon the ONIX International 
 	            Code lists Issue 33 (April 2016)
 
-	2016-01-23: Module for public release based upon the ONIX International
+	2016-01-23: Module for public release based upon the ONIX International 
 	            Code lists Issue 32 (January 2016)
 
-	2015-11-02: Module for public release based upon the ONIX International
+	2015-11-02: Module for public release based upon the ONIX International 
 	            Code lists Issue 31 (November 2015)
 
-	2015-07-29: Module for public release based upon the ONIX International
+	2015-07-29: Module for public release based upon the ONIX International 
 	            Code lists Issue 30 (July 2015)
 
-	2015-05-06: Module for public release based upon the ONIX International
+	2015-05-06: Module for public release based upon the ONIX International 
 	            Code lists Issue 29 (May 2015)
 
-	2015-02-09: Module for public release based upon the ONIX International
+	2015-02-09: Module for public release based upon the ONIX International 
 	            Code lists Issue 28 (February 2015)
 
-	2014-10-17: Module for public release based upon the ONIX International
+	2014-10-17: Module for public release based upon the ONIX International 
 	            Code lists Issue 27 (October 2014)
 
-	2014-07-09: Module for public release based upon the ONIX International
+	2014-07-09: Module for public release based upon the ONIX International 
 	            Code lists Issue 26 (July 2014)
 
-	2014-04-14: Module for public release based upon the ONIX International
+	2014-04-14: Module for public release based upon the ONIX International 
 	            Code lists Issue 25 (April 2014)
 
-	2014-01-30: Module for public release based upon the ONIX International
+	2014-01-30: Module for public release based upon the ONIX International 
 	            Code lists Issue 24 (January 2014)
 
-	2013-10-15: Module for public release based upon the ONIX International
+	2013-10-15: Module for public release based upon the ONIX International 
 	            Code lists Issue 23 (October 2013)
 
-	2013-07-19: Module for public release based upon the ONIX International
+	2013-07-19: Module for public release based upon the ONIX International 
 	            Code lists Issue 22 (July 2013)
 
-	2013-04-19: Module for public release based upon the ONIX International
+	2013-04-19: Module for public release based upon the ONIX International 
 	            Code lists Issue 21 (April 2013)
 
-	2013-01-21: Module for public release based upon the ONIX International
+	2013-01-21: Module for public release based upon the ONIX International 
 	            Code lists Issue 20 (January 2013)
 
-	2012-10-22: Module for public release based upon the ONIX International
+	2012-10-22: Module for public release based upon the ONIX International 
 	            Code lists Issue 19 (October 2012)
 
-	2012-08-14: Module for public release based upon the ONIX International
+	2012-08-14: Module for public release based upon the ONIX International 
 	            Code lists Issue 18 (August 2012)
 
-	2012-04-20: Module for public release based upon the ONIX International
+	2012-04-20: Module for public release based upon the ONIX International 
 	            Code lists Issue 17 (April 2012)
 
-	2012-01-23: Module for public release based upon the ONIX International
+	2012-01-23: Module for public release based upon the ONIX International 
 	            Code lists Issue 16 (January 2012)
 
-	2011-10-21: Module for public release based upon the ONIX International
+	2011-10-21: Module for public release based upon the ONIX International 
 	            Code lists Issue 15 (October 2011)
 
-	2011-06-27: Module for public release based upon the ONIX International
+	2011-06-27: Module for public release based upon the ONIX International 
 	            Code lists Issue 14 (June 2011)
 
-	2011-03-23: Module for public release based upon the ONIX International
+	2011-03-23: Module for public release based upon the ONIX International 
 	            Code lists Issue 13 (March 2011)
 
-	2010-10-26: Module for public release based upon the ONIX International
+	2010-10-26: Module for public release based upon the ONIX International 
 	            Code lists Issue 12 (October 2010)
 
-	2010-05-17: Module for public release based upon the ONIX International
+	2010-05-17: Module for public release based upon the ONIX International 
 	            Code lists Issue 11, with correction in List 67 (May 2010)
 
-	2010-03-18: Module for public release based upon the ONIX International
+	2010-03-18: Module for public release based upon the ONIX International 
 	            Code lists Issue 11 (March 2010)
 
-	2009-07-15: Module for public release based upon the ONIX International
+	2009-07-15: Module for public release based upon the ONIX International 
 	            Code lists Issue 10 (July 2009)
 
-	2009-04-09: Module for public release based upon the ONIX International
+	2009-04-09: Module for public release based upon the ONIX International 
 	            Code lists Issue 9 (April 2009)
 
-	2009-02-10: Module for public release based upon the ONIX International
+	2009-02-10: Module for public release based upon the ONIX International 
 	            Code Lists Issue 8+ (revised February 2009)
 
-	2008-12-04: Module for public release based upon the ONIX International
+	2008-12-04: Module for public release based upon the ONIX International 
 	            Code Lists Issue 8+ (December 2008)
 
-	2008-04-22: Module for public release based upon the ONIX International
+	2008-04-22: Module for public release based upon the ONIX International 
 	            Code Lists Issue 8 (April 2008)
 
 	2007-03-27: Module for public release based upon the ONIX International
@@ -260,13 +269,13 @@
 	2005-02-10: Module for public release based upon the ONIX International
 	            Code Lists Issue 4 (February 2005)
 
-	2004-11-10: Module for public release based upon the ONIX International
+	2004-11-10: Module for public release based upon the ONIX International 
 	            Code Lists Issue 3 (August 2004)
 
-	2004-08-10: Second Draft Module based upon the ONIX International
+	2004-08-10: Second Draft Module based upon the ONIX International 
 	            Code Lists Issue 3 (August 2004)
 
-	2003-12-30: First Draft Module based upon the ONIX International
+	2003-12-30: First Draft Module based upon the ONIX International 
 	            Code Lists Issue 2 (December 2003)
 
 -->
@@ -570,7 +579,7 @@
 			<xs:enumeration value="27">
 				<xs:annotation>
 					<xs:documentation>JP e-code</xs:documentation>
-					<xs:documentation>E-publication identifier controlled by JPOIID’s Committee for Research and Management of Electronic Publishing Codes</xs:documentation>
+					<xs:documentation>E-publication identifier controlled by JPOIID’s Committee for Research and Management of Electronic Publishing Codes. 20 alphanumeric characters, without spaces, beginning with the ISBN ‘registrant element’</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="28">
@@ -587,8 +596,8 @@
 			</xs:enumeration>
 			<xs:enumeration value="30">
 				<xs:annotation>
-					<xs:documentation>UPC12+5</xs:documentation>
-					<xs:documentation>Used only with comic books and other products which use the UPC extension to identify individual issues or products. Do not use where the UPC12 itself identifies the specific product, irrespective of any 5-digit extension – use code 04 instead</xs:documentation>
+					<xs:documentation>UPC-12+5</xs:documentation>
+					<xs:documentation>Used only with comic books and other products which use the UPC extension to identify individual issues or products. Do not use where the UPC-12 itself identifies the specific product, irrespective of any 5-digit extension – use code 04 instead</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="31">
@@ -600,7 +609,7 @@
 			<xs:enumeration value="34">
 				<xs:annotation>
 					<xs:documentation>ISSN-13</xs:documentation>
-					<xs:documentation>International Standard Serial Number expressed as a GTIN-13, with optional 2- or 5-digit barcode extension (ie 13, 15 or 18 digits starting 977, without spaces or hyphens), and only when the extended ISSN is used specifically as a product identifier (ie when the two publisher-defined ‘variant’ digits within the ISSN-13 itself and/or the 2- or 5-digit barcode extension are used to identify a single issue of a serial publication for separate sale). Only for use in ONIX 3.0 or later</xs:documentation>
+					<xs:documentation>International Standard Serial Number expressed as a GTIN-13, with optional 2- or 5-digit barcode extension (ie 13, 15 or 18 digits starting 977, without spaces or hyphens, with &lt;BarcodeType&gt; codes 02, 12 or 05), and only when the extended ISSN is used specifically as a product identifier (ie when the two publisher-defined ‘variant’ digits within the ISSN-13 itself and/or the 2- or 5-digit barcode extension are used to identify a single issue of a serial publication for separate sale). Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="35">
@@ -863,6 +872,12 @@
 					<xs:documentation>Category of books containing a linked group of plates, tables, diagrams, lists, often but not always combined with maps or a geographical theme or approach. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
+			<xs:enumeration value="21">
+				<xs:annotation>
+					<xs:documentation>Newspaper</xs:documentation>
+					<xs:documentation>Daily or weekly. Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="List13">
@@ -1061,7 +1076,7 @@
 			<xs:enumeration value="14">
 				<xs:annotation>
 					<xs:documentation>Alternative title</xs:documentation>
-					<xs:documentation>An alternative title that the book is widely known by, whether it appears on the book or not (including a title used in another market – but see code 06 for translations)</xs:documentation>
+					<xs:documentation>An alternative title that the book is widely known by, whether it appears on the book or not (including a title used in another market – but see code 06 for translations – or a working title previously used in metadata but replaced before publication)</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="15">
@@ -1117,6 +1132,12 @@
 				<xs:annotation>
 					<xs:documentation>ISRC</xs:documentation>
 					<xs:documentation>International Standard Recording Code</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="31">
+				<xs:annotation>
+					<xs:documentation>EIDR Content ID</xs:documentation>
+					<xs:documentation>Entertainment Identifier Registry identifier for an audiovisual work, eg a movie, TV series (a DOI beginning ‘10.5240/’ with a suffix of 21 hexadecimal digits and five hyphens, and without https://doi.org/ or the older http://dx.doi.org/). See ui.eidr.org/search. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="32">
@@ -1195,13 +1216,13 @@
 			<xs:enumeration value="A09">
 				<xs:annotation>
 					<xs:documentation>Created by</xs:documentation>
-					<xs:documentation>For example of editorial concept, of board game, etc</xs:documentation>
+					<xs:documentation>For example of an editorial concept, of a board game, etc</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="A10">
 				<xs:annotation>
 					<xs:documentation>From an idea by</xs:documentation>
-					<xs:documentation/>
+					<xs:documentation>For example of a plot idea. Implies a less direct association or active participation than ‘created by’</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="A11">
@@ -1489,7 +1510,7 @@
 			<xs:enumeration value="B05">
 				<xs:annotation>
 					<xs:documentation>Adapted by</xs:documentation>
-					<xs:documentation> See also B22 (Dramatized by) </xs:documentation>
+					<xs:documentation>See also B22 (Dramatized by)</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="B06">
@@ -1591,7 +1612,7 @@
 			<xs:enumeration value="B22">
 				<xs:annotation>
 					<xs:documentation>Dramatized by</xs:documentation>
-					<xs:documentation> See also B05 (Adapted by) </xs:documentation>
+					<xs:documentation>See also B05 (Adapted by)</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="B23">
@@ -1664,6 +1685,12 @@
 				<xs:annotation>
 					<xs:documentation>Sensitivity reader / editor</xs:documentation>
 					<xs:documentation>Reader or editor responsible for ensuring the text is free of offensive, potentially offensive or insensitive language, is inclusive and free from bias, and avoids stereotypical characterization. Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="B35">
+				<xs:annotation>
+					<xs:documentation>Image descriptions by</xs:documentation>
+					<xs:documentation>Creator of alternative image descriptions for accessibility purposes. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="B99">
@@ -1825,7 +1852,7 @@
 			<xs:enumeration value="Z01">
 				<xs:annotation>
 					<xs:documentation>Assisted by</xs:documentation>
-					<xs:documentation>May be associated with any contributor role, and placement should therefore be controlled by contributor sequence numbering</xs:documentation>
+					<xs:documentation>Contributor must follow another contributor with any contributor role, and placement should therefore be controlled by contributor sequence numbering to ensure the correct association</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="Z02">
@@ -1849,7 +1876,13 @@
 			<xs:enumeration value="Z05">
 				<xs:annotation>
 					<xs:documentation>Posthumously completed by</xs:documentation>
-					<xs:documentation>May be associated with any contributor role, and placement should therefore be controlled by contributor sequence numbering. Only for use in ONIX 3.0 or later</xs:documentation>
+					<xs:documentation>Contributor must follow another (posthumous) contributor with any contributor role, and placement should therefore be controlled by contributor sequence numbering to ensure the correct association. Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Z06">
+				<xs:annotation>
+					<xs:documentation>In association with</xs:documentation>
+					<xs:documentation>Contributor must follow another contributor with any contributor role, and placement should therefore be controlled by contributor sequence numbering to ensure the correct association. See also ‘published in association with’ in List 45. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="Z98">
@@ -1898,7 +1931,7 @@
 			<xs:enumeration value="04">
 				<xs:annotation>
 					<xs:documentation>‘Real’ name</xs:documentation>
-					<xs:documentation>May be used to identify a well-known real name, where the primary name is a pseudonym</xs:documentation>
+					<xs:documentation>May be used to identify a well-known ‘real’ name, where the primary name is a pseudonym or is unnamed</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="05">
@@ -1917,6 +1950,12 @@
 				<xs:annotation>
 					<xs:documentation>Fictional character name</xs:documentation>
 					<xs:documentation>Use only within &lt;NameAsSubject&gt; to indicate the subject is fictional, or in &lt;AlternativeName&gt; alongside &lt;UnnamedPersons&gt; to indicate a human-like name for a synthetic voice or AI. Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="08">
+				<xs:annotation>
+					<xs:documentation>Acronym / initialism</xs:documentation>
+					<xs:documentation>Use only within &lt;AlternativeName&gt; with a corporate name to indicate the name is an acronym, initialism or short abbreviation for the full name. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 		</xs:restriction>
@@ -1941,7 +1980,7 @@
 			<xs:enumeration value="03">
 				<xs:annotation>
 					<xs:documentation>et al</xs:documentation>
-					<xs:documentation>And others. Use when some but not all contributors are listed</xs:documentation>
+					<xs:documentation>And others. Use when some but not all contributors are listed individually, perhaps because the complete contributor list is impractically long</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="04">
@@ -1953,25 +1992,25 @@
 			<xs:enumeration value="05">
 				<xs:annotation>
 					<xs:documentation>Synthesised voice – male</xs:documentation>
-					<xs:documentation>Use with Contributor role code E07 ‘read by’, eg for audio books with digital narration</xs:documentation>
+					<xs:documentation>Use for example with Contributor role code E07 ‘read by’ for audio books with digital narration having a male-inflected tone. ‘Brand name’ of voice may be provided in &lt;AlternativeName&gt;</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="06">
 				<xs:annotation>
-					<xs:documentation>Synthesised voice – female</xs:documentation>
-					<xs:documentation>Use with Contributor role code E07 ‘read by’, eg for audio books with digital narration</xs:documentation>
+					<xs:documentation>Synthesized voice – female</xs:documentation>
+					<xs:documentation>Use for example with Contributor role code E07 ‘read by’ for audio books with digital narration having a female-inflected tone. ‘Brand name’ of voice may be provided in &lt;AlternativeName&gt;</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="07">
 				<xs:annotation>
-					<xs:documentation>Synthesised voice – unspecified</xs:documentation>
-					<xs:documentation>Use with Contributor role code E07 ‘read by’, eg for audio books with digital narration</xs:documentation>
+					<xs:documentation>Synthesized voice – unspecified</xs:documentation>
+					<xs:documentation>Use for example with Contributor role code E07 ‘read by’ for audio books with digital narration</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="08">
 				<xs:annotation>
-					<xs:documentation>Synthesised voice – based on real voice actor</xs:documentation>
-					<xs:documentation>Use with Contributor role code E07 ‘read by’, eg for audio books with digital narration, and provide name of voice actor in &lt;AlternativeName&gt;. Only for use in ONIX 3.0 or later</xs:documentation>
+					<xs:documentation>Synthesized voice – based on real voice actor</xs:documentation>
+					<xs:documentation>Sometimes termed an ‘Authorized Voice Replica’. Use for exanple with Contributor role code E07 ‘read by’ for audio books with digital narration, and provide name of voice actor in &lt;AlternativeName&gt;. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="09">
@@ -2631,7 +2670,7 @@
 			<xs:enumeration value="00">
 				<xs:annotation>
 					<xs:documentation>Unspecified, see description</xs:documentation>
-					<xs:documentation>See description in the &lt;IllustrationTypeDescription&gt; element</xs:documentation>
+					<xs:documentation>See description in the &lt;AncillaryContentDescription&gt; element</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="01">
@@ -2896,43 +2935,43 @@
 			<xs:enumeration value="12">
 				<xs:annotation>
 					<xs:documentation>BIC subject category</xs:documentation>
-					<xs:documentation>For all BIC subject codes and qualifiers, see https://bic.org.uk/resources/BIC-Standard-Subject-Categories/</xs:documentation>
+					<xs:documentation>Deprecated . The BIC subject category scheme is obsolete, see https://bic.org.uk/resources/BIC-Standard-Subject-Categories/</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="13">
 				<xs:annotation>
 					<xs:documentation>BIC geographical qualifier</xs:documentation>
-					<xs:documentation/>
+					<xs:documentation>Deprecated</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="14">
 				<xs:annotation>
 					<xs:documentation>BIC language qualifier (language as subject)</xs:documentation>
-					<xs:documentation/>
+					<xs:documentation>Deprecated</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="15">
 				<xs:annotation>
 					<xs:documentation>BIC time period qualifier</xs:documentation>
-					<xs:documentation/>
+					<xs:documentation>Deprecated</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="16">
 				<xs:annotation>
 					<xs:documentation>BIC educational purpose qualifier</xs:documentation>
-					<xs:documentation/>
+					<xs:documentation>Deprecated</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="17">
 				<xs:annotation>
 					<xs:documentation>BIC reading level and special interest qualifier</xs:documentation>
-					<xs:documentation/>
+					<xs:documentation>Deprecated</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="18">
 				<xs:annotation>
 					<xs:documentation>DDC-Sachgruppen der Deutschen Nationalbibliografie</xs:documentation>
-					<xs:documentation>Used for German National Bibliography since 2004 (100 subjects). Is different from value 30. See http://www.dnb.de/service/pdf/ddc_wv_aktuell.pdf (in German) or http://www.dnb.de/eng/service/pdf/ddc_wv_aktuell_eng.pdf (English)</xs:documentation>
+					<xs:documentation>Used for German National Bibliography since 2004 (100 subjects). Is different from value 30. See https://www.dnb.de/SharedDocs/Downloads/DE/Professionell/Erschliessen/ddcSachgruppenDNBAb2013.html (in German)</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="19">
@@ -2962,7 +3001,7 @@
 			<xs:enumeration value="23">
 				<xs:annotation>
 					<xs:documentation>Publisher’s own category code</xs:documentation>
-					<xs:documentation/>
+					<xs:documentation>Which is not in itself a subject scheme, but describes other attributes of the content, as specified in &lt;SubjectSchemeName&gt;</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="24">
@@ -3607,6 +3646,12 @@
 					<xs:documentation>General Finnish Ontology for Places (Finnish: Yleinen suomalainen ontologia – paikat). See https://finto.fi/yso-paikat/fi/ (in Finnish), https://finto.fi/yso-paikat/sv/ (in Swedish), https://finto.fi/yso-paikat/en/ (in English). Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
+			<xs:enumeration value="D3">
+				<xs:annotation>
+					<xs:documentation>Norske emneord</xs:documentation>
+					<xs:documentation>See https://www.nb.no/nbvok/nb/. Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="List28">
@@ -4083,7 +4128,7 @@
 			<xs:enumeration value="06">
 				<xs:annotation>
 					<xs:documentation>Lexile measure</xs:documentation>
-					<xs:documentation>The Lexile measure in &lt;ComplexityCode&gt; combines the Lexile number (for example 620L or 880L) and optionally the Lexile code (for example AD or HL). Examples might be ‘880L’, ‘AD0L’ or ‘HL600L’. See https://lexile.com/about-lexile/lexile-overview/</xs:documentation>
+					<xs:documentation>The Lexile measure in &lt;ComplexityCode&gt; combines MetaMetrics’ Lexile number (for example 620L or 880L) and optionally the Lexile code (for example AD or HL). Examples might be ‘880L’, ‘AD0L’ or ‘HL600L’. Applies to English text. See https://lexile.com/about-lexile/lexile-overview/</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="07">
@@ -4120,6 +4165,12 @@
 				<xs:annotation>
 					<xs:documentation>Lexile Audio measure</xs:documentation>
 					<xs:documentation>Lexile Audio measure from MetaMetrics’ Framework for Listening. The code in &lt;ComplexityCode&gt; indicates the difficulty of comprehension of audio material (for example 600L or 1030L). Only for use in ONIX 3.0 or later. See https://lexile.global/the-lexile-framework-for-listening/</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="13">
+				<xs:annotation>
+					<xs:documentation>Lexile measure (Spanish)</xs:documentation>
+					<xs:documentation>Metametrics’ Lexile measure for Spanish text. See https://lexile.com/educators/understanding-lexile-measures/lexile-measures-spanish/ Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 		</xs:restriction>
@@ -4453,8 +4504,8 @@
 			</xs:enumeration>
 			<xs:enumeration value="29">
 				<xs:annotation>
-					<xs:documentation>EIDR Party DOI</xs:documentation>
-					<xs:documentation>DOI used in EIDR party registry, for example ‘10.5237/C9F6-F41F’ (Sam Raimi). See http://eidr.org</xs:documentation>
+					<xs:documentation>EIDR Party ID</xs:documentation>
+					<xs:documentation>Entertainment Identifier Registry party identifier (a DOI beginning ‘10.5237/’ with a suffix of 8 hexadecimal digits and one hyphen, and without the https://doi.org/ or the older http://dx.doi.org/), for example ‘10.5237/C9F6-F41F’ (Sam Raimi). See http://eidr.org</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="30">
@@ -4472,7 +4523,7 @@
 			<xs:enumeration value="32">
 				<xs:annotation>
 					<xs:documentation>FundRef DOI</xs:documentation>
-					<xs:documentation>DOI used in CrossRef’s Open Funder Registry list of academic research funding bodies, for example ‘10.13039/100004440’ (Wellcome Trust). See https://www.crossref.org/services/funder-registry/</xs:documentation>
+					<xs:documentation>DOI used in CrossRef’s Open Funder Registry list of academic research funding bodies, for example ‘10.13039/100010269’ (Wellcome Trust). Use of RORs for funder identifiers is now preferred. See https://www.crossref.org/services/funder-registry/</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="33">
@@ -4547,6 +4598,12 @@
 					<xs:documentation>French business and location identifier, issued by the National Institute of Statistics and Economic Studies (INSEE). 14 digits (the SIREN plus a further five digits), without spaces, or occasionally an alphanumeric code. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
+			<xs:enumeration value="45">
+				<xs:annotation>
+					<xs:documentation>Chinese Participant identifier</xs:documentation>
+					<xs:documentation>Chinese Participant identifier on the Publishing and distribution public service platform. 12-digits (or 11 digits plus X), usually presented with a / and hyphens dividing the number into groups of three, four and four digits plus a check digit, but in ONIX the / and hyphens should be omitted. Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="List45">
@@ -4599,7 +4656,7 @@
 			<xs:enumeration value="09">
 				<xs:annotation>
 					<xs:documentation>New or acquiring publisher</xs:documentation>
-					<xs:documentation>When ownership of a product or title is transferred from one publisher to another</xs:documentation>
+					<xs:documentation>When ownership of a product is transferred from one publisher to another</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="10">
@@ -4623,7 +4680,7 @@
 			<xs:enumeration value="13">
 				<xs:annotation>
 					<xs:documentation>Former publisher</xs:documentation>
-					<xs:documentation>When ownership of a product or title is transferred from one publisher to another (complement of code 09)</xs:documentation>
+					<xs:documentation>When ownership of a product is transferred from one publisher to another (complement of code 09)</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="14">
@@ -4660,6 +4717,12 @@
 				<xs:annotation>
 					<xs:documentation>Manufacturer</xs:documentation>
 					<xs:documentation>Organization primarily responsible for physical manufacture of a product, when neither Printer nor Binder is directly appropriate (for example, with disc or tape products, or digital products on a physical carrier)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="21">
+				<xs:annotation>
+					<xs:documentation>Previous publisher</xs:documentation>
+					<xs:documentation>Use for the publisher of earlier manifestations of the work. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 		</xs:restriction>
@@ -7220,7 +7283,7 @@
 			<xs:enumeration value="23">
 				<xs:annotation>
 					<xs:documentation>Similar product</xs:documentation>
-					<xs:documentation>&lt;RelatedProduct&gt; is another product that is suggested as similar to &lt;Product&gt; (‘if you liked &lt;Product&gt;, you may also like &lt;RelatedProduct&gt;’, or vice versa)</xs:documentation>
+					<xs:documentation>&lt;RelatedProduct&gt; is another product that is suggested as similar to &lt;Product&gt; (‘if you liked &lt;Product&gt;, you may also like &lt;RelatedProduct&gt;’, or vice versa). In some markets, this may be termed a ‘comparison title’ or ‘comp title’</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="24">
@@ -8112,175 +8175,175 @@
 			<xs:enumeration value="09">
 				<xs:annotation>
 					<xs:documentation>Not yet available, postponed indefinitely</xs:documentation>
-					<xs:documentation>Not yet available from the supplier, and the publisher indicates that it has been postponed indefinitely. Should be used in preference to code 10 where the publisher has indicated that a previously-announced publication date is no longer correct, and no new date has yet been announced. No expected avalabilty date should be included in &lt;SupplyDate&gt;. Only for use in ONIX 3.0 or later</xs:documentation>
+					<xs:documentation>Product is not yet available from the supplier, and the publisher indicates that it has been postponed indefinitely. Should be used in preference to code 10 where the publisher has indicated that a previously-announced publication date is no longer correct, and no new date has yet been announced. No expected avalabilty date should be included in &lt;SupplyDate&gt;. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="10">
 				<xs:annotation>
 					<xs:documentation>Not yet available</xs:documentation>
-					<xs:documentation>Not yet available (requires expected date, either as &lt;ExpectedShipDate&gt; (ONIX 2.1) or as &lt;SupplyDate&gt; with &lt;SupplyDateRole&gt; coded ‘08’ (ONIX 3.0 or later), except in exceptional circumstances where no date is known)</xs:documentation>
+					<xs:documentation>Product is not yet available (requires expected date, either as &lt;ExpectedShipDate&gt; (ONIX 2.1) or as &lt;SupplyDate&gt; with &lt;SupplyDateRole&gt; coded ‘08’ (ONIX 3.0 or later), except in exceptional circumstances where no date is known)</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="11">
 				<xs:annotation>
 					<xs:documentation>Awaiting stock</xs:documentation>
-					<xs:documentation>Not yet available, but will be a stock item when available (requires expected date, either as &lt;ExpectedShipDate&gt; (ONIX 2.1) or as &lt;SupplyDate&gt; with &lt;SupplyDateRole&gt; coded ‘08’ (ONIX 3.0 or later), except in exceptional circumstances where no date is known). Used particularly for imports which have been published in the country of origin but have not yet arrived in the importing country</xs:documentation>
+					<xs:documentation>Product is not yet available, but will be a stock item when available (requires expected date, either as &lt;ExpectedShipDate&gt; (ONIX 2.1) or as &lt;SupplyDate&gt; with &lt;SupplyDateRole&gt; coded ‘08’ (ONIX 3.0 or later), except in exceptional circumstances where no date is known). Used particularly for imports which have been published in the country of origin but have not yet arrived in the importing country</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="12">
 				<xs:annotation>
 					<xs:documentation>Not yet available, will be POD</xs:documentation>
-					<xs:documentation>Not yet available, to be published as print-on-demand only (requires expected date, either as &lt;ExpectedShipDate&gt; (ONIX 2.1) or as &lt;SupplyDate&gt; with &lt;SupplyDateRole&gt; coded ‘08’ (ONIX 3.0 or later), except in exceptional circumstances where no date is known). May apply either to a POD successor to an existing conventional edition, when the successor will be published under a different ISBN (normally because different trade terms apply); or to a title that is being published as a POD original</xs:documentation>
+					<xs:documentation>Product is not yet available, to be published as print-on-demand only (requires expected date, either as &lt;ExpectedShipDate&gt; (ONIX 2.1) or as &lt;SupplyDate&gt; with &lt;SupplyDateRole&gt; coded ‘08’ (ONIX 3.0 or later), except in exceptional circumstances where no date is known). May apply either to a POD successor to an existing conventional edition, when the successor will be published under a different ISBN (normally because different trade terms apply); or to a title that is being published as a POD original</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="20">
 				<xs:annotation>
 					<xs:documentation>Available</xs:documentation>
-					<xs:documentation>Available from us (form of availability unspecified)</xs:documentation>
+					<xs:documentation>Product is available from the supplier (form of availability unspecified)</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="21">
 				<xs:annotation>
 					<xs:documentation>In stock</xs:documentation>
-					<xs:documentation>Available from us as a stock item</xs:documentation>
+					<xs:documentation>Product is available from the supplier as a stock item</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="22">
 				<xs:annotation>
 					<xs:documentation>To order</xs:documentation>
-					<xs:documentation>Available from the supplier as a non-stock item, by special order. Where possible, an &lt;OrderTime&gt; should be included</xs:documentation>
+					<xs:documentation>Product is available from the supplier as a non-stock item, by special order. Where possible, an &lt;OrderTime&gt; should be included</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="23">
 				<xs:annotation>
 					<xs:documentation>POD</xs:documentation>
-					<xs:documentation>Available from the supplier by print-on-demand. If the fulfillment delay is likely to be more than 24 hours, an &lt;OrderTime&gt; should be included</xs:documentation>
+					<xs:documentation>Product is available from the supplier by print-on-demand. If the fulfillment delay is likely to be more than 24 hours, an &lt;OrderTime&gt; should be included</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="30">
 				<xs:annotation>
 					<xs:documentation>Temporarily unavailable</xs:documentation>
-					<xs:documentation>Temporarily unavailable: temporarily unavailable from us (reason unspecified) (requires expected date, either as &lt;ExpectedShipDate&gt; (ONIX 2.1) or as &lt;SupplyDate&gt; with &lt;SupplyDateRole&gt; coded ‘08’ (ONIX 3.0 or later), except in exceptional circumstances where no date is known)</xs:documentation>
+					<xs:documentation>Product is temporarily unavailable: temporarily unavailable from the supplier (reason unspecified) (requires expected date, either as &lt;ExpectedShipDate&gt; (ONIX 2.1) or as &lt;SupplyDate&gt; with &lt;SupplyDateRole&gt; coded ‘08’ (ONIX 3.0 or later), except in exceptional circumstances where no date is known)</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="31">
 				<xs:annotation>
 					<xs:documentation>Out of stock</xs:documentation>
-					<xs:documentation>Stock item, temporarily out of stock (requires expected date, either as &lt;ExpectedShipDate&gt; (ONIX 2.1) or as &lt;SupplyDate&gt; with &lt;SupplyDateRole&gt; coded ‘08’ (ONIX 3.0 or later), except in exceptional circumstances where no date is known)</xs:documentation>
+					<xs:documentation>Product is stock item, but is temporarily out of stock (requires expected date, either as &lt;ExpectedShipDate&gt; (ONIX 2.1) or as &lt;SupplyDate&gt; with &lt;SupplyDateRole&gt; coded ‘08’ (ONIX 3.0 or later), except in exceptional circumstances where no date is known)</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="32">
 				<xs:annotation>
 					<xs:documentation>Reprinting</xs:documentation>
-					<xs:documentation>Temporarily unavailable, reprinting (requires expected date, either as &lt;ExpectedShipDate&gt; (ONIX 2.1) or as &lt;SupplyDate&gt; with &lt;SupplyDateRole&gt; coded ‘08’ (ONIX 3.0 or later), except in exceptional circumstances where no date is known)</xs:documentation>
+					<xs:documentation>Product is temporarily unavailable, and is reprinting (requires expected date, either as &lt;ExpectedShipDate&gt; (ONIX 2.1) or as &lt;SupplyDate&gt; with &lt;SupplyDateRole&gt; coded ‘08’ (ONIX 3.0 or later), except in exceptional circumstances where no date is known)</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="33">
 				<xs:annotation>
 					<xs:documentation>Awaiting reissue</xs:documentation>
-					<xs:documentation>Temporarily unavailable, awaiting reissue (requires expected date, either as &lt;ExpectedShipDate&gt; (ONIX 2.1) or as &lt;SupplyDate&gt; with &lt;SupplyDateRole&gt; coded ‘08’ (ONIX 3.0 or later), except in exceptional circumstances where no date is known)</xs:documentation>
+					<xs:documentation>Product is temporarily unavailable, awaiting reissue (requires expected date, either as &lt;ExpectedShipDate&gt; (ONIX 2.1) or as &lt;SupplyDate&gt; with &lt;SupplyDateRole&gt; coded ‘08’ (ONIX 3.0 or later), except in exceptional circumstances where no date is known)</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="34">
 				<xs:annotation>
 					<xs:documentation>Temporarily withdrawn from sale</xs:documentation>
-					<xs:documentation>May be for quality or technical reasons. Requires expected availability date, either as &lt;ExpectedShipDate&gt; (ONIX 2.1) or as &lt;SupplyDate&gt; with &lt;SupplyDateRole&gt; coded ‘08’ (ONIX 3.0 or later), except in exceptional circumstances where no date is known</xs:documentation>
+					<xs:documentation>Product is temporarily withdrawn from sale, possibly for quality or technical reasons. Requires expected availability date, either as &lt;ExpectedShipDate&gt; (ONIX 2.1) or as &lt;SupplyDate&gt; with &lt;SupplyDateRole&gt; coded ‘08’ (ONIX 3.0 or later), except in exceptional circumstances where no date is known</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="40">
 				<xs:annotation>
 					<xs:documentation>Not available (reason unspecified)</xs:documentation>
-					<xs:documentation>Not available from us (for any reason)</xs:documentation>
+					<xs:documentation>Product is not available from the supplier (for any reason)</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="41">
 				<xs:annotation>
 					<xs:documentation>Not available, replaced by new product</xs:documentation>
-					<xs:documentation>This product is unavailable, but a successor product or edition is or will be available from us (identify successor in &lt;RelatedProduct&gt;)</xs:documentation>
+					<xs:documentation>Product is unavailable, but a successor product or edition is or will be available from the supplier (identify successor in &lt;RelatedProduct&gt;)</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="42">
 				<xs:annotation>
 					<xs:documentation>Not available, other format available</xs:documentation>
-					<xs:documentation>This product is unavailable, but the same content is or will be available from us in an alternative format (identify other format product in &lt;RelatedProduct&gt;)</xs:documentation>
+					<xs:documentation>Product is unavailable, but the same content is or will be available from the supplier in an alternative format (identify other format product in &lt;RelatedProduct&gt;)</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="43">
 				<xs:annotation>
-					<xs:documentation>No longer supplied by us</xs:documentation>
-					<xs:documentation>Identify new supplier in &lt;NewSupplier&gt; if possible</xs:documentation>
+					<xs:documentation>No longer supplied by the supplier</xs:documentation>
+					<xs:documentation>Product is no longer available from the supplier. Identify new supplier in &lt;NewSupplier&gt; if possible</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="44">
 				<xs:annotation>
 					<xs:documentation>Apply direct</xs:documentation>
-					<xs:documentation>Not available to trade, apply direct to publisher</xs:documentation>
+					<xs:documentation>Product is not available to trade, apply direct to publisher</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="45">
 				<xs:annotation>
 					<xs:documentation>Not sold separately</xs:documentation>
-					<xs:documentation>Must be bought as part of a set or trade pack (identify set or pack in &lt;RelatedProduct&gt; using code 02). Individual copies of the product are not available from the supplier, but packs of copies are available, or individual copies of the product may typically be sold at retail</xs:documentation>
+					<xs:documentation>Product must be bought as part of a set or trade pack (identify set or pack in &lt;RelatedProduct&gt; using code 02). Individual copies of the product are not available from the supplier, but packs of copies are available, and individual copies of the product may typically be sold at retail</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="46">
 				<xs:annotation>
 					<xs:documentation>Withdrawn from sale</xs:documentation>
-					<xs:documentation>May be for legal reasons or to avoid giving offence</xs:documentation>
+					<xs:documentation>Product is withdrawn from sale, possibly permanently. May be for legal reasons or to avoid giving offence</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="47">
 				<xs:annotation>
 					<xs:documentation>Remaindered</xs:documentation>
-					<xs:documentation>Remaindered</xs:documentation>
+					<xs:documentation>Product has been remaindered and is no longer available from the supplier in the normal way, but may be available under different terms and conditions in order to dispose of excess stock</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="48">
 				<xs:annotation>
 					<xs:documentation>Not available, replaced by POD</xs:documentation>
-					<xs:documentation>Out of print, but a print-on-demand edition is or will be available under a different ISBN. Use only when the POD successor has a different ISBN, normally because different trade terms apply</xs:documentation>
+					<xs:documentation>Product is out of print, but a print-on-demand edition is or will be available under a different ISBN. Use only when the POD successor has a different ISBN, normally because different trade terms apply</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="49">
 				<xs:annotation>
 					<xs:documentation>Recalled</xs:documentation>
-					<xs:documentation>Recalled for reasons of consumer safety</xs:documentation>
+					<xs:documentation>Product has been recalled, possibly for reasons of consumer safety</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="50">
 				<xs:annotation>
 					<xs:documentation>Not sold as set</xs:documentation>
-					<xs:documentation>Must be bought as individual items (identify contents of set or oack in &lt;RelatedProduct&lt; using code 01. Used when a collection that is not sold as a set nevertheless has its own ONIX record</xs:documentation>
+					<xs:documentation>Contents of set or pack must be bought as individual items (identify contents of set or oack in &lt;RelatedProduct&gt; using code 01). Used when a collection that is not sold as a set nevertheless has its own ONIX record</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="51">
 				<xs:annotation>
 					<xs:documentation>Not available, publisher indicates OP</xs:documentation>
-					<xs:documentation>This product is unavailable from the supplier, no successor product or alternative format is available or planned. Use this code only when the publisher has indicated the product is out of print</xs:documentation>
+					<xs:documentation>Product is unavailable from the supplier, no successor product or alternative format is available or planned. Use this code only when the publisher has indicated the product is out of print</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="52">
 				<xs:annotation>
 					<xs:documentation>Not available, publisher no longer sells product in this market</xs:documentation>
-					<xs:documentation>This product is unavailable from the supplier in this market, no successor product or alternative format is available or planned. Use this code when a publisher has indicated the product is permanently unavailable (in this market) while remaining available elsewhere</xs:documentation>
+					<xs:documentation>Product is unavailable from the supplier in this market, no successor product or alternative format is available or planned. Use this code when a publisher has indicated the product is permanently unavailable (in this market) while remaining available elsewhere</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="97">
 				<xs:annotation>
 					<xs:documentation>No recent update received</xs:documentation>
-					<xs:documentation>Sender has not received any recent update for this product from the publisher/supplier (for use when the sender is a data aggregator): the definition of ‘recent’ must be specified by the aggregator, or by agreement between parties to an exchange</xs:documentation>
+					<xs:documentation>Sender has not received any recent update for this product from the publisher or supplier (for use when the sender is a data aggregator). The definition of ‘recent’ must be specified by the aggregator, or by agreement between parties to an exchange</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="98">
 				<xs:annotation>
 					<xs:documentation>No longer receiving updates</xs:documentation>
-					<xs:documentation>Sender is no longer receiving any updates from the publisher/supplier of this product (for use when the sender is a data aggregator)</xs:documentation>
+					<xs:documentation>Sender is no longer receiving any updates from the publisher or supplier of this product (for use when the sender is a data aggregator)</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="99">
 				<xs:annotation>
 					<xs:documentation>Contact supplier</xs:documentation>
-					<xs:documentation>Availability not known to sender</xs:documentation>
+					<xs:documentation>Product availability not known to sender</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 		</xs:restriction>
@@ -8442,6 +8505,12 @@
 			<xs:documentation source="ONIX Code List 69">Agent role</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
+			<xs:enumeration value="01">
+				<xs:annotation>
+					<xs:documentation>Publisher acts as own sales agent</xs:documentation>
+					<xs:documentation>Normally omitted, but required in some countries to provide positive indication the publisher acts as its own sales agent (FR: auto-diffuseur) in a specified market. Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 			<xs:enumeration value="05">
 				<xs:annotation>
 					<xs:documentation>Exclusive sales agent</xs:documentation>
@@ -8531,13 +8600,13 @@
 			<xs:enumeration value="06">
 				<xs:annotation>
 					<xs:documentation>To libraries only</xs:documentation>
-					<xs:documentation>Sales rights (or market distribution rights) apply to supplies to libraries</xs:documentation>
+					<xs:documentation>Sales rights (or market distribution rights) apply to supplies to libraries (public and national libraries, libraries in educational institutions)</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="07">
 				<xs:annotation>
 					<xs:documentation>To schools only</xs:documentation>
-					<xs:documentation>Sales rights (or market distribution rights) apply to supplies to schools</xs:documentation>
+					<xs:documentation>Sales rights (or market distribution rights) apply to supplies to schools (primary and secondary education)</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="08">
@@ -8622,6 +8691,18 @@
 				<xs:annotation>
 					<xs:documentation>Subscription service exclusive</xs:documentation>
 					<xs:documentation>Sales rights (or market distribution rights) apply to supplies to the designated subscription service(s), which must be identified or named in an instance of the &lt;SalesOutlet&gt; composite. Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="22">
+				<xs:annotation>
+					<xs:documentation>To education only</xs:documentation>
+					<xs:documentation>Sales rights (or market distribution rights) apply to supplies to educational institutions only (primary, secondary, tertiary, adult, vocational and professional etc). Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="23">
+				<xs:annotation>
+					<xs:documentation>Except to education</xs:documentation>
+					<xs:documentation>Sales rights (or market distribution rights) apply to supplies other than to educational institutions. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="99">
@@ -8917,7 +8998,7 @@
 			<xs:enumeration value="42">
 				<xs:annotation>
 					<xs:documentation>Author’s social networking URL</xs:documentation>
-					<xs:documentation>For example, a Facebook, Instagram, Youtube, Pinterest, Tiktok (including Booktok), Twitter (latterly, X) or similar page for the contributor </xs:documentation>
+					<xs:documentation>For example, a Facebook, Instagram, Youtube, Pinterest, Tiktok (including Booktok), Twitter (latterly, X) or similar page for the contributor</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="43">
@@ -8972,6 +9053,18 @@
 				<xs:annotation>
 					<xs:documentation>Legal deposit website for digital preservation</xs:documentation>
 					<xs:documentation>The URL of a digital legal deposit service (eg https://www.legaldeposit.org.uk), or a more specific URL for access to its preservation metadata, to provide confirmation of the digital legal deposit status of the product. &lt;WebsiteDescription&gt; may contain the name of the service. Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="52">
+				<xs:annotation>
+					<xs:documentation>Publisher’s or third party contact form</xs:documentation>
+					<xs:documentation>For example, a web page providing an interactive contact form for safety-related issues. Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="53">
+				<xs:annotation>
+					<xs:documentation>Organization’s website for corporate social responsibility</xs:documentation>
+					<xs:documentation>The URL of a web page describing the CSR policies, including corporate ethics, governance and human rights or modern slavery statements, of the organization, but see code 50 for sustainability. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 		</xs:restriction>
@@ -10733,6 +10826,12 @@
 					<xs:documentation/>
 				</xs:annotation>
 			</xs:enumeration>
+			<xs:enumeration value="lom">
+				<xs:annotation>
+					<xs:documentation>Loma (Liberia)</xs:documentation>
+					<xs:documentation>ONIX local code for Liberian language, equivalent to lom in ISO 639-3. See also Toma for the closely-related Guinean variant. Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 			<xs:enumeration value="lmo">
 				<xs:annotation>
 					<xs:documentation>Lombard</xs:documentation>
@@ -11265,6 +11364,12 @@
 				<xs:annotation>
 					<xs:documentation>Ojibwa</xs:documentation>
 					<xs:documentation>Macrolanguage. See also ojs (Severn Ojibwa)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="oka">
+				<xs:annotation>
+					<xs:documentation>Okanagan; Nsyilxcn / Nsyilxcən</xs:documentation>
+					<xs:documentation>Colville-Okanagan. ONIX local code, equivalent to oka in ISO 639-3. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="odt">
@@ -12035,6 +12140,12 @@
 					<xs:documentation/>
 				</xs:annotation>
 			</xs:enumeration>
+			<xs:enumeration value="tod">
+				<xs:annotation>
+					<xs:documentation>Toma</xs:documentation>
+					<xs:documentation>ONIX local code for Guinean language, equivalent to tod in ISO 639-3. See also Loma for the closely-related Liberian variant. Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 			<xs:enumeration value="tog">
 				<xs:annotation>
 					<xs:documentation>Tonga (Nyasa)</xs:documentation>
@@ -12640,8 +12751,14 @@
 			</xs:enumeration>
 			<xs:enumeration value="02">
 				<xs:annotation>
-					<xs:documentation>Color of page edge</xs:documentation>
-					<xs:documentation>Sprayed / gilded edges. For Product Form Feature values see code list 98</xs:documentation>
+					<xs:documentation>Color of page edges</xs:documentation>
+					<xs:documentation>Sprayed / stained / gilded edges. For Product Form Feature values see code list 98. For patterned and illustrated page edges, see also List 158 code 54</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="55">
+				<xs:annotation>
+					<xs:documentation>Color of endpapers</xs:documentation>
+					<xs:documentation>Or of inside front and back covers. For Product Form Feature Values see code list 98. For patterned and illustrated endpapers, see also List 158 code 55. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="03">
@@ -12700,8 +12817,8 @@
 			</xs:enumeration>
 			<xs:enumeration value="13">
 				<xs:annotation>
-					<xs:documentation>EU Toy Safety Hazard warning</xs:documentation>
-					<xs:documentation>Product carries hazard warning required by EU Toy Safety Directive. The Product Form Feature Value is a code from List 184, and (for some codes) the exact wording of the warning may be given in Product Form Feature Description</xs:documentation>
+					<xs:documentation>EU General Product Safety Regulation and Toy Safety Directive hazard warning</xs:documentation>
+					<xs:documentation>Product carries hazard warning, conformity notice or other text required by EU General Product Safety Regulation or Toy Safety Directive. The Product Form Feature Value is a code from List 184, and (for some codes) the exact wording of the warning or text may be given in Product Form Feature Description</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="14">
@@ -12797,7 +12914,7 @@
 			<xs:enumeration value="33">
 				<xs:annotation>
 					<xs:documentation>FSC certified – recycled</xs:documentation>
-					<xs:documentation>Product carries FSC logo (Recycled). &lt;ProductFormFeatureValue&gt; is the Certification number (ie either a Chain Of Custody (COC) number or a Trademark License number) printed on the book. Format: Chain of Custody number is two to five letters-COC-six digits (the digits should include leading zeroes if necessary), eg ‘AB-COC-001234’ or ‘ABCDE-COC-123456’; Trademark License number is C followed by six digits, eg ‘C005678’ (this would normally be prefixed by ‘FSC®’ when displayed). The Product Form Feature Description element may carry free text indicating the grade or type of paper. Should be accompanied by a Pre- and Post-Consumer-Waste (PCW) percentage value, to be reported in another instance of &lt;ProductFormFeature&gt; with type code 36. Certification numbers may be checked at https://info.fsc.org/</xs:documentation>
+					<xs:documentation>Product carries FSC logo (Recycled). &lt;ProductFormFeatureValue&gt; is the Certification number (ie either a Chain Of Custody (COC) number or a Trademark License number) printed on the book. Format: Chain of Custody number is two to five letters-COC-six digits (the digits should include leading zeroes if necessary), eg ‘AB-COC-001234’ or ‘ABCDE-COC-123456’; Trademark License number is C followed by six digits, eg ‘C005678’ (this would normally be prefixed by ‘FSC®’ when displayed). The Product Form Feature Description element may carry free text indicating the grade or type of paper. May be accompanied by a Pre- and Post-Consumer-Waste (PCW) percentage value, to be reported in another instance of &lt;ProductFormFeature&gt; with type code 36, but otherwise assumed to be 100% recycled. Certification numbers may be checked at https://info.fsc.org/</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="34">
@@ -12881,7 +12998,7 @@
 			<xs:enumeration value="47">
 				<xs:annotation>
 					<xs:documentation>EUDR raw material location (interior or full product)</xs:documentation>
-					<xs:documentation>For EU Deforestation Regulations, location of raw material source plot (‘where the tree grew’) for the interior or main body of the product (or for the entire product, if the raw material source for the binding and other parts of the product cannot be differentiated). If there are multiple sources for the same raw material, repeat &lt;ProductFormFeature&gt; for each plot. Further repeats of &lt;ProductFormFeature&gt; may be used for multiple paper, card and board types. &lt;ProductFormFeatureValue&gt; is a country code from List 91 indicating the country in which the source plot is, optionally followed by space and a date of harvest of the source plot (YYYY, YYYYMM or YYYYMMDD). &lt;ProductFormFeatureDescription&gt; is a list of points defining the plot from which the raw material was harvested, using GPS coordinates with 6 decimal places of precision (these are real numbers, ±90 for latitude [negative numbers indicate a latitude south of the equator], ±180 excluding -180 itself for longitude [negative numbers indicate a longitude west of the Prime Greenwich meridian]). Latitude and Longitude for each point are space-separated, and multiple points are comma-separated. (Note these coordinates use decimal parts of a degree, not minutes and seconds.) ONE point defines the centre of a 4 hectare plot (200m × 200m). TWO points define a line joining opposite corners of a ‘square’ plot bounded by two lines of latitude and two of longitude. THREE or more points define a simple polygon outlining the plot. Lines and polygon edges may not cross a national boundary or the 180° line of longitude. Polygon edges may not intersect. It is good practice to ensure the polygon is drawn clockwise and is ‘closed’ (that is, that the first and last points are identical, so that for example four points define a triangle). If not closed, the closing polygon edge is implied, and to avoid ambiguity, trailing zeros in the latitude and longitude should be explicit. Only for use in ONIX 3.0 or later</xs:documentation>
+					<xs:documentation>For EU Deforestation regulations, location of raw material source plot (‘where the tree grew’) for the interior or main body of the product (or for the entire product, if the raw material source for the binding and other parts of the product cannot be differentiated). If there are multiple sources for the same raw material, repeat &lt;ProductFormFeature&gt; for each plot or use the ‘list of plots’ option below. Further repeats of &lt;ProductFormFeature&gt; may be used for multiple paper, card and board types. &lt;ProductFormFeatureValue&gt; is a country code from List 91 indicating the country in which the source plot is, optionally followed by a space and the binomial (Latin) name of the species, optionally followed by a space and the date of harvest of the source plot (YYYY, YYYYMM or YYYYMMDD). &lt;ProductFormFeatureDescription&gt; is a list of points defining one or more plots from which the raw material was harvested, using GPS coordinates with 6 decimal places of precision (these are real numbers, ±90 for latitude [negative numbers indicate a latitude south of the equator], ±180 excluding -180 itself for longitude [negative numbers indicate a longitude west of the Prime Greenwich meridian]). Latitude and Longitude for each point are space-separated, and multiple points are comma-separated. Multiple plots are semicolon separated, and must be in the same country. (Any supplied species name and date must also apply to all plots in the list.) (Note these GPS coordinates use decimal parts of a degree, not minutes and seconds.) ONE point defines the center of a 4 hectare plot (200m × 200m). TWO points define a line joining opposite corners of a ‘square’ plot bounded by two lines of latitude and two of longitude. THREE or more points define a simple polygon outlining the plot. Plot types with one, two or multiple points must not be mixed in a list of multiple plots. Lines and polygon edges may not cross a national boundary or the 180° line of longitude. Polygon edges may not intersect. It is good practice to ensure the polygon is drawn clockwise and is ‘closed’ (that is, that the first and last points are identical, so that for example four points define a triangle). If not closed, the closing polygon edge is implied, and to avoid ambiguity, trailing zeros in the latitude and longitude should be explicit. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="48">
@@ -12899,7 +13016,31 @@
 			<xs:enumeration value="50">
 				<xs:annotation>
 					<xs:documentation>EUDR due diligence reference</xs:documentation>
-					<xs:documentation>For EU Deforestation Regulations, &lt;ProductFormFeatureValue&gt; is a ‘Due Diligence Statement’ (DDS) document reference recorded by the publisher or other organization responsible for the product when a due diligence statement is uploaded to the EU’s portal, expected to be in a format like ‘24FRXVV3VOS991’. There may also be a UUID acting as an internal or proprietary document reference, for which use &lt;ProductFormFeatureDescription&gt;. &lt;ProductFormFeature&gt; should be repeated if multiple DDSs apply. See https://environment.ec.europa.eu/topics/forests/deforestation/regulation-deforestation-free-products_en Only for use in ONIX 3.0 or later</xs:documentation>
+					<xs:documentation>For EU Deforestation Regulations, &lt;ProductFormFeatureValue&gt; is the ‘Due Diligence Statement’ (DDS) document reference recorded by the publisher or other organization responsible for the product when a due diligence statement is uploaded to the EU’s portal, expected to be in a format like ‘24FRXVV3VOS991’ (with an optional suffix ‘+’ and a ‘verification code’). This references the DDS for the product as a whole. There may also be a UUID acting as an internal or proprietary document reference, for which use &lt;ProductFormFeatureDescription&gt;. &lt;ProductFormFeature&gt; should be repeated if multiple DDSs apply to the product as a whole. See https://environment.ec.europa.eu/topics/forests/deforestation/regulation-deforestation-free-products_en Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="51">
+				<xs:annotation>
+					<xs:documentation>EUDR associated due diligence references</xs:documentation>
+					<xs:documentation>For EU Deforestation Regulation, &lt;ProductFormFeatureValue&gt; is a space-separated list of document references for DDSs (including optional verification code) created by upstream operators that are or may be referred to in the DDS for the product as a whole (ie the DDS specified using code 50). Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="52">
+				<xs:annotation>
+					<xs:documentation>EUDR compliant with national law attestation</xs:documentation>
+					<xs:documentation>For EU Deforestation regulations, a ‘flag’ indicating that all raw materials were produced in accordance with legal requirements of one or more countries within each of which there are one or more source plots, and that documentation to verify this is available upon request. &lt;ProductFormFeatureValue&gt; is a space-separated list of country codes from List 91. Presence of code 52 and a country code acts as an positive attestation that the product’s raw materials sourced from the specified country are compliant with the national laws of that country, but the attestation is meaningful only if there is no pre-existing DDS for the product as a whole (presence of a DDS reference already attests the product is compliant with all national laws and that documentation is available). Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="53">
+				<xs:annotation>
+					<xs:documentation>EUDR deforestation-free attestation</xs:documentation>
+					<xs:documentation>For EU Deforestation regulations, a ‘flag’ indicating that all raw materials used for the product are ‘deforestation-free’, and that documentation to verify this is available upon request. Presence of code 53 acts as a positive attestation that the product’s raw materials are deforestation-free, but the attestation is meaningful only if there is no pre-existing DDS for the product as a whole (presence of a DDS reference already attests the product is deforestation-free and that documentation is available). Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="54">
+				<xs:annotation>
+					<xs:documentation>EUDR stock present attestation</xs:documentation>
+					<xs:documentation>For EU Deforestation regulations, a ‘flag’ indicating that no (in-EU) supplier has stock that was not physically present within the EU prior to the enforcement date of the Regulation, and that documentation to verify this is available upon request. Presence of code 54 acts as a positive attestation that all copies of the product held at distributors and wholesalers within the EU pre-dates the enforcement date, but the attestation is meaningful only if there is no pre-existing DDS for the product as a whole (presence of a DDS reference already attests the product is compliant with the regulation and that documentation is available). Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 		</xs:restriction>
@@ -13092,7 +13233,7 @@
 			</xs:enumeration>
 			<xs:enumeration value="45">
 				<xs:annotation>
-					<xs:documentation>Text within images </xs:documentation>
+					<xs:documentation>Text within images</xs:documentation>
 					<xs:documentation>Including text-as-text embedded in diagrams, charts, or within images containing speech balloons, thought bubbles, captions etc. Note this does not include ‘text as an image’ or images of text (for which see code 49). Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
@@ -13249,13 +13390,13 @@
 			<xs:enumeration value="24">
 				<xs:annotation>
 					<xs:documentation>Animated / interactive illustrations</xs:documentation>
-					<xs:documentation>eg animated diagrams, charts, graphs or other illustrations (usually without sound) </xs:documentation>
+					<xs:documentation>eg animated diagrams, charts, graphs or other illustrations (usually without sound)</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="25">
 				<xs:annotation>
 					<xs:documentation>Narrative animation</xs:documentation>
-					<xs:documentation>eg cartoon, animatic or CGI animation (usually includes sound) </xs:documentation>
+					<xs:documentation>eg cartoon, animatic or CGI animation (usually includes sound)</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="28">
@@ -15908,6 +16049,18 @@
 					<xs:documentation>Identifier for a business organization for VAT purposes, eg within the EU’s VIES system. See http://ec.europa.eu/taxation_customs/vies/faqvies.do for EU VAT ID formats, which vary from country to country. Generally these consist of a two-letter country code followed by the 8–12 digits of the national VAT ID. Some countries include one or two letters within their VAT ID. See http://en.wikipedia.org/wiki/VAT_identification_number for non-EU countries that maintain similar identifiers. Spaces, dashes etc should be omitted</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
+			<xs:enumeration value="41">
+				<xs:annotation>
+					<xs:documentation>EORI</xs:documentation>
+					<xs:documentation>Economic Operators Registration and Identification, identifier for businesses that import into or export from the EU. Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="45">
+				<xs:annotation>
+					<xs:documentation>Chinese participant identifier</xs:documentation>
+					<xs:documentation>Chinese Participant identifier on the Publishing and distribution public service platform. 12-digits (or 11 digits plus X), usually presented with a / and hyphens dividing the number into groups of three, four and four digits plus a check digit, but in ONIX the / and hyphens should be omitted. Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="List93">
@@ -16051,7 +16204,7 @@
 			<xs:enumeration value="ANG">
 				<xs:annotation>
 					<xs:documentation>Netherlands Antillian Guilder</xs:documentation>
-					<xs:documentation>Curaçao, Sint Maarten</xs:documentation>
+					<xs:documentation>Curaçao, Sint Maarten. Replaced by the Caribbean Guilder (XCG) from April 2025. Deprecated – use only for historical prices that pre-date withdrawal</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="AOA">
@@ -16249,7 +16402,7 @@
 			<xs:enumeration value="CUC">
 				<xs:annotation>
 					<xs:documentation>Cuban Convertible Peso</xs:documentation>
-					<xs:documentation>Cuba (alternative currency)</xs:documentation>
+					<xs:documentation>Cuba (alternative currency from 1994, withdrawn 2021). Deprecated – use only for historical prices that pre-date withdrawal</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="CUP">
@@ -17146,6 +17299,12 @@
 					<xs:documentation>Anguilla, Antigua and Barbuda, Dominica, Grenada, Montserrat, Saint Kitts and Nevis, Saint Lucia, Saint Vincent and the Grenadines</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
+			<xs:enumeration value="XCG">
+				<xs:annotation>
+					<xs:documentation>Caribbean Guilder</xs:documentation>
+					<xs:documentation>Curaçao, Sint Maarten</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 			<xs:enumeration value="XOF">
 				<xs:annotation>
 					<xs:documentation>CFA Franc BCEAO</xs:documentation>
@@ -17203,7 +17362,7 @@
 			<xs:enumeration value="ZWL">
 				<xs:annotation>
 					<xs:documentation>Zimbabwe Dollar</xs:documentation>
-					<xs:documentation>Deprecated, replaced by ZWG </xs:documentation>
+					<xs:documentation>Deprecated, replaced by ZWG</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 		</xs:restriction>
@@ -18911,6 +19070,12 @@
 					<xs:documentation>Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
+			<xs:enumeration value="AKA">
+				<xs:annotation>
+					<xs:documentation>Akademika</xs:documentation>
+					<xs:documentation>Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 			<xs:enumeration value="AKK">
 				<xs:annotation>
 					<xs:documentation>Akateeminen Kirjakauppa</xs:documentation>
@@ -18921,6 +19086,12 @@
 				<xs:annotation>
 					<xs:documentation>Albertson’s</xs:documentation>
 					<xs:documentation/>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="ALV">
+				<xs:annotation>
+					<xs:documentation>Allvit</xs:documentation>
+					<xs:documentation>Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="ALT">
@@ -18957,6 +19128,12 @@
 				<xs:annotation>
 					<xs:documentation>Apple</xs:documentation>
 					<xs:documentation/>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="ARK">
+				<xs:annotation>
+					<xs:documentation>Ark</xs:documentation>
+					<xs:documentation>Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="ASD">
@@ -19193,6 +19370,12 @@
 					<xs:documentation>Deprecated</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
+			<xs:enumeration value="BSU">
+				<xs:annotation>
+					<xs:documentation>BS Undervisning</xs:documentation>
+					<xs:documentation>Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 			<xs:enumeration value="CAI">
 				<xs:annotation>
 					<xs:documentation>Cairn</xs:documentation>
@@ -19313,6 +19496,12 @@
 					<xs:documentation/>
 				</xs:annotation>
 			</xs:enumeration>
+			<xs:enumeration value="EKJ">
+				<xs:annotation>
+					<xs:documentation>E-kirjasto</xs:documentation>
+					<xs:documentation>Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 			<xs:enumeration value="EPA">
 				<xs:annotation>
 					<xs:documentation>E-Pagine</xs:documentation>
@@ -19337,6 +19526,12 @@
 					<xs:documentation/>
 				</xs:annotation>
 			</xs:enumeration>
+			<xs:enumeration value="EBK">
+				<xs:annotation>
+					<xs:documentation>Ebok Premium</xs:documentation>
+					<xs:documentation>Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 			<xs:enumeration value="EBC">
 				<xs:annotation>
 					<xs:documentation>Ebooks Corp</xs:documentation>
@@ -19355,22 +19550,10 @@
 					<xs:documentation/>
 				</xs:annotation>
 			</xs:enumeration>
-			<xs:enumeration value="EKJ">
-				<xs:annotation>
-					<xs:documentation>E-kirjasto</xs:documentation>
-					<xs:documentation>Only for use in ONIX 3.0 or later</xs:documentation>
-				</xs:annotation>
-			</xs:enumeration>
 			<xs:enumeration value="ELE">
 				<xs:annotation>
 					<xs:documentation>Electre</xs:documentation>
 					<xs:documentation/>
-				</xs:annotation>
-			</xs:enumeration>
-			<xs:enumeration value="ELB">
-				<xs:annotation>
-					<xs:documentation>Publizon</xs:documentation>
-					<xs:documentation>Formerly Axiell Elib.se</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="ELI">
@@ -19382,13 +19565,13 @@
 			<xs:enumeration value="ELS">
 				<xs:annotation>
 					<xs:documentation>Elisa</xs:documentation>
-					<xs:documentation>Only for use in ONIX 3.0 or later</xs:documentation>
+					<xs:documentation>Only for use in ONIX 3.0 or later. Deprecated</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="ELK">
 				<xs:annotation>
 					<xs:documentation>Elisa Kirja Kuukausitilaus</xs:documentation>
-					<xs:documentation>Only for use in ONIX 3.0 or later</xs:documentation>
+					<xs:documentation>Only for use in ONIX 3.0 or later. Deprecated</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="ELL">
@@ -19424,6 +19607,12 @@
 			<xs:enumeration value="EVB">
 				<xs:annotation>
 					<xs:documentation>Everybook</xs:documentation>
+					<xs:documentation>Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="FAB">
+				<xs:annotation>
+					<xs:documentation>Fabel</xs:documentation>
 					<xs:documentation>Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
@@ -19517,6 +19706,12 @@
 					<xs:documentation/>
 				</xs:annotation>
 			</xs:enumeration>
+			<xs:enumeration value="ILU">
+				<xs:annotation>
+					<xs:documentation>Illumicrate</xs:documentation>
+					<xs:documentation>Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 			<xs:enumeration value="IMM">
 				<xs:annotation>
 					<xs:documentation>Immatériel.fr</xs:documentation>
@@ -19583,6 +19778,12 @@
 					<xs:documentation>Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
+			<xs:enumeration value="KRJ">
+				<xs:annotation>
+					<xs:documentation>Kirja.fi</xs:documentation>
+					<xs:documentation>Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 			<xs:enumeration value="KID">
 				<xs:annotation>
 					<xs:documentation>Kirja&amp;Idea</xs:documentation>
@@ -19592,12 +19793,6 @@
 			<xs:enumeration value="KPV">
 				<xs:annotation>
 					<xs:documentation>Kirjastopalvelu</xs:documentation>
-					<xs:documentation>Only for use in ONIX 3.0 or later</xs:documentation>
-				</xs:annotation>
-			</xs:enumeration>
-			<xs:enumeration value="KRJ">
-				<xs:annotation>
-					<xs:documentation>Kirja.fi</xs:documentation>
 					<xs:documentation>Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
@@ -19637,15 +19832,15 @@
 					<xs:documentation/>
 				</xs:annotation>
 			</xs:enumeration>
-			<xs:enumeration value="LDL">
-				<xs:annotation>
-					<xs:documentation>Lidl</xs:documentation>
-					<xs:documentation>Only for use in ONIX 3.0 or later</xs:documentation>
-				</xs:annotation>
-			</xs:enumeration>
 			<xs:enumeration value="LEG">
 				<xs:annotation>
 					<xs:documentation>Legible.com</xs:documentation>
+					<xs:documentation>Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="LTP">
+				<xs:annotation>
+					<xs:documentation>Lehtipiste</xs:documentation>
 					<xs:documentation>Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
@@ -19655,9 +19850,9 @@
 					<xs:documentation>Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
-			<xs:enumeration value="LTP">
+			<xs:enumeration value="LDL">
 				<xs:annotation>
-					<xs:documentation>Lehtipiste</xs:documentation>
+					<xs:documentation>Lidl</xs:documentation>
 					<xs:documentation>Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
@@ -19775,6 +19970,12 @@
 					<xs:documentation>Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
+			<xs:enumeration value="NOL">
+				<xs:annotation>
+					<xs:documentation>Norli</xs:documentation>
+					<xs:documentation>Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 			<xs:enumeration value="NUM">
 				<xs:annotation>
 					<xs:documentation>Numilog</xs:documentation>
@@ -19805,6 +20006,12 @@
 					<xs:documentation/>
 				</xs:annotation>
 			</xs:enumeration>
+			<xs:enumeration value="OSS">
+				<xs:annotation>
+					<xs:documentation>Osloskolen</xs:documentation>
+					<xs:documentation>Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 			<xs:enumeration value="OVD">
 				<xs:annotation>
 					<xs:documentation>OverDrive</xs:documentation>
@@ -19821,6 +20028,12 @@
 				<xs:annotation>
 					<xs:documentation>Past Times</xs:documentation>
 					<xs:documentation>Deprecated</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="PER">
+				<xs:annotation>
+					<xs:documentation>Perlego</xs:documentation>
+					<xs:documentation>Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="PTS">
@@ -19859,6 +20072,12 @@
 					<xs:documentation>Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
+			<xs:enumeration value="PDM">
+				<xs:annotation>
+					<xs:documentation>Podme</xs:documentation>
+					<xs:documentation>Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 			<xs:enumeration value="POK">
 				<xs:annotation>
 					<xs:documentation>Pokkaritukku</xs:documentation>
@@ -19875,6 +20094,12 @@
 				<xs:annotation>
 					<xs:documentation>Publio</xs:documentation>
 					<xs:documentation>Publio.pl. Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="ELB">
+				<xs:annotation>
+					<xs:documentation>Publizon</xs:documentation>
+					<xs:documentation>Formerly Axiell Elib.se</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="RDB">
@@ -19983,6 +20208,12 @@
 				<xs:annotation>
 					<xs:documentation>Shanghai Book Traders</xs:documentation>
 					<xs:documentation/>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="SKL">
+				<xs:annotation>
+					<xs:documentation>Skolon</xs:documentation>
+					<xs:documentation>Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="SKB">
@@ -20280,6 +20511,12 @@
 					<xs:documentation>EAN symbology (two-digit extension, normally indicating periodical issue number)</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
+			<xs:enumeration value="13">
+				<xs:annotation>
+					<xs:documentation>GTIN-13+5</xs:documentation>
+					<xs:documentation>EAN symbology (five-digit extension, normally indicating periodical issue number)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="List142">
@@ -20417,13 +20654,13 @@
 			<xs:enumeration value="08">
 				<xs:annotation>
 					<xs:documentation>WARNING: STRANGULATION HAZARD – Long cord | Not for children under 3 yrs.</xs:documentation>
-					<xs:documentation>Required on applicable products sold in the US</xs:documentation>
+					<xs:documentation>Required on applicable products sold in the US. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="09">
 				<xs:annotation>
 					<xs:documentation>No strangulation hazard warning necessary</xs:documentation>
-					<xs:documentation>To be used when a supplier wishes to make a clear statement that no such warning is applicable to product</xs:documentation>
+					<xs:documentation>To be used when a supplier wishes to make a clear statement that no such warning is applicable to product, Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="11">
@@ -20435,79 +20672,79 @@
 			<xs:enumeration value="12">
 				<xs:annotation>
 					<xs:documentation>No magnet hazard warning necessary</xs:documentation>
-					<xs:documentation>To be used when a supplier wishes to make a clear statement that no such warning is applicable to product</xs:documentation>
+					<xs:documentation>To be used when a supplier wishes to make a clear statement that no such warning is applicable to product. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="13">
 				<xs:annotation>
 					<xs:documentation>WARNING – Flashing hazard</xs:documentation>
-					<xs:documentation>Product flashes, flickers or includes high-contrast static or moving patterns which may cause discomfort or seizures in people with photosensitive epilepsy</xs:documentation>
+					<xs:documentation>Product flashes, flickers or includes high-contrast static or moving patterns which may cause discomfort or seizures in people with photosensitive epilepsy. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="14">
 				<xs:annotation>
 					<xs:documentation>No flashing hazard warning necessary</xs:documentation>
-					<xs:documentation>To be used when a supplier wishes to make a clear statement that no such warning is applicable to product</xs:documentation>
+					<xs:documentation>To be used when a supplier wishes to make a clear statement that no such warning is applicable to product. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="15">
 				<xs:annotation>
 					<xs:documentation>WARNING – Sound hazard</xs:documentation>
-					<xs:documentation>Product makes loud, sudden, repetitive or other sounds which may trigger seizures in sensitive people</xs:documentation>
+					<xs:documentation>Product makes loud, sudden, repetitive or other sounds which may trigger seizures in sensitive people. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="16">
 				<xs:annotation>
 					<xs:documentation>No sound hazard warning necessary</xs:documentation>
-					<xs:documentation>To be used when a supplier wishes to make a clear statement that no such warning is applicable to product</xs:documentation>
+					<xs:documentation>To be used when a supplier wishes to make a clear statement that no such warning is applicable to product. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="17">
 				<xs:annotation>
 					<xs:documentation>WARNING – Motion simulation hazard</xs:documentation>
-					<xs:documentation>Products simulates (via visual effects) the experience of motion, which may cause nausea in sensitive people</xs:documentation>
+					<xs:documentation>Products simulates (via visual effects) the experience of motion, which may cause nausea in sensitive people. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="18">
 				<xs:annotation>
 					<xs:documentation>No motion simulation hazard warning necessary</xs:documentation>
-					<xs:documentation>To be used when a supplier wishes to make a clear statement that no such warning is applicable to product</xs:documentation>
+					<xs:documentation>To be used when a supplier wishes to make a clear statement that no such warning is applicable to product. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="21">
 				<xs:annotation>
 					<xs:documentation>WARNING – California Proposition 65 carcinogenic, teratogenic or other reproductively harmful chemical hazard</xs:documentation>
-					<xs:documentation>Required on applicable products sold in California. Must be accompanied in &lt;ProductFormFeatureDescription&gt; by specific additional text as displayed on product or packaging. For example, “WARNING: This product can expose you to chemicals including [chemical name], which is known to the State of California to cause cancer. For more information, go to www.P65Warnings.ca.gov”. Note long-form warnings should be used here, even if a short form warning is used on the product or packaging</xs:documentation>
+					<xs:documentation>Required on applicable products sold in California. Must be accompanied in &lt;ProductFormFeatureDescription&gt; by specific additional text as displayed on product or packaging. For example, “WARNING: This product can expose you to chemicals including [chemical name], which is known to the State of California to cause cancer. For more information, go to www.P65Warnings.ca.gov”. Note long-form warnings should be used here, even if a short form warning is used on the product or packaging. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="22">
 				<xs:annotation>
 					<xs:documentation>No California Proposition 65 hazard warning necessary</xs:documentation>
-					<xs:documentation>To be used when a supplier wishes to make a clear statement that no such warning is applicable to product</xs:documentation>
+					<xs:documentation>To be used when a supplier wishes to make a clear statement that no such warning is applicable to product. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="23">
 				<xs:annotation>
 					<xs:documentation>California Proposition 65 chemical name</xs:documentation>
-					<xs:documentation>&lt;ProductFormFeatureDescripton&gt; carries the name of chemical that is the subject of a warning, taken from the list at www.p65warnings.ca.gov/chemicals</xs:documentation>
+					<xs:documentation>&lt;ProductFormFeatureDescripton&gt; carries the name of chemical that is the subject of a warning, taken from the list at www.p65warnings.ca.gov/chemicals Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="24">
 				<xs:annotation>
 					<xs:documentation>Flashing risk unknown</xs:documentation>
-					<xs:documentation>Flashing present but risk unknown or unassessed</xs:documentation>
+					<xs:documentation>Flashing present but risk unknown or unassessed. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="25">
 				<xs:annotation>
 					<xs:documentation>Sound risk unknown</xs:documentation>
-					<xs:documentation>Sound present but risk unknown or unassessed</xs:documentation>
+					<xs:documentation>Sound present but risk unknown or unassessed. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="26">
 				<xs:annotation>
 					<xs:documentation>Motion simulation risk unknown</xs:documentation>
-					<xs:documentation>Motion simulation present but risk unknown or unassessed</xs:documentation>
+					<xs:documentation>Motion simulation present but risk unknown or unassessed. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 		</xs:restriction>
@@ -20556,7 +20793,7 @@
 			<xs:enumeration value="06">
 				<xs:annotation>
 					<xs:documentation>Readium LCP DRM</xs:documentation>
-					<xs:documentation>Has Licensed Content Protection DRM applied by a Readium License Server</xs:documentation>
+					<xs:documentation>Has Licensed Content Protection DRM applied by a Readium License Server. See https://readium.org/lcp-specs/</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="07">
@@ -21282,7 +21519,7 @@
 			<xs:enumeration value="EC">
 				<xs:annotation>
 					<xs:documentation>Digital online</xs:documentation>
-					<xs:documentation>Digital content accessed online only</xs:documentation>
+					<xs:documentation>Digital content accessed online only (eg streamed), not downloadable to the purchaser’s own device(s)</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="ED">
@@ -21951,7 +22188,7 @@
 			<xs:enumeration value="02">
 				<xs:annotation>
 					<xs:documentation>Short description/annotation</xs:documentation>
-					<xs:documentation>Of the product. Limited to a maximum of 350 characters. In ONIX 3.0, this is assumed to include markup characters. In ONIX 3.1 and later, this limit does not include markup </xs:documentation>
+					<xs:documentation>Of the product. Limited to a maximum of 350 characters. In ONIX 3.0, this is assumed to include markup characters. In ONIX 3.1 and later, this limit does not include markup</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="03">
@@ -22125,7 +22362,7 @@
 			<xs:enumeration value="31">
 				<xs:annotation>
 					<xs:documentation>Rules or instructions</xs:documentation>
-					<xs:documentation>Eg for a game, kit</xs:documentation>
+					<xs:documentation>Eg for a game or kit – as supplied with the product</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="32">
@@ -22411,13 +22648,13 @@
 			</xs:enumeration>
 			<xs:enumeration value="05">
 				<xs:annotation>
-					<xs:documentation>Series image / artwork</xs:documentation>
+					<xs:documentation>Collection image / artwork</xs:documentation>
 					<xs:documentation/>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="06">
 				<xs:annotation>
-					<xs:documentation>Series logo</xs:documentation>
+					<xs:documentation>Collection logo</xs:documentation>
 					<xs:documentation/>
 				</xs:annotation>
 			</xs:enumeration>
@@ -22616,7 +22853,7 @@
 			<xs:enumeration value="39">
 				<xs:annotation>
 					<xs:documentation>Instructional material</xs:documentation>
-					<xs:documentation>For example, video showing how to use the product</xs:documentation>
+					<xs:documentation>For example, a video, PDF, web page or app showing how to assemble, use or maintain the product, that is separate from the product itself</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="40">
@@ -22651,14 +22888,14 @@
 			</xs:enumeration>
 			<xs:enumeration value="45">
 				<xs:annotation>
-					<xs:documentation>Cover holding image</xs:documentation>
+					<xs:documentation>Cover holding imageG4993</xs:documentation>
 					<xs:documentation>Image that may be used for promotional purposes in place of a front cover, ONLY where the front cover itself cannot be provided or used for any reason. Typically, holding images may comprise logos, artwork or an unfinished front cover image. Senders should ensure removal of the holding image from the record as soon as a cover image is available. Recipients must ensure replacement of the holding image with the cover image when it is supplied</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="46">
 				<xs:annotation>
 					<xs:documentation>Rules or instructions</xs:documentation>
-					<xs:documentation>Eg for a game, kit</xs:documentation>
+					<xs:documentation>Eg for a game or kit – as supplied with the product</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="47">
@@ -22694,13 +22931,31 @@
 			<xs:enumeration value="52">
 				<xs:annotation>
 					<xs:documentation>Warning label</xs:documentation>
-					<xs:documentation>Image of any warning label or hazard warning text on product or packaging</xs:documentation>
+					<xs:documentation>Image of any warning label or hazard warning text on product or packaging, eg as required for EU General Product Safety or Toy Safety, or for battery safety purposes</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="53">
+				<xs:annotation>
+					<xs:documentation>Product safety contacts</xs:documentation>
+					<xs:documentation>Document giving full contact detail, including postal addresses, for product safety contacts at publisher or supplier. Deprecated, except for use in ONIX 3.0</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="54">
+				<xs:annotation>
+					<xs:documentation>Page edge deco image</xs:documentation>
+					<xs:documentation>2D image of edge decoration (see also List 79 code 02)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="55">
+				<xs:annotation>
+					<xs:documentation>Endpaper deco image</xs:documentation>
+					<xs:documentation>2D image of endpaper (or inside front and back cover) decoration (see also List 79 code 55)</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="99">
 				<xs:annotation>
 					<xs:documentation>License</xs:documentation>
-					<xs:documentation>Link to a license covering permitted usage of the product content. Deprecated in favor of &lt;EpubLicense&gt;. This was a temporary workaround in ONIX 3.0, and use of &lt;EpubLicense&gt; is strongly preferred</xs:documentation>
+					<xs:documentation>Link to a license covering permitted usage of the product content. Deprecated in favor of &lt;EpubLicense&gt;. This was a temporary workaround in ONIX 3.0, and use of &lt;EpubLicense&gt; is strongly preferred. Not for use in ONIX 3.1 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 		</xs:restriction>
@@ -22816,7 +23071,7 @@
 			<xs:enumeration value="11">
 				<xs:annotation>
 					<xs:documentation>ORCID of resource contributor</xs:documentation>
-					<xs:documentation>Use to link resource such as a contributor image to a contributor unambiguously, for example with Resource Content types 04, 11–14 from List 158, particularly where the product has more than a single contributor. &lt;FeatureValue&gt; contains the 16-digit ORCID, which must match an ORCID given in an instance of &lt;Contributor&gt;</xs:documentation>
+					<xs:documentation>Use to link resource such as a contributor image to a contributor unambiguously, for example with Resource Content types 04, 11–14 from List 158, particularly where the product has more than a single contributor. &lt;FeatureValue&gt; contains the 16-digit ISNI, which must match an ORCID given in an instance of &lt;Contributor&gt;</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 		</xs:restriction>
@@ -22927,7 +23182,7 @@
 			<xs:enumeration value="02">
 				<xs:annotation>
 					<xs:documentation>Sales embargo date</xs:documentation>
-					<xs:documentation>If there is an embargo on retail sales (in the market) before a certain date, the date from which the embargo is lifted and retail sales and fulfillment of pre-orders are permitted. In the absence of an embargo date, retail sales and pre-order fulfillment may begin as soon as stock is available to the retailer</xs:documentation>
+					<xs:documentation>If there is an embargo on retail sales (in the market) before a certain date, the date from which the embargo is lifted and retail sales and fulfillment of pre-orders are permitted. (In some markets, this may be termed a ‘strict on-sale date’.) In the absence of an embargo date, retail sales and pre-order fulfillment may begin as soon as stock is available to the retailer</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="09">
@@ -22950,8 +23205,8 @@
 			</xs:enumeration>
 			<xs:enumeration value="12">
 				<xs:annotation>
-					<xs:documentation>Last reprint date</xs:documentation>
-					<xs:documentation>Date when a product was last reprinted</xs:documentation>
+					<xs:documentation>Latest reprint date</xs:documentation>
+					<xs:documentation>Date when a product was most recently reprinted</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="13">
@@ -22962,8 +23217,8 @@
 			</xs:enumeration>
 			<xs:enumeration value="16">
 				<xs:annotation>
-					<xs:documentation>Last reissue date</xs:documentation>
-					<xs:documentation>Date when a product was last reissued</xs:documentation>
+					<xs:documentation>Latest reissue date</xs:documentation>
+					<xs:documentation>Date when a product was most recently reissued</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="19">
@@ -24198,8 +24453,8 @@
 			</xs:enumeration>
 			<xs:enumeration value="B216">
 				<xs:annotation>
-					<xs:documentation>Press-out puzzle pieces</xs:documentation>
-					<xs:documentation>A book containing pages with die-cut or press-out pieces that can be used as a jigsaw, puzzle pieces, etc</xs:documentation>
+					<xs:documentation>Press-out pieces</xs:documentation>
+					<xs:documentation>A book containing pages with die-cut or press-out pieces that can be used as a jigsaw, as puzzle or game pieces, play pieces (eg paper dolls) etc</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="B221">
@@ -24224,6 +24479,12 @@
 				<xs:annotation>
 					<xs:documentation>‘Wordless’ book</xs:documentation>
 					<xs:documentation>Picture book, generally for children though also used in augmentative and alternative education, without text in the body of the book. Also ‘silent books’, wordless graphic novels and comic books: use with applicable Product Form code</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="B225">
+				<xs:annotation>
+					<xs:documentation>Cut-out pieces</xs:documentation>
+					<xs:documentation>A book containing pages with pieces intended to be cut out (not pre-cut or press-out – see B216) that can be used as puzzle or game pieces, play pieces etc, but which may not be suitable for young children</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="B301">
@@ -24334,10 +24595,28 @@
 					<xs:documentation>Hardcover or softcover where interior spreads lay flat across the spine</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
+			<xs:enumeration value="B319">
+				<xs:annotation>
+					<xs:documentation>Flush cut binding</xs:documentation>
+					<xs:documentation>Hardcover where the cover boards are trimmed flush with the trimmed book block</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="B320">
+				<xs:annotation>
+					<xs:documentation>Rounded spine</xs:documentation>
+					<xs:documentation>Hardcover where the spine is rounded during binding</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="B321">
+				<xs:annotation>
+					<xs:documentation>Square spine</xs:documentation>
+					<xs:documentation>Hardcover where the spine is straight</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 			<xs:enumeration value="B400">
 				<xs:annotation>
 					<xs:documentation>Self-covered</xs:documentation>
-					<xs:documentation>Covers do not use a distinctive stock, but are the same as the body pages. Use for example with Product form BF, to indicate a pamphlet does not use a card or distinct paper cover. See also B416 (for card covers) and B418 (for distinct paper covers) </xs:documentation>
+					<xs:documentation>Covers do not use a distinctive stock, but are the same as the body pages. Use for example with Product form BF, to indicate a pamphlet does not use a card or distinct paper cover. See also B416 (for card covers) and B418 (for distinct paper covers)</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="B401">
@@ -24382,10 +24661,16 @@
 					<xs:documentation>Decorative or functional</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
+			<xs:enumeration value="B419">
+				<xs:annotation>
+					<xs:documentation>Decorated page edges</xs:documentation>
+					<xs:documentation>Colored, stained, gilded, patterned, abstract or illustrated sprayed edges. Use &lt;ProductFormFeature&gt; to specify the color, and optionally, use &lt;SupportingResource&gt; to provide an image of the decoration</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 			<xs:enumeration value="B408">
 				<xs:annotation>
 					<xs:documentation>Decorated endpapers</xs:documentation>
-					<xs:documentation>Illustrated or abstract printed endpapers, but not those solely of colored paper</xs:documentation>
+					<xs:documentation>Colored, patterned, printed, abstract or illustrated endpapers or of inside front and back covers. Use &lt;ProductFormFeature&gt; to specify the color, and optionally, use &lt;SupportingResource&gt; to provide an image of the decoration</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="B409">
@@ -24433,7 +24718,7 @@
 			<xs:enumeration value="B416">
 				<xs:annotation>
 					<xs:documentation>Card cover</xs:documentation>
-					<xs:documentation>With card cover (like a typical paperback). As distinct from a self-cover or more elaborate binding. Use for example with Product form BF, to indicate a pamphlet is bound within a card cover. See also B400 (for self-covers) and B418 (for distinct paper covers) </xs:documentation>
+					<xs:documentation>With card cover (like a typical paperback). As distinct from a self-cover or more elaborate binding. Use for example with Product form BF, to indicate a pamphlet is bound within a card cover. See also B400 (for self-covers) and B418 (for distinct paper covers)</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="B417">
@@ -24452,6 +24737,12 @@
 				<xs:annotation>
 					<xs:documentation>Delicate cover / jacket finish</xs:documentation>
 					<xs:documentation>Cover or jacket finish may merit special handling or packaging during distribution and fulfilment, for example because of gloss varnish which may hold fingerprints or matt laminate liable to scuffing</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="B421">
+				<xs:annotation>
+					<xs:documentation>Embossed cover</xs:documentation>
+					<xs:documentation>Embossing (or debossing) used on cover or jacket</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="B501">
@@ -24715,7 +25006,7 @@
 			<xs:enumeration value="B750">
 				<xs:annotation>
 					<xs:documentation>Tactile images</xs:documentation>
-					<xs:documentation>Eg charts, diagrams, maps, that are embossed or textured for accessibility purposes</xs:documentation>
+					<xs:documentation>Eg charts, diagrams, maps, or other tactile graphics or illustrations that are embossed or textured for accessibility purposes</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="B751">
@@ -25255,7 +25546,7 @@
 			<xs:enumeration value="E201">
 				<xs:annotation>
 					<xs:documentation>Fixed format</xs:documentation>
-					<xs:documentation>Use this and/or code E200 when a particular e-publication type (specified using codes E100 and upwards) is fixed layout or has both fixed layout and reflowable sections or variants, to indicate which option is included in this product</xs:documentation>
+					<xs:documentation>Use this and possibly code E200 when a particular e-publication type (specified using codes E100 and upwards) is fixed layout or has both fixed layout and reflowable sections or variants, to indicate which option is included in this product</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="E202">
@@ -25645,13 +25936,13 @@
 			<xs:enumeration value="V210">
 				<xs:annotation>
 					<xs:documentation>Closed captions</xs:documentation>
-					<xs:documentation>Or subtitles</xs:documentation>
+					<xs:documentation>Or subtitles, where visibility may be controlled by the viewer. Use &lt;Language&gt; for the language of the captions/subtitles</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="V211">
 				<xs:annotation>
 					<xs:documentation>Open captions</xs:documentation>
-					<xs:documentation>‘Burnt-in’ or hard captions or subtitles</xs:documentation>
+					<xs:documentation>‘Burnt-in’ or hard captions or subtitles. Use &lt;Language&gt; for the language of the captions/subtitles</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="V212">
@@ -25664,6 +25955,18 @@
 				<xs:annotation>
 					<xs:documentation>Sign language interpretation</xs:documentation>
 					<xs:documentation>Full signing of audio and audiovisual content of the included within the product supplied</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="V214">
+				<xs:annotation>
+					<xs:documentation>Textual description of audio</xs:documentation>
+					<xs:documentation>Closed or open captions/subtitles include descriptions of non-dialogue audio (eg background sounds, music, speaker identification) in addition to dialogue. Use in combination with V210 or V211. Use V210, V211 alone for captions/subtitles that include only dialogue. In some markets, described audio is termed ‘subtitles for the deaf and hard of hearing’</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="V215">
+				<xs:annotation>
+					<xs:documentation>Audio description of video</xs:documentation>
+					<xs:documentation>Also termed ‘described video’ – audio track describes the video content</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="V220">
@@ -26088,7 +26391,7 @@
 	</xs:simpleType>
 	<xs:simpleType name="List184">
 		<xs:annotation>
-			<xs:documentation source="ONIX Code List 184">EU Toy Safety Directive hazard warning type</xs:documentation>
+			<xs:documentation source="ONIX Code List 184">EU General Product Safety Regulation and Toy Safety Directive hazard warning type</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="00">
@@ -26190,7 +26493,7 @@
 			</xs:enumeration>
 			<xs:enumeration value="05">
 				<xs:annotation>
-					<xs:documentation>PDF/UA-1 </xs:documentation>
+					<xs:documentation>PDF/UA-1</xs:documentation>
 					<xs:documentation>Conforms with the requirements of ISO 32000-1:2008 plus ISO 14289-1:2014 – Portable Document Format for Universal Accessibility, for example, all content is tagged in logical reading order and correctly represents the document’s semantic structure. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
@@ -26221,7 +26524,7 @@
 			<xs:enumeration value="11">
 				<xs:annotation>
 					<xs:documentation>Table of contents navigation</xs:documentation>
-					<xs:documentation>Table of contents allows direct (eg hyperlinked) access to all levels of text organization above individual paragraphs (ie to all chapters, sections and subsections that exist within the text), and to all tables, figures, illustrations etc (non-textual items such as illustrations, tables, audio or video content may be directly accessible from the Table of contents, or from a similar List of illustrations, List of tables, etc) </xs:documentation>
+					<xs:documentation>Table of contents allows direct (eg hyperlinked) access to all levels of text organization above individual paragraphs (ie to all chapters, sections and subsections that exist within the text), and to all tables, figures, illustrations etc (non-textual items such as illustrations, tables, audio or video content may be directly accessible from the Table of contents, or from a similar List of illustrations, List of tables, etc)</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="12">
@@ -26317,7 +26620,7 @@
 			<xs:enumeration value="28">
 				<xs:annotation>
 					<xs:documentation>Full alternative audio descriptions</xs:documentation>
-					<xs:documentation>All or substantially all non-text content has full alternative descriptions as pre-recorded audio. Note this applies to normal images (eg photographs, charts and diagrams) and also to any embedded video etc. Video content should include full alternative descriptions (eg audio-described video) and transcript, subtitles or captions (whether closed or open) suitable for hearing-impaired as well as for visually-impaired readers. (Purely decorative non-text content can be ignored, but the accessibility of resources delivered via a network connection rather than as part of the e-publication package must be included). Only for use in ONIX 3.0 or later</xs:documentation>
+					<xs:documentation>All or substantially all non-text content has full alternative descriptions as pre-recorded audio. Note this applies to normal images (eg photographs, charts and diagrams) and also to any embedded video etc. Video content should include full alternative descriptions (eg audio-described video) and transcript, subtitles or captions (whether closed or open) suitable for hearing-impaired as well as for visually-impaired readers. (Purely decorative non-text content can be ignored, but the accessibility of resources delivered via a network connection rather than as part of the e-publication package must be included). For products that are primarily video, see Product form detail code V215. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="29">
@@ -26335,7 +26638,7 @@
 			<xs:enumeration value="31">
 				<xs:annotation>
 					<xs:documentation>Accessible controls provided</xs:documentation>
-					<xs:documentation>Where interactive content is included in the product, controls are provided (eg for speed, pause and resume, reset) and labelled to make their use clear. Only for use in ONIX 3.0 or later</xs:documentation>
+					<xs:documentation>Where interactive content is included in the product, timing controls are provided (eg for speed, pause and resume, reset) and labelled to make their use clear. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="32">
@@ -26358,7 +26661,7 @@
 			</xs:enumeration>
 			<xs:enumeration value="36">
 				<xs:annotation>
-					<xs:documentation>All textual content can be modified</xs:documentation>
+					<xs:documentation>Appearance of all textual content can be modified</xs:documentation>
 					<xs:documentation>E-publication does not restrict the ability of users to modify and reflow the display of any textual content to the full extent allowed by the reading system (eg to change the text size or typeface, line height and word spacing, colors). Only for use in ONIX 3.0 or later. Compare with code 10 which applies to a broader range of content types</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
@@ -26386,6 +26689,12 @@
 					<xs:documentation>Where links, controls or buttons are included in the product, the purpose or functionality of each link, control or button is apparent from the associated text alone – or where it is unclear, separate link, control or button descriptions are provided. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
+			<xs:enumeration value="41">
+				<xs:annotation>
+					<xs:documentation>Page list navigation</xs:documentation>
+					<xs:documentation>E-publication includes page number navigation, based on print-equivalent page numbers (see code 19) or digital-only static page breaks. Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 			<xs:enumeration value="51">
 				<xs:annotation>
 					<xs:documentation>All non-decorative content supports reading via pre-recorded audio</xs:documentation>
@@ -26398,9 +26707,21 @@
 					<xs:documentation>Sometimes termed ‘screen reader-friendly’, and fully supports multiple forms of non-visual reading. All contents of the digital publication necessary to use and understanding, including text, images (via their alternative descriptions), audio and video material (via their transcripts, descriptions, captions or subtitles) are fully accessible via suitable reading devices, for example text-to-speech screen readers or tactile reading devices (‘Braille displays’), and nothing in the digital publication prevents or blocks the use of alternative reading modes. The entire publication can be navigated and ‘read’ using only text rendered via sound or touch, and does not require visual perception. NB this implies that all &lt;ProductContent&gt; types listed can be accessed without sight. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
+			<xs:enumeration value="53">
+				<xs:annotation>
+					<xs:documentation>Described math content</xs:documentation>
+					<xs:documentation>Textual description of mathematical content, either as an alternative description attached to an image of the content, or in addition to MathML or LaTeX. Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="54">
+				<xs:annotation>
+					<xs:documentation>Accessible chemistry content (as LaTeX)</xs:documentation>
+					<xs:documentation>Only for use in ONIX 3.0 or later</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 			<xs:enumeration value="75">
 				<xs:annotation>
-					<xs:documentation>EEA exception 1 – Micro-enterprises</xs:documentation>
+					<xs:documentation>EAA exception 1 – Micro-enterprises</xs:documentation>
 					<xs:documentation>Digital product falls under European Accessibility Act exception for Micro-enterprises (as defined by current regulations). The product may not have to comply with requirements of the EAA if the publisher is a micro-enterprise. &lt;ProductFormFeatureDescription&gt; may carry details justifying the exception claim. Use for example with code 09. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
@@ -26412,8 +26733,8 @@
 			</xs:enumeration>
 			<xs:enumeration value="77">
 				<xs:annotation>
-					<xs:documentation>EAA exception 3 – Fundamental modification</xs:documentation>
-					<xs:documentation>Digital product falls under European Accessibility Act exception for Fundamental modification (as defined by current regulations). The product may not have to comply with requirements of the EAA if doing so requires a fundamental modification of the nature of the product or service. &lt;ProductFormFeatureDescription&gt; may carry details justifying the exception claim. Use for example with code 09. Only for use in ONIX 3.0 or later</xs:documentation>
+					<xs:documentation>EAA exception 3 – Fundamental alteration</xs:documentation>
+					<xs:documentation>Digital product falls under European Accessibility Act exception for Fundamental alteration (as defined by current regulations). The product may not have to comply with requirements of the EAA if doing so requires a fundamental modification of the nature of the product or service. &lt;ProductFormFeatureDescription&gt; may carry details justifying the exception claim. Use for example with code 09. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="80">
@@ -26467,31 +26788,31 @@
 			<xs:enumeration value="92">
 				<xs:annotation>
 					<xs:documentation>Accessibility addendum</xs:documentation>
-					<xs:documentation>&lt;ProductFormFeatureDescription&gt; contains a short addendum to the accessibility detail of the product, or the URL of a web page comprising such an addendum, providing further details of the specific conformance and features derails provided. The addendum should be considered additional to the more structured data. A complete Accessibility summary (including information that is duplicated in the structured data) should be provided using code 00. Further detailed information may be provided in an external file using codes 94–96. Only for use in ONIX 3.0 or later</xs:documentation>
+					<xs:documentation>&lt;ProductFormFeatureDescription&gt; contains a short addendum to the accessibility detail of the product, or the URL of a web page comprising such an addendum, providing further details of the specific conformance and features details provided. The addendum should be considered additional to the more structured data. A complete Accessibility summary (including information that is duplicated in the structured data) should be provided using code 00. Further detailed information may be provided in an external file using codes 94–96. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="93">
 				<xs:annotation>
-					<xs:documentation>Compliance certification by (URL) </xs:documentation>
+					<xs:documentation>Compliance certification by (URL)</xs:documentation>
 					<xs:documentation>&lt;ProductFormFeatureDescription&gt; carries the URL of a web page belonging to an organization responsible for compliance testing and certification of the product – typically a ‘home page’ or a page describing the certification scheme itself. Only for use in ONIX 3.0 or later</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="94">
 				<xs:annotation>
 					<xs:documentation>Compliance web page for detailed accessibility information</xs:documentation>
-					<xs:documentation>&lt;ProductFormFeatureDescription&gt; carries the URL of a web page giving further detailed description of the accessibility features, compatibility, testing, certification etc relevant to this product. The web page should be maintained by an independent compliance scheme or testing organization. Note the web page may include information about specific national requirements or voluntary conformance reports </xs:documentation>
+					<xs:documentation>&lt;ProductFormFeatureDescription&gt; carries the URL of a web page giving further detailed description of the accessibility features, compatibility, testing, certification etc relevant to this product. The web page should be maintained by an independent compliance scheme or testing organization. Note the web page may include information about specific national requirements or voluntary conformance reports</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="95">
 				<xs:annotation>
 					<xs:documentation>Trusted intermediary’s web page for detailed accessibility information</xs:documentation>
-					<xs:documentation>&lt;ProductFormFeatureDescription&gt; carries the URL of a web page giving further detailed description of the accessibility features, compatibility, testing etc relevant to this product. The web page should be provided by a trusted intermediary or third party nominated by the publisher. Note the web page can include information about specific national requirements or voluntary conformance reports </xs:documentation>
+					<xs:documentation>&lt;ProductFormFeatureDescription&gt; carries the URL of a web page giving further detailed description of the accessibility features, compatibility, testing etc relevant to this product. The web page should be provided by a trusted intermediary or third party nominated by the publisher. Note the web page can include information about specific national requirements or voluntary conformance reports</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="96">
 				<xs:annotation>
 					<xs:documentation>Publisher’s web page for detailed accessibility information</xs:documentation>
-					<xs:documentation>&lt;ProductFormFeatureDescription&gt; carries the URL of a web page giving further detailed description of the accessibility features, compatibility, testing etc relevant to this product. The web page should be provided by the publisher. Note the web page can include information about specific national requirements or voluntary conformance reports </xs:documentation>
+					<xs:documentation>&lt;ProductFormFeatureDescription&gt; carries the URL of a web page giving further detailed description of the accessibility features, compatibility, testing etc relevant to this product. The web page should be provided by the publisher. Note the web page can include information about specific national requirements or voluntary conformance reports</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="97">
@@ -26634,6 +26955,18 @@
 					<xs:documentation>Eg for EU General product safety regulation (GPSR) compliance. See https://commission.europa.eu/business-economy-euro/product-safety-and-requirements/product-safety/general-product-safety-regulation_en</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
+			<xs:enumeration value="11">
+				<xs:annotation>
+					<xs:documentation>Product raw materials contact</xs:documentation>
+					<xs:documentation>Eg for EU Deforestation regulation (EUDR) compliance. See https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32023R1115&amp;qid=1687867231461</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="99">
+				<xs:annotation>
+					<xs:documentation>Customer services contact</xs:documentation>
+					<xs:documentation>For general enquiries</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="List203">
@@ -26673,8 +27006,8 @@
 			</xs:enumeration>
 			<xs:enumeration value="05">
 				<xs:annotation>
-					<xs:documentation>Content warning (drug-taking)</xs:documentation>
-					<xs:documentation>The publisher warns the product includes content involving severe misuse of drugs</xs:documentation>
+					<xs:documentation>Content warning (drugs)</xs:documentation>
+					<xs:documentation>The publisher warns the product includes content involving severe misuse of drugs or alcohol</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="06">
@@ -26705,6 +27038,12 @@
 				<xs:annotation>
 					<xs:documentation>Content warning (animal cruelty)</xs:documentation>
 					<xs:documentation>The publisher warns the product includes content involving extreme cruelty to animals</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="11">
+				<xs:annotation>
+					<xs:documentation>Content warning (illness)</xs:documentation>
+					<xs:documentation>The publisher warns the product includes content involving serious chronic or acute illness (mental or physical)</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 		</xs:restriction>
@@ -27596,6 +27935,12 @@
 					<xs:documentation>Eg for EU General product safety regulation (GPSR) compliance where the supplier acts on behalf of the publisher or publisher representative as an importer into the EU. See https://commission.europa.eu/business-economy-euro/product-safety-and-requirements/product-safety/general-product-safety-regulation_en</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
+			<xs:enumeration value="11">
+				<xs:annotation>
+					<xs:documentation>Product raw materials contact</xs:documentation>
+					<xs:documentation>Eg for EU Deforestation regulation (EUDR) compliance where the supplier acts on behalf of the publisher or publisher representtive as an importer into the EU. See https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32023R1115&amp;qid=1687867231461</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 			<xs:enumeration value="99">
 				<xs:annotation>
 					<xs:documentation>Customer services contact</xs:documentation>
@@ -27678,8 +28023,8 @@
 			</xs:enumeration>
 			<xs:enumeration value="31">
 				<xs:annotation>
-					<xs:documentation>EIDR DOI</xs:documentation>
-					<xs:documentation>Entertainment Identifier Registry DOI</xs:documentation>
+					<xs:documentation>EIDR Content ID</xs:documentation>
+					<xs:documentation>Entertainment Identifier Registry identifier for an audiovisual work, eg a movie, TV series (a DOI beginning ‘10.5240/’ with a suffix of 21 hexadecimal digits and five hyphens, and without https://doi.org/ or the older http://dx.doi.org/). See ui.eidr.org/search</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 		</xs:restriction>
@@ -27764,7 +28109,7 @@
 			<xs:enumeration value="21">
 				<xs:annotation>
 					<xs:documentation>Lithium-ion</xs:documentation>
-					<xs:documentation>For all specific battery chemistries, &lt;ProductFormFeatureDescription&gt; may optionally describe the battery construction – for example the nunber of individual cells per battery and any other physical details, eg ‘4 x pouch cells’</xs:documentation>
+					<xs:documentation>For all specific battery chemistries, &lt;ProductFormFeatureDescription&gt; may optionally describe the battery construction – for example the number of individual cells per battery and any other physical details, eg ‘4 x pouch cells’</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="22">
@@ -28217,7 +28562,7 @@
 			<xs:enumeration value="B002">
 				<xs:annotation>
 					<xs:documentation>Without crop marks</xs:documentation>
-					<xs:documentation>If page size of the resource file is not equal to final trimmed page size of the product (in &lt;Measure&gt;, then text or image area should be centred on final pages. Note that content may not bleed to the trimmed page edge</xs:documentation>
+					<xs:documentation>If page size of the resource file is not equal to final trimmed page size of the product (in &lt;Measure&gt;, then text or image area should be centered on final pages. Note that content may not bleed to the trimmed page edge</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="B003">
@@ -28550,6 +28895,12 @@
 					<xs:documentation/>
 				</xs:annotation>
 			</xs:enumeration>
+			<xs:enumeration value="03">
+				<xs:annotation>
+					<xs:documentation>Overall textured laminate</xs:documentation>
+					<xs:documentation>Provide any further details in Specification feature description</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="List259">
@@ -28567,6 +28918,12 @@
 				<xs:annotation>
 					<xs:documentation>Irregular</xs:documentation>
 					<xs:documentation>No fixed publication schedule</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="r">
+				<xs:annotation>
+					<xs:documentation>Regular</xs:documentation>
+					<xs:documentation>New products in the collection are regularly scheduled, but less frequently than once every two years</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="e">
@@ -28625,8 +28982,8 @@
 			</xs:enumeration>
 			<xs:enumeration value="d">
 				<xs:annotation>
-					<xs:documentation> Daily, or more frequently than weekly</xs:documentation>
-					<xs:documentation> At least twice a week </xs:documentation>
+					<xs:documentation>Daily, or more frequently than weekly</xs:documentation>
+					<xs:documentation>At least twice a week</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="x">
@@ -28737,7 +29094,19 @@
 			<xs:enumeration value="105">
 				<xs:annotation>
 					<xs:documentation>EU Ecolabel</xs:documentation>
-					<xs:documentation>See www.ecolabel.eu</xs:documentation>
+					<xs:documentation>See https://www.ecolabel.eu</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="201">
+				<xs:annotation>
+					<xs:documentation>ClimateCalc</xs:documentation>
+					<xs:documentation>Per book CO₂e calculator, used widely in Denmark and as the basis of the IPA’s Publishing 2030 Accelerator project’s calculator. See https://www.climatecalc.eu and https://sdg.internationalpublishers.org/cop26-accelerator/</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="202">
+				<xs:annotation>
+					<xs:documentation>Canadian SPT Carbon calculator</xs:documentation>
+					<xs:documentation>Per book CO₂e calculator from Booknet Canada, see https://www.booknetcanada.ca/sustainable-publishing-tools</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="501">
