@@ -47,12 +47,12 @@ class OaiPmhGatewayTests {
         when(gatewayConfig.getVerb()).thenReturn("ListRecords");
         when(gatewayConfig.getMetadataPrefix()).thenReturn("marc21");
 
-        var response = createResponse();
-        when(oaiPmhClient.get("/harvest?verb=ListRecords&metadataPrefix=marc21")).thenReturn(response);
+        var oaiPmhResponse = createResponse();
+        when(oaiPmhClient.get("/harvest?verb=ListRecords&metadataPrefix=marc21")).thenReturn(oaiPmhResponse);
 
-        var metadata = oaiPmhGateway.find();
+        var gatewayResponse = oaiPmhGateway.find();
 
-        assertEquals(0, metadata.size());
+        assertEquals(0, gatewayResponse.books().size());
     }
 
     @Test
@@ -64,11 +64,11 @@ class OaiPmhGatewayTests {
         var resumptionToken = "token";
         when(resumptionTokenRepository.get("/harvest")).thenReturn(Optional.of(new ResumptionToken(resumptionToken, Instant.now())));
 
-        var response = createResponse();
-        when(oaiPmhClient.get("/harvest?verb=ListRecords&resumptionToken=" + resumptionToken)).thenReturn(response);
+        var oaiPmhResponse = createResponse();
+        when(oaiPmhClient.get("/harvest?verb=ListRecords&resumptionToken=" + resumptionToken)).thenReturn(oaiPmhResponse);
 
-        var metadata = oaiPmhGateway.find();
-        assertEquals(0, metadata.size());
+        var gatewayResponse = oaiPmhGateway.find();
+        assertEquals(0, gatewayResponse.books().size());
     }
 
     @Test
@@ -80,11 +80,11 @@ class OaiPmhGatewayTests {
         var lastModified = Instant.now();
         when(lastModifiedRepository.get("/harvest")).thenReturn(Optional.of(lastModified));
 
-        var response = createResponse();
-        when(oaiPmhClient.get("/harvest?verb=ListRecords&metadataPrefix=marc21&from=" + ISO_INSTANT.format(lastModified))).thenReturn(response);
+        var oaiPmhResponse = createResponse();
+        when(oaiPmhClient.get("/harvest?verb=ListRecords&metadataPrefix=marc21&from=" + ISO_INSTANT.format(lastModified))).thenReturn(oaiPmhResponse);
 
-        var metadata = oaiPmhGateway.find();
-        assertEquals(0, metadata.size());
+        var gatewayResponse = oaiPmhGateway.find();
+        assertEquals(0, gatewayResponse.books().size());
     }
 
     OAIPMHtype createResponse() {

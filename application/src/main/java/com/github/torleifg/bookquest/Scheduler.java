@@ -25,9 +25,13 @@ class Scheduler {
 
     @Scheduled(initialDelayString = "${scheduler.initial-delay}", fixedDelayString = "${scheduler.fixed-delay}", timeUnit = TimeUnit.SECONDS)
     void run() {
-        if (!enabled || gateways.isEmpty()) {
-            log.warn("Scheduler is disabled or no gateways available.");
+        if (!enabled) {
+            log.warn("Scheduler is disabled.");
+            return;
+        }
 
+        if (gateways.isEmpty()) {
+            log.warn("No gateways available.");
             return;
         }
 
@@ -43,10 +47,8 @@ class Scheduler {
             } catch (Exception e) {
                 log.error("Error while polling {}.", name, e);
             } finally {
-                log.info("Moving on...");
+                log.info("Finished polling {}", name);
             }
         }
-
-        log.info("No more data available from any gateway in this cycle.");
     }
 }

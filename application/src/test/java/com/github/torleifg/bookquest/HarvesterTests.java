@@ -3,6 +3,7 @@ package com.github.torleifg.bookquest;
 import com.github.torleifg.bookquest.core.domain.Book;
 import com.github.torleifg.bookquest.core.domain.Metadata;
 import com.github.torleifg.bookquest.core.service.BookService;
+import com.github.torleifg.bookquest.core.service.GatewayResponse;
 import com.github.torleifg.bookquest.core.service.GatewayService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,7 +37,7 @@ class HarvesterTests {
 
         book.setMetadata(metadata);
 
-        when(gateway.find()).thenReturn(List.of(book));
+        when(gateway.find()).thenReturn(new GatewayResponse("requestUri", List.of(book)));
 
         harvester.poll(gateway);
 

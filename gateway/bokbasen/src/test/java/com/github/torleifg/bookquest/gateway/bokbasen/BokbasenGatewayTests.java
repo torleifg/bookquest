@@ -44,12 +44,12 @@ class BokbasenGatewayTests {
         when(gatewayConfig.getPagesize()).thenReturn(100);
         when(gatewayConfig.getAfter()).thenReturn("19700101090000");
 
-        var response = createResponse();
+        var bokbasenResponse = createResponse();
 
-        when(bokbasenClient.get("/harvest?subscription=extended&pagesize=100&after=19700101090000")).thenReturn(ResponseEntity.ok(response));
+        when(bokbasenClient.get("/harvest?subscription=extended&pagesize=100&after=19700101090000")).thenReturn(ResponseEntity.ok(bokbasenResponse));
 
-        var metadata = bokbasenGateway.find();
-        assertEquals(0, metadata.size());
+        var gatewayResponse = bokbasenGateway.find();
+        assertEquals(0, gatewayResponse.books().size());
     }
 
     @Test
@@ -61,12 +61,12 @@ class BokbasenGatewayTests {
         var resumptionToken = "token";
         when(resumptionTokenRepository.get("/harvest")).thenReturn(Optional.of(new ResumptionToken(resumptionToken, Instant.now())));
 
-        var response = createResponse();
+        var bokbasenResponse = createResponse();
 
-        when(bokbasenClient.get("/harvest?subscription=extended&pagesize=100&next=token")).thenReturn(ResponseEntity.ok(response));
+        when(bokbasenClient.get("/harvest?subscription=extended&pagesize=100&next=token")).thenReturn(ResponseEntity.ok(bokbasenResponse));
 
-        var metadata = bokbasenGateway.find();
-        assertEquals(0, metadata.size());
+        var gatewayResponse = bokbasenGateway.find();
+        assertEquals(0, gatewayResponse.books().size());
     }
 
     ONIXMessage createResponse() {
