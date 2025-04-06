@@ -13,15 +13,15 @@ import java.util.List;
 @Slf4j
 @Component
 class Harvester {
-    private final BookService service;
+    private final BookService bookService;
 
-    Harvester(BookService service) {
-        this.service = service;
+    Harvester(BookService bookService) {
+        this.bookService = bookService;
     }
 
     @Transactional
-    boolean poll(GatewayService service) {
-        final GatewayResponse response = service.find();
+    boolean poll(GatewayService gatewayService) {
+        final GatewayResponse response = gatewayService.find();
 
         final List<Book> books = response.books();
 
@@ -31,7 +31,7 @@ class Harvester {
             return false;
         }
 
-        this.service.save(books);
+        bookService.save(books);
 
         return true;
     }
