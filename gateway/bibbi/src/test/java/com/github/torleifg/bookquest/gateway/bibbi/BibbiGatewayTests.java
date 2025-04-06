@@ -44,11 +44,11 @@ class BibbiGatewayTests {
         when(gatewayConfig.getLimit()).thenReturn(100);
         when(gatewayConfig.getQuery()).thenReturn("type:(audiobook OR book)");
 
-        var response = createResponse();
-        when(bibbiClient.get("/harvest?limit=100&query=type:(audiobook OR book)")).thenReturn(response);
+        var bibbiResponse = createResponse();
+        when(bibbiClient.get("/harvest?limit=100&query=type:(audiobook OR book)")).thenReturn(bibbiResponse);
 
-        var metadata = bibbiGateway.find();
-        assertEquals(0, metadata.size());
+        var gatewayResponse = bibbiGateway.find();
+        assertEquals(0, gatewayResponse.books().size());
     }
 
     @Test
@@ -60,11 +60,11 @@ class BibbiGatewayTests {
         var resumptionToken = "token";
         when(resumptionTokenRepository.get("/harvest")).thenReturn(Optional.of(new ResumptionToken(resumptionToken, Instant.now())));
 
-        var response = createResponse();
-        when(bibbiClient.get("/harvest?limit=100&resumption_token=" + resumptionToken)).thenReturn(response);
+        var bibbiResponse = createResponse();
+        when(bibbiClient.get("/harvest?limit=100&resumption_token=" + resumptionToken)).thenReturn(bibbiResponse);
 
-        var metadata = bibbiGateway.find();
-        assertEquals(0, metadata.size());
+        var gatewayResponse = bibbiGateway.find();
+        assertEquals(0, gatewayResponse.books().size());
     }
 
     @Test
@@ -76,11 +76,11 @@ class BibbiGatewayTests {
         var lastModified = Instant.now();
         when(lastModifiedRepository.get("/harvest")).thenReturn(Optional.of(lastModified));
 
-        var response = createResponse();
-        when(bibbiClient.get("/harvest?limit=100&query=type:(audiobook OR book) AND modified:[" + lastModified + " TO *]")).thenReturn(response);
+        var bibbiResponse = createResponse();
+        when(bibbiClient.get("/harvest?limit=100&query=type:(audiobook OR book) AND modified:[" + lastModified + " TO *]")).thenReturn(bibbiResponse);
 
-        var metadata = bibbiGateway.find();
-        assertEquals(0, metadata.size());
+        var gatewayResponse = bibbiGateway.find();
+        assertEquals(0, gatewayResponse.books().size());
     }
 
     GetV1PublicationsHarvest200Response createResponse() {

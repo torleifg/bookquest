@@ -4,8 +4,8 @@ import com.github.torleifg.bookquest.core.domain.Book;
 import com.github.torleifg.bookquest.core.repository.LastModifiedRepository;
 import com.github.torleifg.bookquest.core.repository.ResumptionToken;
 import com.github.torleifg.bookquest.core.repository.ResumptionTokenRepository;
+import com.github.torleifg.bookquest.core.service.GatewayResponse;
 import com.github.torleifg.bookquest.core.service.GatewayService;
-import lombok.extern.slf4j.Slf4j;
 import org.marc4j.MarcXmlReader;
 import org.marc4j.marc.Record;
 import org.openarchives.oai._2.HeaderType;
@@ -24,7 +24,6 @@ import java.util.Optional;
 
 import static java.time.format.DateTimeFormatter.ISO_INSTANT;
 
-@Slf4j
 class OaiPmhGateway implements GatewayService {
     private final OaiPmhProperties.GatewayConfig gatewayConfig;
 
@@ -55,7 +54,7 @@ class OaiPmhGateway implements GatewayService {
     }
 
     @Override
-    public List<Book> find() {
+    public GatewayResponse find() {
         final String serviceUri = gatewayConfig.getServiceUri();
         final String requestUri = createRequestUri(serviceUri);
 
@@ -68,9 +67,7 @@ class OaiPmhGateway implements GatewayService {
             }
 
             if (response.hasNoRecordsMatchError()) {
-                log.info("Received 0 records from {}", requestUri);
-
-                return List.of();
+                return new GatewayResponse(requestUri, List.of());
             }
 
             throw new OaiPmhException(response.errorsToString());
@@ -87,18 +84,14 @@ class OaiPmhGateway implements GatewayService {
         }
 
         if (!response.hasRecords()) {
-            log.info("Received 0 record(s) from {}", requestUri);
-
-            return List.of();
+            return new GatewayResponse(requestUri, List.of());
         }
 
-        final var oaiPmhrecords = response.getRecords();
-
-        log.info("Received {} record(s) from {}", oaiPmhrecords.size(), requestUri);
+        final var oaiPmhRecords = response.getRecords();
 
         final List<Book> books = new ArrayList<>();
 
-        for (final var oaiPmhRecord : oaiPmhrecords) {
+        for (final var oaiPmhRecord : oaiPmhRecords) {
             final String identifier = oaiPmhRecord.getHeader().getIdentifier();
 
             if (oaiPmhRecord.getHeader().getStatus() == StatusType.DELETED) {
@@ -131,13 +124,13 @@ class OaiPmhGateway implements GatewayService {
             }
         }
 
-        Optional.of(oaiPmhrecords.getLast())
+        Optional.of(oaiPmhRecords.getLast())
                 .map(org.openarchives.oai._2.RecordType::getHeader)
                 .map(HeaderType::getDatestamp)
                 .map(Instant::parse)
                 .ifPresent(lastModified -> lastModifiedRepository.save(serviceUri, lastModified.plusSeconds(1L)));
 
-        return books;
+        return new GatewayResponse(requestUri, books);
     }
 
     private String createRequestUri(String serviceUri) {

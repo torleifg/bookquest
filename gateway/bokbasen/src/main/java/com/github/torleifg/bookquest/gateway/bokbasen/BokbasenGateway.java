@@ -3,8 +3,8 @@ package com.github.torleifg.bookquest.gateway.bokbasen;
 import com.github.torleifg.bookquest.core.domain.Book;
 import com.github.torleifg.bookquest.core.repository.ResumptionToken;
 import com.github.torleifg.bookquest.core.repository.ResumptionTokenRepository;
+import com.github.torleifg.bookquest.core.service.GatewayResponse;
 import com.github.torleifg.bookquest.core.service.GatewayService;
-import lombok.extern.slf4j.Slf4j;
 import org.editeur.ns.onix._3_1.reference.*;
 import org.springframework.http.ResponseEntity;
 
@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-@Slf4j
 class BokbasenGateway implements GatewayService {
     private final BokbasenProperties.GatewayConfig gatewayConfig;
 
@@ -33,7 +32,7 @@ class BokbasenGateway implements GatewayService {
     }
 
     @Override
-    public List<Book> find() {
+    public GatewayResponse find() {
         final String serviceUri = gatewayConfig.getServiceUri();
         final String requestUri = createRequestUri(serviceUri);
 
@@ -47,14 +46,10 @@ class BokbasenGateway implements GatewayService {
                 .ifPresent(token -> resumptionTokenRepository.save(serviceUri, token));
 
         if (!response.hasProducts()) {
-            log.info("Received 0 products from {}", requestUri);
-
-            return List.of();
+            return new GatewayResponse(requestUri, List.of());
         }
 
         final var products = response.getProducts();
-
-        log.info("Received {} product(s) from {}", products.size(), requestUri);
 
         final List<Book> books = new ArrayList<>();
 
@@ -72,7 +67,7 @@ class BokbasenGateway implements GatewayService {
             books.add(bokbasenMapper.from(product));
         }
 
-        return books;
+        return new GatewayResponse(requestUri, books);
     }
 
     private String createRequestUri(String serviceUri) {

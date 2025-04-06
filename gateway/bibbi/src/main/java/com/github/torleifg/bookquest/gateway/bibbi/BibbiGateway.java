@@ -4,8 +4,8 @@ import com.github.torleifg.bookquest.core.domain.Book;
 import com.github.torleifg.bookquest.core.repository.LastModifiedRepository;
 import com.github.torleifg.bookquest.core.repository.ResumptionToken;
 import com.github.torleifg.bookquest.core.repository.ResumptionTokenRepository;
+import com.github.torleifg.bookquest.core.service.GatewayResponse;
 import com.github.torleifg.bookquest.core.service.GatewayService;
-import lombok.extern.slf4j.Slf4j;
 import no.bs.bibliografisk.model.BibliographicRecordMetadata;
 import no.bs.bibliografisk.model.GetV1PublicationsHarvest200ResponsePublicationsInner;
 
@@ -18,7 +18,6 @@ import java.util.Optional;
 import static java.time.format.DateTimeFormatter.ISO_INSTANT;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
-@Slf4j
 class BibbiGateway implements GatewayService {
     private final BibbiProperties.GatewayConfig gatewayConfig;
 
@@ -39,7 +38,7 @@ class BibbiGateway implements GatewayService {
     }
 
     @Override
-    public List<Book> find() {
+    public GatewayResponse find() {
         final String serviceUri = gatewayConfig.getServiceUri();
         final String requestUri = createRequestUri(serviceUri);
 
@@ -56,14 +55,10 @@ class BibbiGateway implements GatewayService {
         }
 
         if (!response.hasPublications()) {
-            log.info("Received 0 publications from {}", requestUri);
-
-            return List.of();
+            return new GatewayResponse(requestUri, List.of());
         }
 
         final var publications = response.getPublications();
-
-        log.info("Received {} publications from {}", publications.size(), requestUri);
 
         final List<Book> books = new ArrayList<>();
 
@@ -85,7 +80,7 @@ class BibbiGateway implements GatewayService {
                 .map(OffsetDateTime::toInstant)
                 .ifPresent(lastModified -> lastModifiedRepository.save(serviceUri, lastModified.plusSeconds(1L)));
 
-        return books;
+        return new GatewayResponse(requestUri, books);
     }
 
     private String createRequestUri(String serviceUri) {
