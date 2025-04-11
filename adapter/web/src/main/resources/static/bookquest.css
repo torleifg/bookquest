@@ -15,7 +15,6 @@ body {
     font-size: inherit;
     width: 100%;
     height: 40px;
-    border: 1px solid #bcd1aa;
     border-radius: 15px;
     padding: 10px 40px 10px 15px;
     outline: none;
@@ -48,12 +47,6 @@ body {
     background-color: #bcd1aa;
     padding: 3px 8px;
     border-radius: 10px;
-}
-
-hr {
-    border: none;
-    height: 1px;
-    background-color: #bcd1aa;
 }
 
 .result-item img {
