@@ -1,22 +1,23 @@
-# Hybrid Search Engine for Books
+<h1 align="center">BookQuest</h1>
+<p align="center">Hybrid Search Engine for Books</p>
 
-This repository contains code and resources to run a hybrid (semantic and full-text) search engine for books. 
-It utilizes text embeddings and supports harvesting book metadata from various sources, using international standards 
+This repository contains code and resources to run a hybrid (semantic and full-text) search engine for books.
+It uses text embeddings and supports harvesting book metadata from various sources, using international standards
 like MARC21 and ONIX 3.
-
-The application leverages **Multilingual-E5-small** for generating text embeddings and **PostgreSQL** with **pgvector**
-as database and vector store. This provides multilingual semantic search capabilities.
 
 ## Technologies
 
-- **[Multilingual-E5-small](https://huggingface.co/intfloat/multilingual-e5-small)**: This pre-trained model is used for
+- Spring Boot
+- PostgreSQL
+- **[Multilingual-E5-small](https://huggingface.co/intfloat/multilingual-e5-small)**: Pre-trained model used for 
   generating text embeddings.
 - **[pgvector](https://github.com/pgvector/pgvector)**: A PostgreSQL extension for storing and querying vectors, used as
   the vector store in the search engine.
 
 ## Getting Started
 
-Follow Run as Docker Compose **or** Run as Spring Boot to configure and run the application.
+Follow [Run as Docker Compose](#run-as-docker-compose) *or* [Run as Spring Boot](#run-as-spring-boot) to configure and
+run the application.
 
 ### Run as Docker Compose
 
@@ -165,7 +166,7 @@ Instructions for extracting a dataset for fine-tuning a BERT-based model for mul
 reviews: https://github.com/torleifg/multi-label-bert-classifier
 
 ```shell
-psql -h localhost -p 5433 -U username -d postgres
+psql -h localhost -p 5432 -U username -d postgres
 ```
 
 Extract example dataset using genre and form as labels.
