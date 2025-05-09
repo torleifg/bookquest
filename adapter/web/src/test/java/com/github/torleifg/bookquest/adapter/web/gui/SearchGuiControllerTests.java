@@ -49,10 +49,11 @@ class SearchGuiControllerTests {
 
     @Test
     void semanticSimilarityTest() throws Exception {
-        mockMvc.perform(get("/search").with(csrf()))
+        mockMvc.perform(get("/similar").with(csrf())
+                    .param("isbn", "isbn"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("text/html;charset=UTF-8"));
 
-        verify(bookService).semanticSimilarity();
+        verify(bookService).semanticSimilarity("isbn");
     }
 }
