@@ -9,9 +9,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
-
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -36,7 +34,7 @@ class SearchGuiControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("text/html;charset=UTF-8"));
 
-        when(bookService.lastModified()).thenReturn(List.of());
+        verify(bookService).lastModified();
     }
 
     @Test
@@ -46,7 +44,7 @@ class SearchGuiControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("text/html;charset=UTF-8"));
 
-        when(bookService.hybridSearch("query string")).thenReturn(List.of());
+        verify(bookService).hybridSearch("query string");
     }
 
     @Test
@@ -55,6 +53,6 @@ class SearchGuiControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("text/html;charset=UTF-8"));
 
-        when(bookService.semanticSimilarity()).thenReturn(List.of());
+        verify(bookService).semanticSimilarity();
     }
 }

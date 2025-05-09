@@ -7,8 +7,7 @@ like MARC21 and ONIX 3.
 
 ## Technologies
 
-- Spring Boot
-- PostgreSQL
+- Spring Boot & PostgreSQL
 - **[Multilingual-E5-small](https://huggingface.co/intfloat/multilingual-e5-small)**: Pre-trained model used for 
   generating text embeddings.
 - **[pgvector](https://github.com/pgvector/pgvector)**: A PostgreSQL extension for storing and querying vectors, used as
