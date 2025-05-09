@@ -38,8 +38,11 @@
     <!-- Results -->
     <div class="results">
         <div th:if="${#lists.size(results) > 0}">
-            <div th:each="book : ${results}" class="result-item">
-                <p><strong th:text="${book.title + ' (' + book.publishedYear + ')'}"></strong>
+            <div th:each="book, iter : ${results}" class="result-item">
+                <p><a th:href="@{/similar(isbn=${book.isbn})}" class="invisible-link" aria-label="Find similar titles"
+                      title="Find similar titles">
+                    <strong th:text="${book.title + ' (' + book.publishedYear + ')'}"></strong>
+                </a>
                     <span th:if="${book.bookFormat != null}" class="format-label">
                         <span th:text="${book.bookFormat}"></span>
                     </span>
@@ -80,7 +83,7 @@
                         </tr>
                     </table>
                 </details>
-                <hr/>
+                <hr th:if="${!iter.last}"/>
             </div>
         </div>
         <div th:if="${#lists.size(results) == 0}">

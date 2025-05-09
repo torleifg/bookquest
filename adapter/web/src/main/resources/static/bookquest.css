@@ -112,3 +112,13 @@ details[open] > summary {
     outline: none;
     border: none;
 }
+
+.invisible-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.invisible-link:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}

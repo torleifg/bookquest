@@ -79,7 +79,7 @@ class OaiPmhGateway implements GatewayService {
             resumptionTokenRepository.save(serviceUri, resumptionToken.get());
         } else {
             resumptionTokenRepository.get(serviceUri)
-                    .filter(token -> token.isNotExpired(gatewayConfig.getTtl()))
+                    .filter(token -> !token.isExpired(gatewayConfig.getTtl()))
                     .ifPresent(token -> resumptionTokenRepository.save(serviceUri, token.value()));
         }
 
@@ -140,7 +140,7 @@ class OaiPmhGateway implements GatewayService {
 
         final Optional<ResumptionToken> resumptionToken = resumptionTokenRepository.get(serviceUri);
 
-        if (resumptionToken.isPresent() && resumptionToken.get().isNotExpired(gatewayConfig.getTtl())) {
+        if (resumptionToken.isPresent() && !resumptionToken.get().isExpired(gatewayConfig.getTtl())) {
             return requestUri.append("&resumptionToken=")
                     .append(resumptionToken.get().value())
                     .toString();

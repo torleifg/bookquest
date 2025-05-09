@@ -12,6 +12,7 @@ import org.openarchives.oai._2.OAIPMHtype;
 import org.openarchives.oai._2.ObjectFactory;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 import static java.time.format.DateTimeFormatter.ISO_INSTANT;
@@ -62,10 +63,30 @@ class OaiPmhGatewayTests {
         when(gatewayConfig.getTtl()).thenReturn(5L);
 
         var resumptionToken = "token";
-        when(resumptionTokenRepository.get("/harvest")).thenReturn(Optional.of(new ResumptionToken(resumptionToken, Instant.now())));
+        when(resumptionTokenRepository.get("/harvest")).thenReturn(Optional.of(new ResumptionToken(resumptionToken, Instant.now().minus(2, ChronoUnit.MINUTES))));
 
         var oaiPmhResponse = createResponse();
         when(oaiPmhClient.get("/harvest?verb=ListRecords&resumptionToken=" + resumptionToken)).thenReturn(oaiPmhResponse);
+
+        var gatewayResponse = oaiPmhGateway.find();
+        assertEquals(0, gatewayResponse.books().size());
+    }
+
+    @Test
+    void findFromExpiredResumptionTokenTest() {
+        when(gatewayConfig.getServiceUri()).thenReturn("/harvest");
+        when(gatewayConfig.getVerb()).thenReturn("ListRecords");
+        when(gatewayConfig.getMetadataPrefix()).thenReturn("marc21");
+        when(gatewayConfig.getTtl()).thenReturn(5L);
+
+        var resumptionToken = "token";
+        when(resumptionTokenRepository.get("/harvest")).thenReturn(Optional.of(new ResumptionToken(resumptionToken, Instant.now().minus(6, ChronoUnit.MINUTES))));
+
+        var lastModified = Instant.now();
+        when(lastModifiedRepository.get("/harvest")).thenReturn(Optional.of(lastModified));
+
+        var oaiPmhResponse = createResponse();
+        when(oaiPmhClient.get("/harvest?verb=ListRecords&metadataPrefix=marc21&from=" + ISO_INSTANT.format(lastModified))).thenReturn(oaiPmhResponse);
 
         var gatewayResponse = oaiPmhGateway.find();
         assertEquals(0, gatewayResponse.books().size());
@@ -76,6 +97,8 @@ class OaiPmhGatewayTests {
         when(gatewayConfig.getServiceUri()).thenReturn("/harvest");
         when(gatewayConfig.getVerb()).thenReturn("ListRecords");
         when(gatewayConfig.getMetadataPrefix()).thenReturn("marc21");
+
+        when(resumptionTokenRepository.get("/harvest")).thenReturn(Optional.empty());
 
         var lastModified = Instant.now();
         when(lastModifiedRepository.get("/harvest")).thenReturn(Optional.of(lastModified));

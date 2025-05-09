@@ -37,20 +37,22 @@ class SearchGuiController {
 
 
     @GetMapping("/search")
-    public String search(Model model, @RequestParam(required = false) String query, Locale locale) {
-        final List<SearchView> dtos;
+    public String search(Model model, @RequestParam String query, Locale locale) {
+        final List<SearchView> dtos = bookService.hybridSearch(query).stream()
+                .map(book -> searchViewMapper.from(book, locale))
+                .toList();
 
-        if (query != null && !query.isBlank()) {
-            model.addAttribute("query", query);
+        model.addAttribute("query", query);
+        model.addAttribute("results", dtos);
 
-            dtos = bookService.hybridSearch(query).stream()
-                    .map(book -> searchViewMapper.from(book, locale))
-                    .toList();
-        } else {
-            dtos = bookService.semanticSimilarity().stream()
-                    .map(book -> searchViewMapper.from(book, locale))
-                    .toList();
-        }
+        return "search";
+    }
+
+    @GetMapping("/similar")
+    public String similar(Model model, @RequestParam String isbn, Locale locale) {
+        final List<SearchView> dtos = bookService.semanticSimilarity(isbn).stream()
+                .map(book -> searchViewMapper.from(book, locale))
+                .toList();
 
         model.addAttribute("results", dtos);
 

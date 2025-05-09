@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,10 +59,30 @@ class BibbiGatewayTests {
         when(gatewayConfig.getTtl()).thenReturn(5);
 
         var resumptionToken = "token";
-        when(resumptionTokenRepository.get("/harvest")).thenReturn(Optional.of(new ResumptionToken(resumptionToken, Instant.now())));
+        when(resumptionTokenRepository.get("/harvest")).thenReturn(Optional.of(new ResumptionToken(resumptionToken, Instant.now().minus(2, ChronoUnit.MINUTES))));
 
         var bibbiResponse = createResponse();
         when(bibbiClient.get("/harvest?limit=100&resumption_token=" + resumptionToken)).thenReturn(bibbiResponse);
+
+        var gatewayResponse = bibbiGateway.find();
+        assertEquals(0, gatewayResponse.books().size());
+    }
+
+    @Test
+    void findFromExpiredResumptionTokenTest() {
+        when(gatewayConfig.getServiceUri()).thenReturn("/harvest");
+        when(gatewayConfig.getLimit()).thenReturn(100);
+        when(gatewayConfig.getQuery()).thenReturn("type:(audiobook OR book)");
+        when(gatewayConfig.getTtl()).thenReturn(5);
+
+        var resumptionToken = "token";
+        when(resumptionTokenRepository.get("/harvest")).thenReturn(Optional.of(new ResumptionToken(resumptionToken, Instant.now().minus(6, ChronoUnit.MINUTES))));
+
+        var lastModified = Instant.now();
+        when(lastModifiedRepository.get("/harvest")).thenReturn(Optional.of(lastModified));
+
+        var bibbiResponse = createResponse();
+        when(bibbiClient.get("/harvest?limit=100&query=type:(audiobook OR book) AND modified:[" + lastModified + " TO *]")).thenReturn(bibbiResponse);
 
         var gatewayResponse = bibbiGateway.find();
         assertEquals(0, gatewayResponse.books().size());
@@ -72,6 +93,8 @@ class BibbiGatewayTests {
         when(gatewayConfig.getServiceUri()).thenReturn("/harvest");
         when(gatewayConfig.getLimit()).thenReturn(100);
         when(gatewayConfig.getQuery()).thenReturn("type:(audiobook OR book)");
+
+        when(resumptionTokenRepository.get("/harvest")).thenReturn(Optional.empty());
 
         var lastModified = Instant.now();
         when(lastModifiedRepository.get("/harvest")).thenReturn(Optional.of(lastModified));
