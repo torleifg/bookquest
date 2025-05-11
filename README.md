@@ -103,17 +103,17 @@ application will be ready for use.
 ## Use the search engine
 
 The hybrid search is based on Reciprocal Rank Fusion (RRF), an algorithm used for combining multiple ranked lists of 
-search results to improve the overall ranking quality, in this case to combine full-text and vector search results.
+search results to improve the overall ranking quality, in this case to combine full-text and semantic search results.
 
 ### GUI
 
-Visit ```http://localhost:8080``` in the browser and watch the results as the metadata harvesting progresses. Enter a 
-query for hybrid search or leave it blank for semantic similarity search (the first search hit will be a random choice 
-and the rest will be semantically similar books).
+Visit http://localhost:8080 in the browser and watch the results as the metadata harvesting progresses. The 
+welcome page shows the last modified books (that has a description and cover image). Enter a query for hybrid search. 
+Clicking on the title of a book will show semantically similar books.
 
 ### API (build your own frontend)
 
-Visit ```http://localhost:8080/swagger-ui.html``` in the browser to read and/or download the OpenAPI specification.
+Visit http://localhost:8080/swagger-ui.html in the browser to read and/or download the OpenAPI specification.
 
 ## Gateway
 
