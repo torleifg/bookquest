@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -235,6 +236,7 @@ class BookRepositoryAdapterTests {
         metadata.setIsbn("isbn");
         metadata.setTitle("title");
         metadata.setDescription("description");
+        metadata.setThumbnailUrl(URI.create("http://thumbnail"));
 
         book.setMetadata(metadata);
 

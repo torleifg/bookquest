@@ -34,10 +34,6 @@ public class BookService {
         return bookRepository.hybridSearch(query, 20);
     }
 
-    public List<Book> semanticSimilarity() {
-        return bookRepository.semanticSimilarity(20);
-    }
-
     public List<Book> semanticSimilarity(String isbn) {
         return bookRepository.semanticSimilarity(isbn, 20);
     }

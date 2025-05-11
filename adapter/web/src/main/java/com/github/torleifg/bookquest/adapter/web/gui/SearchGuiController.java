@@ -35,9 +35,12 @@ class SearchGuiController {
         return "redirect:/";
     }
 
-
     @GetMapping("/search")
     public String search(Model model, @RequestParam String query, Locale locale) {
+        if (query == null || query.isBlank()) {
+            return "redirect:/";
+        }
+
         final List<SearchView> dtos = bookService.hybridSearch(query).stream()
                 .map(book -> searchViewMapper.from(book, locale))
                 .toList();

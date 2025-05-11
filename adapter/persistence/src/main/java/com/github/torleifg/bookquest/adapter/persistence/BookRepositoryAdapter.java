@@ -75,7 +75,10 @@ class BookRepositoryAdapter implements BookRepository {
     public List<Book> lastModified(int limit) {
         return jdbcClient.sql("""
                         select * from book
-                        where deleted is false and metadata ->> 'description' is not null order by modified desc, id limit ?
+                        where deleted is false
+                        and metadata ->> 'description' is not null
+                        and metadata ->> 'thumbnailUrl' is not null
+                        order by modified desc, id limit ?
                         """)
                 .param(limit)
                 .query(new BookRowMapper())
