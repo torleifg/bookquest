@@ -227,6 +227,19 @@ class BookRepositoryAdapterTests {
         assertEquals(books.getFirst().getMetadata(), book.getMetadata());
     }
 
+    @Test
+    void autocompleteTest() {
+        var book = createBook();
+
+        client.sql("insert into book (external_id, metadata) values (?, ?)")
+                .param(book.getExternalId())
+                .param(BookRepositoryAdapter.toPGobject(book.getMetadata()))
+                .update();
+
+        var suggestions = adapter.autocomplete("tit", 10);
+        assertEquals(1, suggestions.size());
+    }
+
     Book createBook() {
         var book = new Book();
         book.setExternalId("externalId");

@@ -60,10 +60,20 @@ class SearchGuiControllerTests {
     @Test
     void semanticSimilarityTest() throws Exception {
         mockMvc.perform(get("/similar").with(csrf())
-                    .param("isbn", "isbn"))
+                        .param("isbn", "isbn"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("text/html;charset=UTF-8"));
 
         verify(bookService).semanticSimilarity("isbn");
+    }
+
+    @Test
+    void autocompleteTest() throws Exception {
+        mockMvc.perform(get("/autocomplete").with(csrf())
+                        .param("term", "term"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"));
+
+        verify(bookService).autocomplete("term");
     }
 }

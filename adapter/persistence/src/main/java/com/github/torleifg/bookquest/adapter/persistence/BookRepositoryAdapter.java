@@ -155,6 +155,17 @@ class BookRepositoryAdapter implements BookRepository {
         return semanticSimilarity(document, limit);
     }
 
+    @Override
+    public List<String> autocomplete(String term, int limit) {
+        return jdbcClient.sql("""
+                        select * from autocomplete_books(?, ?)
+                        """)
+                .param(term)
+                .param(limit)
+                .query(String.class)
+                .list();
+    }
+
     private List<Book> semanticSimilarity(Optional<Document> document, int limit) {
         if (document.isEmpty()) {
             return List.of();

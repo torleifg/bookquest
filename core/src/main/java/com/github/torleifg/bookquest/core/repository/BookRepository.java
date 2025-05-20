@@ -19,4 +19,6 @@ public interface BookRepository {
     List<Book> semanticSimilarity(int limit);
 
     List<Book> semanticSimilarity(String isbn, int limit);
+
+    List<String> autocomplete(String term, int limit);
 }
