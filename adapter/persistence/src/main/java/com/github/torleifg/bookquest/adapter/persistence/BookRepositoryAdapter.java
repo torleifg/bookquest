@@ -116,10 +116,21 @@ class BookRepositoryAdapter implements BookRepository {
 
     @Override
     public List<Book> hybridSearch(String query, int limit) {
-        final Map<Book, Double> rrf = new ReciprocalRankFusion(query, fullTextSearch(query, limit), semanticSearch(query, limit))
-                .compute();
+        final int wordCount = query == null ? 0 : query.trim().split("\\s+").length;
 
-        return rrf.keySet()
+        final List<Book> fullText = fullTextSearch(query, limit);
+
+        if (wordCount <= 3) {
+            return fullText.stream()
+                    .limit(limit)
+                    .toList();
+        }
+
+        final List<Book> semantic = semanticSearch(query, limit);
+
+        return new ReciprocalRankFusion(fullText, semantic, 0.5, 0.5)
+                .compute()
+                .keySet()
                 .stream()
                 .limit(limit)
                 .toList();

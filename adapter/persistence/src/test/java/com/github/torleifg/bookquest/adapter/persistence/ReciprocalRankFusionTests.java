@@ -12,15 +12,14 @@ class ReciprocalRankFusionTests {
 
     @Test
     void computeTest() {
-        var firstBook = createBook("Book W");
-        var secondBook = createBook("Book X");
-        var thirdBook = createBook("Book Y");
-        var fourthBook = createBook("Book Z");
+        var firstBook = createBook("Book A B C");
+        var secondBook = createBook("Book D E F");
+        var thirdBook = createBook("Book G H I");
 
-        var fullTextSearchHits = List.of(firstBook, secondBook, thirdBook);
-        var vectorSearchHits = List.of(thirdBook, fourthBook);
+        var fullText = List.of(firstBook, secondBook, thirdBook);
+        var semantic = List.of(thirdBook);
 
-        var mergedSearchHits = new ReciprocalRankFusion("Book", fullTextSearchHits, vectorSearchHits);
+        var mergedSearchHits = new ReciprocalRankFusion(fullText, semantic, 0.5, 0.5);
 
         var rrf = mergedSearchHits.compute();
 
@@ -29,9 +28,9 @@ class ReciprocalRankFusionTests {
                 System.out.println(book.getMetadata().getTitle() + " -> " + score)
         );
 
-        assertEquals(4, rrf.size());
+        assertEquals(3, rrf.size());
 
-        var expectedRanking = List.of(thirdBook, firstBook, secondBook, fourthBook);
+        var expectedRanking = List.of(thirdBook, firstBook, secondBook);
 
         var actualRanking = List.copyOf(rrf.keySet());
 

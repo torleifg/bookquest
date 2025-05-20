@@ -8,15 +8,10 @@ import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toMap;
 
-record ReciprocalRankFusion(String query, List<Book> firstSearchHits, List<Book> secondSearchHits) {
+record ReciprocalRankFusion(List<Book> fullText, List<Book> semantic, double fullTextWeight, double semanticWeight) {
 
     Map<Book, Double> compute() {
-        final double weight = computeFullTextWeight(query);
-
-        return mergeSearchHits(
-                toRankedMap(firstSearchHits),
-                toRankedMap(secondSearchHits),
-                weight);
+        return mergeSearchHits(toRankedMap(fullText), toRankedMap(semantic), fullTextWeight, semanticWeight);
     }
 
     private Map<Book, Integer> toRankedMap(List<Book> sortedList) {
@@ -30,17 +25,17 @@ record ReciprocalRankFusion(String query, List<Book> firstSearchHits, List<Book>
                 ));
     }
 
-    private Map<Book, Double> mergeSearchHits(Map<Book, Integer> fullTextResults, Map<Book, Integer> vectorResults, double fullTextWeight) {
+    private Map<Book, Double> mergeSearchHits(Map<Book, Integer> fullText, Map<Book, Integer> semantic, double fullTextWeight, double semanticWeight) {
         final int K = 60;
 
         final Map<Book, Double> mergedSearchHits = new HashMap<>();
 
-        fullTextResults.forEach((book, rank) ->
+        fullText.forEach((book, rank) ->
                 mergedSearchHits.merge(book, fullTextWeight * (1.0 / (K + rank)), Double::sum)
         );
 
-        vectorResults.forEach((book, rank) ->
-                mergedSearchHits.merge(book, (1 - fullTextWeight) * (1.0 / (K + rank)), Double::sum)
+        semantic.forEach((book, rank) ->
+                mergedSearchHits.merge(book, semanticWeight * (1.0 / (K + rank)), Double::sum)
         );
 
         return mergedSearchHits.entrySet().stream()
@@ -51,15 +46,5 @@ record ReciprocalRankFusion(String query, List<Book> firstSearchHits, List<Book>
                         (existing, replacement) -> existing,
                         LinkedHashMap::new
                 ));
-    }
-
-    private double computeFullTextWeight(String text) {
-        if (text == null || text.isBlank()) {
-            return 0.5;
-        }
-
-        final String[] words = text.trim().split("\\s+");
-
-        return words.length > 3 ? 0.5 : 0.6;
     }
 }
