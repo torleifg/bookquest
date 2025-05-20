@@ -37,4 +37,8 @@ public class BookService {
     public List<Book> semanticSimilarity(String isbn) {
         return bookRepository.semanticSimilarity(isbn, 20);
     }
+
+    public List<String> autocomplete(String term) {
+        return bookRepository.autocomplete(term, 10);
+    }
 }
