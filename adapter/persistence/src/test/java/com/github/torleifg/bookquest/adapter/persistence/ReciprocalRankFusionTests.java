@@ -20,12 +20,12 @@ class ReciprocalRankFusionTests {
         var fullText = List.of(firstBook, secondBook, thirdBook);
         var semantic = List.of(thirdBook, fourthBook);
 
-        List<RankedSearchHit> rankedSearchHit = List.of(
-                ReciprocalRankFusion.toRankedSearchHit(fullText, 0.5),
-                ReciprocalRankFusion.toRankedSearchHit(semantic, 0.5)
+        var rankedSearchHits = List.of(
+                RankedSearchHit.from(fullText, 0.5),
+                RankedSearchHit.from(semantic, 0.5)
         );
 
-        var rrf = new ReciprocalRankFusion(rankedSearchHit).compute();
+        var rrf = new ReciprocalRankFusion(rankedSearchHits).compute();
 
         System.out.println("Ordered by RRF Score:");
         rrf.forEach((book, score) ->

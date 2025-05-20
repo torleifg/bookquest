@@ -5,22 +5,17 @@ import com.github.torleifg.bookquest.core.domain.Book;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toMap;
-import static java.util.stream.Collectors.toSet;
 
 record ReciprocalRankFusion(List<RankedSearchHit> rankedSearchHits) {
 
     Map<Book, Double> compute() {
         final int K = 60;
 
-        final Set<Book> books = rankedSearchHits.stream()
+        final Map<Book, Double> bookScores = rankedSearchHits.stream()
                 .flatMap(rankedSearchHit -> rankedSearchHit.hits().keySet().stream())
-                .collect(toSet());
-
-        final Map<Book, Double> bookScores = books.stream()
+                .distinct()
                 .collect(toMap(
                         book -> book,
                         book -> calculateScore(book, K)
@@ -53,18 +48,5 @@ record ReciprocalRankFusion(List<RankedSearchHit> rankedSearchHits) {
 
         return firstEntry.getKey().getMetadata().getTitle()
                 .compareTo(secondEntry.getKey().getMetadata().getTitle());
-    }
-
-    static RankedSearchHit toRankedSearchHit(List<Book> books, double weight) {
-        final Map<Book, Integer> ranked = IntStream.range(0, books.size())
-                .boxed()
-                .collect(toMap(
-                        books::get,
-                        index -> index + 1,
-                        (existing, replacement) -> existing,
-                        LinkedHashMap::new
-                ));
-
-        return new RankedSearchHit(ranked, weight);
     }
 }

@@ -117,8 +117,8 @@ class BookRepositoryAdapter implements BookRepository {
     @Override
     public List<Book> hybridSearch(String query, int limit) {
         final List<RankedSearchHit> rankedSearchHits = List.of(
-                ReciprocalRankFusion.toRankedSearchHit(fullTextSearch(query, limit), 0.5),
-                ReciprocalRankFusion.toRankedSearchHit(semanticSearch(query, limit), 0.5)
+                RankedSearchHit.from(fullTextSearch(query, limit), 0.5),
+                RankedSearchHit.from(semanticSearch(query, limit), 0.5)
         );
 
         return new ReciprocalRankFusion(rankedSearchHits)
