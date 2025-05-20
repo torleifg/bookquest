@@ -2,49 +2,27 @@ package com.github.torleifg.bookquest.adapter.persistence;
 
 import com.github.torleifg.bookquest.core.domain.Book;
 
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import static java.util.stream.Collectors.toMap;
 
-record ReciprocalRankFusion(String query, List<Book> firstSearchHits, List<Book> secondSearchHits) {
+record ReciprocalRankFusion(List<RankedSearchHit> rankedSearchHits) {
 
     Map<Book, Double> compute() {
-        final double weight = computeFullTextWeight(query);
-
-        return mergeSearchHits(
-                toRankedMap(firstSearchHits),
-                toRankedMap(secondSearchHits),
-                weight);
-    }
-
-    private Map<Book, Integer> toRankedMap(List<Book> sortedList) {
-        return IntStream.range(0, sortedList.size())
-                .boxed()
-                .collect(Collectors.toMap(
-                        sortedList::get,
-                        index -> index + 1,
-                        (existing, replacement) -> existing,
-                        LinkedHashMap::new
-                ));
-    }
-
-    private Map<Book, Double> mergeSearchHits(Map<Book, Integer> fullTextResults, Map<Book, Integer> vectorResults, double fullTextWeight) {
         final int K = 60;
 
-        final Map<Book, Double> mergedSearchHits = new HashMap<>();
+        final Map<Book, Double> bookScores = rankedSearchHits.stream()
+                .flatMap(rankedSearchHit -> rankedSearchHit.hits().keySet().stream())
+                .distinct()
+                .collect(toMap(
+                        book -> book,
+                        book -> calculateScore(book, K)
+                ));
 
-        fullTextResults.forEach((book, rank) ->
-                mergedSearchHits.merge(book, fullTextWeight * (1.0 / (K + rank)), Double::sum)
-        );
-
-        vectorResults.forEach((book, rank) ->
-                mergedSearchHits.merge(book, (1 - fullTextWeight) * (1.0 / (K + rank)), Double::sum)
-        );
-
-        return mergedSearchHits.entrySet().stream()
-                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+        return bookScores.entrySet().stream()
+                .sorted(this::compareEntries)
                 .collect(toMap(
                         Map.Entry::getKey,
                         Map.Entry::getValue,
@@ -53,13 +31,22 @@ record ReciprocalRankFusion(String query, List<Book> firstSearchHits, List<Book>
                 ));
     }
 
-    private double computeFullTextWeight(String text) {
-        if (text == null || text.isBlank()) {
-            return 0.5;
-        }
+    private double calculateScore(Book book, int K) {
+        return rankedSearchHits.stream()
+                .mapToDouble(rankedSearchHit -> {
+                    final Integer rank = rankedSearchHit.hits().get(book);
 
-        final String[] words = text.trim().split("\\s+");
+                    return rank != null ? rankedSearchHit.weight() * (1.0 / (K + rank)) : 0.0;
+                })
+                .sum();
+    }
 
-        return words.length > 3 ? 0.5 : 0.6;
+    private int compareEntries(Map.Entry<Book, Double> firstEntry, Map.Entry<Book, Double> secondEntry) {
+        final int compared = secondEntry.getValue().compareTo(firstEntry.getValue());
+
+        if (compared != 0) return compared;
+
+        return firstEntry.getKey().getMetadata().getTitle()
+                .compareTo(secondEntry.getKey().getMetadata().getTitle());
     }
 }
