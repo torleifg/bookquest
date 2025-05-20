@@ -41,9 +41,19 @@ class SearchGuiController {
             return "redirect:/";
         }
 
-        final List<SearchView> dtos = bookService.hybridSearch(query).stream()
-                .map(book -> searchViewMapper.from(book, locale))
-                .toList();
+        final int wordCount = query.trim().split("\\s+").length;
+
+        final List<SearchView> dtos;
+
+        if (wordCount <= 3) {
+            dtos = bookService.fullTextSearch(query).stream()
+                    .map(book -> searchViewMapper.from(book, locale))
+                    .toList();
+        } else {
+            dtos = bookService.hybridSearch(query).stream()
+                    .map(book -> searchViewMapper.from(book, locale))
+                    .toList();
+        }
 
         model.addAttribute("query", query);
         model.addAttribute("results", dtos);
