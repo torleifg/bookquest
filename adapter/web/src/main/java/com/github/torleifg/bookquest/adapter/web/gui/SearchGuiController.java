@@ -46,12 +46,12 @@ class SearchGuiController {
 
         final List<SearchView> dtos;
 
-        if (wordCount <= 3) {
-            dtos = bookService.fullTextSearch(query).stream()
+        if (wordCount > 4) {
+            dtos = bookService.hybridSearch(query).stream()
                     .map(book -> searchViewMapper.from(book, locale))
                     .toList();
         } else {
-            dtos = bookService.hybridSearch(query).stream()
+            dtos = bookService.fullTextSearch(query).stream()
                     .map(book -> searchViewMapper.from(book, locale))
                     .toList();
         }

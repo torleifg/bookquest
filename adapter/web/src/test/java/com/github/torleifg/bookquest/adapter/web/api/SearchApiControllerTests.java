@@ -81,4 +81,14 @@ class SearchApiControllerTests {
 
         verify(bookService).semanticSimilarity("12345");
     }
+
+    @Test
+    void autocompleteTest() throws Exception {
+        mockMvc.perform(get("/api/search/autocomplete").with(csrf())
+                        .param("term", "term"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"));
+
+        verify(bookService).autocomplete("term");
+    }
 }
