@@ -50,11 +50,11 @@ class SearchGuiControllerTests {
     @Test
     void hybridSearchTest() throws Exception {
         mockMvc.perform(get("/search").with(csrf())
-                        .param("query", "query string string string"))
+                        .param("query", "query string string string string"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("text/html;charset=UTF-8"));
 
-        verify(bookService).hybridSearch("query string string string");
+        verify(bookService).hybridSearch("query string string string string");
     }
 
     @Test

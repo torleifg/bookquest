@@ -72,6 +72,11 @@ class SearchApiController {
                 .toList();
     }
 
+    @GetMapping("/autocomplete")
+    public List<String> autocomplete(@RequestParam @NotBlank(message = "Required parameter 'term' is blank.") String term) {
+        return bookService.autocomplete(term);
+    }
+
     @ExceptionHandler(ConstraintViolationException.class)
     ProblemDetail handleConstraintViolationException(ConstraintViolationException ex) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
