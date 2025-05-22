@@ -228,7 +228,7 @@ class BookRepositoryAdapterTests {
     }
 
     @Test
-    void autocompleteTest() {
+    void autocompleteTriggerTest() {
         var book = createBook();
 
         client.sql("insert into book (external_id, metadata) values (?, ?)")
@@ -236,7 +236,7 @@ class BookRepositoryAdapterTests {
                 .param(BookRepositoryAdapter.toPGobject(book.getMetadata()))
                 .update();
 
-        var suggestions = adapter.autocomplete("tit", 10);
+        var suggestions = adapter.autocomplete("itl", 10);
         assertEquals(1, suggestions.size());
     }
 

@@ -158,7 +158,10 @@ class BookRepositoryAdapter implements BookRepository {
     @Override
     public List<String> autocomplete(String term, int limit) {
         return jdbcClient.sql("""
-                        select * from autocomplete_books(?, ?)
+                        select suggestion from autocomplete
+                        where suggestion ilike '%' || ? || '%'
+                        order by case suggestion_type when 'contributor' then 1 else 2 end, suggestion
+                        limit ?
                         """)
                 .param(term)
                 .param(limit)
