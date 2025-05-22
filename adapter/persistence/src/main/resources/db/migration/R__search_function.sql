@@ -1,6 +1,4 @@
-drop function if exists search_books(text, int);
-
-create function search_books(search_query text, result_limit int)
+create or replace function search_books(search_query text, result_limit int)
     returns table
             (
                 external_id     text,
