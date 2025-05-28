@@ -18,12 +18,7 @@
         $(function () {
             $("#query").autocomplete({
                 source: "/autocomplete",
-                minLength: 3,
-                select: function(event, ui) {
-                    this.value = ui.item.value;
-
-                    return false;
-                }
+                minLength: 3
             });
         });
     </script>

@@ -19,23 +19,23 @@ public class BookService {
     }
 
     public List<Book> lastModified() {
-        return bookRepository.lastModified(20);
+        return bookRepository.lastModified(50);
     }
 
     public List<Book> fullTextSearch(String query) {
-        return bookRepository.fullTextSearch(query, 20);
+        return bookRepository.fullTextSearch(query, 25);
     }
 
     public List<Book> semanticSearch(String query) {
-        return bookRepository.semanticSearch(query, 20);
+        return bookRepository.semanticSearch(query, 25);
     }
 
     public List<Book> hybridSearch(String query) {
-        return bookRepository.hybridSearch(query, 20);
+        return bookRepository.hybridSearch(query, 25);
     }
 
     public List<Book> semanticSimilarity(String isbn) {
-        return bookRepository.semanticSimilarity(isbn, 20);
+        return bookRepository.semanticSimilarity(isbn, 25);
     }
 
     public List<String> autocomplete(String term) {

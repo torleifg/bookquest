@@ -46,7 +46,7 @@ public class SearchViewMapper {
 
         searchView.setContributors(contributors);
 
-        searchView.setPublishedYear(metadata.getPublishedYear());
+        searchView.setPublishedYear(metadata.getPublishedYear().replaceAll("\\D", ""));
         searchView.setDescription(metadata.getDescription());
 
         final String languages = metadata.getLanguages().stream()

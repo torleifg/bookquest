@@ -75,8 +75,7 @@ class BookRepositoryAdapter implements BookRepository {
     public List<Book> lastModified(int limit) {
         return jdbcClient.sql("""
                         select * from book
-                        where deleted is false
-                        and metadata ->> 'description' is not null
+                        where metadata ->> 'description' is not null
                         and metadata ->> 'thumbnailUrl' is not null
                         order by modified desc, id limit ?
                         """)
@@ -89,7 +88,6 @@ class BookRepositoryAdapter implements BookRepository {
     public List<Book> fullTextSearch(String query, int limit) {
         return jdbcClient.sql("""
                         select * from search_books(?, ?)
-                        where deleted is false
                         """)
                 .param(query)
                 .param(limit)
