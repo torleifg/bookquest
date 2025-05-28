@@ -14,7 +14,7 @@ select b.external_id,
        b.vector_store_id,
        b.deleted,
        b.metadata,
-       ts_rank_cd(
+       (ts_rank_cd(
                setweight(to_tsvector('simple', coalesce(b.metadata ->> 'title', '')),
                          'B') ||
                setweight(to_tsvector('simple', coalesce(jsonb_array_to_text(b.metadata -> 'contributors', 'name', 'AUT'), '')),
@@ -28,7 +28,11 @@ select b.external_id,
                setweight(to_tsvector('simple', coalesce(jsonb_array_to_text(b.metadata -> 'genreAndForm', 'term'), '')),
                          'D'),
                websearch_to_tsquery('simple', search_query)
-       ) as rank
+       )
+       + case
+           when b.metadata->>'description' is not null and b.metadata->>'description' <> ''
+           then 1 else 0
+       end)::real as rank
 from book b
 where to_tsvector('simple',
                   coalesce(b.metadata ->> 'title', '') || ' ' ||
