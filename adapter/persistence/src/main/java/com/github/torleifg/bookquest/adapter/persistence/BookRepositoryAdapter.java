@@ -135,7 +135,11 @@ class BookRepositoryAdapter implements BookRepository {
                 .query((resultSet, rowNum) -> new Document(resultSet.getString("content")))
                 .optional();
 
-        return semanticSimilarity(randomDocument, limit);
+        if (randomDocument.isEmpty()) {
+            return List.of();
+        }
+
+        return semanticSimilarity(randomDocument.get(), limit);
     }
 
     @Override
@@ -150,7 +154,11 @@ class BookRepositoryAdapter implements BookRepository {
                 .query((resultSet, rowNum) -> new Document(resultSet.getString("content")))
                 .optional();
 
-        return semanticSimilarity(document, limit);
+        if (document.isEmpty()) {
+            return List.of();
+        }
+
+        return semanticSimilarity(document.get(), limit);
     }
 
     @Override
@@ -167,13 +175,9 @@ class BookRepositoryAdapter implements BookRepository {
                 .list();
     }
 
-    private List<Book> semanticSimilarity(Optional<Document> document, int limit) {
-        if (document.isEmpty()) {
-            return List.of();
-        }
-
+    private List<Book> semanticSimilarity(Document document, int limit) {
         final SearchRequest searchRequest = SearchRequest.builder()
-                .query("passage: " + document.get().getText())
+                .query("passage: " + document.getText())
                 .similarityThreshold(0.8)
                 .topK(limit)
                 .build();

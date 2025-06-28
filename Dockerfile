@@ -1,4 +1,4 @@
-FROM bellsoft/liberica-runtime-container:jdk-21-glibc as builder
+FROM bellsoft/liberica-runtime-container:jdk-24-glibc AS builder
 WORKDIR /opt/app
 
 COPY gradlew gradlew
@@ -14,7 +14,7 @@ COPY application/ application/
 
 RUN ./gradlew bootJar --no-daemon --stacktrace
 
-FROM bellsoft/liberica-runtime-container:jre-21-glibc
+FROM bellsoft/liberica-runtime-container:jre-24-glibc
 WORKDIR /opt/app
 EXPOSE 8080
 

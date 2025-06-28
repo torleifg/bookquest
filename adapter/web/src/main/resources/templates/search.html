@@ -55,7 +55,10 @@
             <div th:each="book, iter : ${results}" class="result-item">
                 <p><a th:href="@{/similar(isbn=${book.isbn})}" class="invisible-link" aria-label="Find similar titles"
                       title="Find similar titles">
-                    <strong th:text="${book.title + ' (' + book.publishedYear + ')'}"></strong>
+                    <strong th:text="${book.title}"></strong>
+                    <span th:if="${book.publishedYear != null}">
+                        <strong th:text="${' (' + book.publishedYear + ')'}"></strong>
+                    </span>
                 </a>
                     <span th:if="${book.bookFormat != null}" class="format-label">
                         <span th:text="${book.bookFormat}"></span>
