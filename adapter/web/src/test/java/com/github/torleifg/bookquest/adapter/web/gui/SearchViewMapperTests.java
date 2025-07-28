@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class SearchGuiMapperTests {
+class SearchViewMapperTests {
 
     @Mock
     MessageSource languageSource;
