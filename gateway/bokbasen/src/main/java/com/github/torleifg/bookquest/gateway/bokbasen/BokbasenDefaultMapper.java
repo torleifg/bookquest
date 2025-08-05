@@ -107,13 +107,9 @@ class BokbasenDefaultMapper implements BokbasenMapper {
         descriptiveDetail.getLanguage().stream()
                 .filter(language -> language.getLanguageRole().getValue() == List22.fromValue("01"))
                 .map(Language::getLanguageCode)
-                .map(language -> {
-                    try {
-                        return com.github.torleifg.bookquest.core.domain.Language.valueOf(language.getValue().value().toUpperCase());
-                    } catch (IllegalArgumentException e) {
-                        return com.github.torleifg.bookquest.core.domain.Language.UND;
-                    }
-                })
+                .map(LanguageCode::getValue)
+                .map(List74::value)
+                .map(com.github.torleifg.bookquest.core.domain.Language::fromTag)
                 .forEach(language -> metadata.getLanguages().add(language));
 
         Optional.ofNullable(descriptiveDetail.getProductForm())
@@ -170,13 +166,13 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                                 final String name = subjectSchemeName.getValue();
 
                                 if (name.equals("Bokbasen_Subject")) {
-                                    metadata.getAbout().add(new Classification(null, "Bokbasen_Subject", language, text));
+                                    metadata.getAbout().add(new Classification(null, "Bokbasen_Subject", language, com.github.torleifg.bookquest.core.domain.Language.fromTag(language), text));
                                 }
                             }
                         }
 
                         if (isGenreAndForm(subjectSchemeIdentifier)) {
-                            metadata.getGenreAndForm().add(new Classification(code, "ntsf", language, text));
+                            metadata.getGenreAndForm().add(new Classification(code, "ntsf", language, com.github.torleifg.bookquest.core.domain.Language.fromTag(language), text));
                         }
                     }
                 }

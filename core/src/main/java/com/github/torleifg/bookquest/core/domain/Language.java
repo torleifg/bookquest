@@ -1,5 +1,8 @@
 package com.github.torleifg.bookquest.core.domain;
 
+import java.util.Locale;
+import java.util.MissingResourceException;
+
 public enum Language {
     AAR,
     AAV,
@@ -572,5 +575,21 @@ public enum Language {
     ZUL,
     ZUN,
     ZXX,
-    ZZA
+    ZZA;
+
+    public static Language fromTag(String language) {
+        return getLanguage(Locale.of(language));
+    }
+
+    public static Language fromLocale(Locale locale) {
+        return getLanguage(locale);
+    }
+
+    private static Language getLanguage(Locale locale) {
+        try {
+            return Language.valueOf(locale.getISO3Language().toUpperCase());
+        } catch (Exception e) {
+            return Language.UND;
+        }
+    }
 }

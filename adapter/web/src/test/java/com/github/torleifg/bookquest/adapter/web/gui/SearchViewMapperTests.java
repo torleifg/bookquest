@@ -47,8 +47,8 @@ class SearchViewMapperTests {
         metadata.setDescription("description");
         metadata.setLanguages(List.of(Language.NOB));
         metadata.setFormat(BookFormat.HARDCOVER);
-        metadata.setAbout(List.of(new Classification("id", "source", "nob", "om")));
-        metadata.setGenreAndForm(List.of(new Classification("id", "source", "nob", "sjanger")));
+        metadata.setAbout(List.of(new Classification("id", "source", "nob", Language.ENG, "om")));
+        metadata.setGenreAndForm(List.of(new Classification("id", "source", "nob", Language.ENG, "sjanger")));
         metadata.setThumbnailUrl(URI.create("http://thumbnailUrl"));
 
         book.setMetadata(metadata);

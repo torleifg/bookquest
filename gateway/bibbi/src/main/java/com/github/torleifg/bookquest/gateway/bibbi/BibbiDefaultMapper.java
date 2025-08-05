@@ -79,11 +79,7 @@ class BibbiDefaultMapper implements BibbiMapper {
         }
 
         if (isNotBlank(publication.getInLanguage())) {
-            try {
-                metadata.setLanguages(List.of(Language.valueOf(publication.getInLanguage().toUpperCase())));
-            } catch (IllegalArgumentException ignored) {
-                metadata.setLanguages(List.of(Language.UND));
-            }
+            metadata.setLanguages(List.of(Language.fromTag(publication.getInLanguage())));
         }
 
         if (publication.getBookFormat() != null) {
@@ -104,10 +100,10 @@ class BibbiDefaultMapper implements BibbiMapper {
             final String id = about.getId();
             final String source = about.getVocabulary().getValue();
 
-            metadata.getAbout().add(new Classification(id, source, "nob", name.getNob()));
+            metadata.getAbout().add(new Classification(id, source, "nob", Language.NOB, name.getNob()));
 
             if (name.getNno() != null) {
-                metadata.getAbout().add(new Classification(id, source, "nno", name.getNno()));
+                metadata.getAbout().add(new Classification(id, source, "nno", Language.NNO, name.getNno()));
             }
         }
 
@@ -121,12 +117,12 @@ class BibbiDefaultMapper implements BibbiMapper {
                     .orElse(null);
 
             metadata.getGenreAndForm().addAll(List.of(
-                    new Classification(id, source, "nob", name.getNob()),
-                    new Classification(id, source, "nno", name.getNno())
+                    new Classification(id, source, "nob", Language.NOB, name.getNob()),
+                    new Classification(id, source, "nno", Language.NNO, name.getNno())
             ));
 
             if (name.getEng() != null) {
-                metadata.getGenreAndForm().add(new Classification(id, source, "eng", name.getEng()));
+                metadata.getGenreAndForm().add(new Classification(id, source, "eng", Language.ENG, name.getEng()));
             }
         }
 
