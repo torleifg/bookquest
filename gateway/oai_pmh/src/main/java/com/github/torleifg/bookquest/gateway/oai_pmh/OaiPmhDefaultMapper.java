@@ -119,13 +119,7 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
                 .map(ControlField::getData)
                 .filter(data -> data.length() > 38)
                 .map(data -> data.substring(35, 38))
-                .map(language -> {
-                    try {
-                        return Language.valueOf(language.toUpperCase());
-                    } catch (IllegalArgumentException e) {
-                        return Language.UND;
-                    }
-                })
+                .map(Language::fromTag)
                 .forEach(metadata.getLanguages()::add);
 
         dataFieldsByTag.getOrDefault("041", List.of()).stream()
@@ -133,13 +127,7 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
                 .flatMap(Collection::stream)
                 .filter(Objects::nonNull)
                 .map(Subfield::getData)
-                .map(language -> {
-                    try {
-                        return Language.valueOf(language.toUpperCase());
-                    } catch (IllegalArgumentException e) {
-                        return Language.UND;
-                    }
-                })
+                .map(Language::fromTag)
                 .filter(language -> !metadata.getLanguages().contains(language))
                 .forEach(metadata.getLanguages()::add);
 
@@ -217,6 +205,6 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
                 .map(Subfield::getData)
                 .orElse(null);
 
-        return new Classification(id, source, language, term);
+        return new Classification(id, source, language, Language.fromTag(language), term);
     }
 }

@@ -32,8 +32,8 @@ class DocumentMapperTests {
         metadata.setTitle("title");
         metadata.setDescription("description");
         metadata.setContributors(List.of(new Contributor(List.of(Role.AUT), "author")));
-        metadata.setAbout(List.of(new Classification("id", "source", "language", "term")));
-        metadata.setGenreAndForm(List.of(new Classification("id", "source", "language", "term")));
+        metadata.setAbout(List.of(new Classification("id", "source", "language", Language.UND, "term")));
+        metadata.setGenreAndForm(List.of(new Classification("id", "source", "language", Language.UND, "term")));
 
         book.setMetadata(metadata);
 
@@ -50,8 +50,8 @@ class DocumentMapperTests {
         metadata.setTitle("title");
         metadata.setDescription("description a b c d e f g h i j k l m n o p q r s t u u v w x y");
         metadata.setContributors(List.of(new Contributor(List.of(Role.AUT), "author"), new Contributor(List.of(Role.ILL), "illustator")));
-        metadata.setAbout(List.of(new Classification("id", "source", "language", "term1"), new Classification("id", "source", "language", "term2")));
-        metadata.setGenreAndForm(List.of(new Classification("id", "source", "language", "term")));
+        metadata.setAbout(List.of(new Classification("id", "source", "language", Language.UND, "term1"), new Classification("id", "source", "language", Language.UND, "term2")));
+        metadata.setGenreAndForm(List.of(new Classification("id", "source", "language", Language.UND, "term")));
 
         book.setMetadata(metadata);
 

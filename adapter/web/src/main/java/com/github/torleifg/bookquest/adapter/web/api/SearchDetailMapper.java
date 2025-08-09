@@ -54,12 +54,12 @@ public class SearchDetailMapper {
         }
 
         metadata.getAbout().stream()
-                .filter(classification -> classification.language().equals(locale.getISO3Language()))
+                .filter(classification -> classification.hasLanguage(locale))
                 .map(classification -> new SearchDetail.Classification(classification.id(), classification.term()))
                 .forEach(searchDetail.getAbout()::add);
 
         metadata.getGenreAndForm().stream()
-                .filter(classification -> classification.language().equals(locale.getISO3Language()))
+                .filter(classification -> classification.hasLanguage(locale))
                 .map(classification -> new SearchDetail.Classification(classification.id(), classification.term()))
                 .forEach(searchDetail.getGenreAndForm()::add);
 

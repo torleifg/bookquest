@@ -63,14 +63,14 @@ public class SearchViewMapper {
         }
 
         final String about = metadata.getAbout().stream()
-                .filter(classification -> classification.language().equals(locale.getISO3Language()))
+                .filter(classification -> classification.hasLanguage(locale))
                 .map(Classification::term)
                 .collect(joining(", "));
 
         searchView.setAbout(about);
 
         final String genreAndForm = metadata.getGenreAndForm().stream()
-                .filter(classification -> classification.language().equals(locale.getISO3Language()))
+                .filter(classification -> classification.hasLanguage(locale))
                 .map(Classification::term)
                 .collect(joining(", "));
 
