@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayDeque;
 import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -35,19 +37,22 @@ class Scheduler {
             return;
         }
 
-        for (final GatewayService gateway : gateways) {
+        final Queue<GatewayService> queue = new ArrayDeque<>(gateways);
+
+        while (!queue.isEmpty()) {
+            final GatewayService gateway = queue.poll();
             final String name = gateway.getClass().getSimpleName();
 
             log.info("Polling {}...", name);
 
             try {
-                while (harvester.poll(gateway)) {
-                    log.info("Continue polling {}.", name);
+                if (harvester.poll(gateway)) {
+                    queue.add(gateway);
+                } else {
+                    log.info("Finished polling {}", name);
                 }
             } catch (Exception e) {
                 log.error("Error while polling {}.", name, e);
-            } finally {
-                log.info("Finished polling {}", name);
             }
         }
     }
