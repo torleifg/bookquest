@@ -1,9 +1,6 @@
 package com.github.torleifg.bookquest.adapter.web.gui;
 
-import com.github.torleifg.bookquest.core.domain.Book;
-import com.github.torleifg.bookquest.core.domain.BookFormat;
-import com.github.torleifg.bookquest.core.domain.Classification;
-import com.github.torleifg.bookquest.core.domain.Metadata;
+import com.github.torleifg.bookquest.core.domain.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
@@ -35,13 +32,7 @@ public class SearchViewMapper {
         searchView.setPublisher(metadata.getPublisher());
 
         final String contributors = metadata.getContributors().stream()
-                .map(contributor -> {
-                    final String roles = contributor.roles().stream()
-                            .map(role -> contributorSource.getMessage(role.name(), null, locale))
-                            .collect(joining(", "));
-
-                    return contributor.name() + " (" + roles + ")";
-                })
+                .map(contributor -> toString(contributor, locale))
                 .collect(joining(" ; "));
 
         searchView.setContributors(contributors);
@@ -81,5 +72,13 @@ public class SearchViewMapper {
         }
 
         return searchView;
+    }
+
+    private String toString(Contributor contributor, Locale locale) {
+        final String roles = contributor.roles().stream()
+                .map(role -> contributorSource.getMessage(role.name(), null, locale))
+                .collect(joining(", "));
+
+        return contributor.name() + " (" + roles + ")";
     }
 }

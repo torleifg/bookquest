@@ -34,24 +34,18 @@ public class SchedulerTests {
     }
 
     @Test
-    void stopPollingTest() {
-        when(harvester.poll(firstGateway)).thenReturn(false);
+    void runTest() {
+        when(harvester.poll(firstGateway)).thenReturn(true, false);
         when(harvester.poll(secondGateway)).thenReturn(false);
 
         scheduler.run();
 
-        verify(harvester, times(1)).poll(firstGateway);
-        verify(harvester, times(1)).poll(secondGateway);
-    }
-
-    @Test
-    void continuePollingTest() {
-        when(harvester.poll(firstGateway)).thenReturn(true, false);
-        when(harvester.poll(secondGateway)).thenReturn(true, false);
-
-        scheduler.run();
+        var inOrder = inOrder(harvester);
+        inOrder.verify(harvester).poll(firstGateway);
+        inOrder.verify(harvester).poll(secondGateway);
+        inOrder.verify(harvester).poll(firstGateway);
 
         verify(harvester, times(2)).poll(firstGateway);
-        verify(harvester, times(2)).poll(secondGateway);
+        verify(harvester, times(1)).poll(secondGateway);
     }
 }

@@ -2,6 +2,7 @@ package com.github.torleifg.bookquest.adapter.web.api;
 
 import com.github.torleifg.bookquest.core.domain.Book;
 import com.github.torleifg.bookquest.core.domain.BookFormat;
+import com.github.torleifg.bookquest.core.domain.Contributor;
 import com.github.torleifg.bookquest.core.domain.Metadata;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
@@ -33,13 +34,7 @@ public class SearchDetailMapper {
         searchDetail.setPublisher(metadata.getPublisher());
 
         metadata.getContributors().stream()
-                .map(contributor -> {
-                    final List<SearchDetail.ContributorRole> contributorRoles = contributor.roles().stream()
-                            .map(role -> new SearchDetail.ContributorRole(role, contributorSource.getMessage(role.name(), null, locale)))
-                            .toList();
-
-                    return new SearchDetail.Contributor(contributorRoles, contributor.name());
-                })
+                .map(contributor -> formatContributor(contributor, locale))
                 .forEach(searchDetail.getContributors()::add);
 
         searchDetail.setPublishedYear(metadata.getPublishedYear());
@@ -68,5 +63,13 @@ public class SearchDetailMapper {
         }
 
         return searchDetail;
+    }
+
+    private SearchDetail.Contributor formatContributor(Contributor contributor, Locale locale) {
+        final List<SearchDetail.ContributorRole> contributorRoles = contributor.roles().stream()
+                .map(role -> new SearchDetail.ContributorRole(role, contributorSource.getMessage(role.name(), null, locale)))
+                .toList();
+
+        return new SearchDetail.Contributor(contributorRoles, contributor.name());
     }
 }
