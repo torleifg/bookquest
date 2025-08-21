@@ -30,15 +30,25 @@ public class BookService {
         return bookRepository.semanticSearch(query, 25);
     }
 
-    public List<Book> hybridSearch(String query) {
-        return bookRepository.hybridSearch(query, 25);
-    }
-
     public List<Book> semanticSimilarity(String isbn) {
         return bookRepository.semanticSimilarity(isbn, 25);
     }
 
     public List<String> autocomplete(String term) {
         return bookRepository.autocomplete(term, 10);
+    }
+
+    public List<Book> hybridSearch(String query) {
+        final List<RankedSearchHit> rankedSearchHits = List.of(
+                RankedSearchHit.from(bookRepository.fullTextSearch(query, 25), 0.5),
+                RankedSearchHit.from(bookRepository.semanticSearch(query, 25), 0.5)
+        );
+
+        return new ReciprocalRankFusion(rankedSearchHits)
+                .compute()
+                .keySet()
+                .stream()
+                .limit(25)
+                .toList();
     }
 }
