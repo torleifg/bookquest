@@ -113,33 +113,16 @@ class BookRepositoryAdapter implements BookRepository {
     }
 
     @Override
-    public List<Book> hybridSearch(String query, int limit) {
-        final List<RankedSearchHit> rankedSearchHits = List.of(
-                RankedSearchHit.from(fullTextSearch(query, limit), 0.5),
-                RankedSearchHit.from(semanticSearch(query, limit), 0.5)
-        );
-
-        return new ReciprocalRankFusion(rankedSearchHits)
-                .compute()
-                .keySet()
-                .stream()
-                .limit(limit)
-                .toList();
-    }
-
-    @Override
     public List<Book> semanticSimilarity(int limit) {
-        final Optional<Document> randomDocument = jdbcClient.sql("""
+        final Optional<Document> document = jdbcClient.sql("""
                         select * from vector_store order by random() limit 1
                         """)
                 .query((resultSet, _) -> new Document(resultSet.getString("content")))
                 .optional();
 
-        if (randomDocument.isEmpty()) {
-            return List.of();
-        }
-
-        return semanticSimilarity(randomDocument.get(), limit);
+        return document
+                .map(it -> semanticSimilarity(it, limit))
+                .orElseGet(List::of);
     }
 
     @Override
@@ -154,11 +137,9 @@ class BookRepositoryAdapter implements BookRepository {
                 .query((resultSet, _) -> new Document(resultSet.getString("content")))
                 .optional();
 
-        if (document.isEmpty()) {
-            return List.of();
-        }
-
-        return semanticSimilarity(document.get(), limit);
+        return document
+                .map(it -> semanticSimilarity(it, limit))
+                .orElseGet(List::of);
     }
 
     @Override

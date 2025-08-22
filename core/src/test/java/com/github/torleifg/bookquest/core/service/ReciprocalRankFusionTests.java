@@ -1,4 +1,4 @@
-package com.github.torleifg.bookquest.adapter.persistence;
+package com.github.torleifg.bookquest.core.service;
 
 import com.github.torleifg.bookquest.core.domain.Book;
 import com.github.torleifg.bookquest.core.domain.Metadata;
