@@ -27,13 +27,13 @@
 <div class="container">
     <header>
         <!-- Language -->
-        <div class="language-picker" th:aria-label="#{aria.language}">
+        <nav class="language-picker" th:aria-label="#{aria.language}">
             <span th:if="${#locale.language == 'en'}">English</span>
             <a th:if="${#locale.language != 'en'}" th:href="@{/change-language(lang='en')}">English</a>
             <span> | </span>
             <span th:if="${#locale.language == 'nb'}">Bokmål</span>
             <a th:if="${#locale.language != 'nb'}" th:href="@{/change-language(lang='nb')}">Bokmål</a>
-        </div>
+        </nav>
         <!-- Search -->
         <div class="search-form">
             <form th:action="@{/search}" method="get">
