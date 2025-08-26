@@ -25,36 +25,33 @@
 </head>
 <body>
 <div class="container">
-    <!-- Language -->
-    <div class="language-picker">
-        <form th:action="@{/change-language}" method="get">
-            <div class="custom-select">
-                <select name="lang" onchange="this.form.submit()" aria-label="Choose language">
-                    <option th:value="en" th:selected="${#locale.language == 'en'}">English</option>
-                    <option th:value="nb" th:selected="${#locale.language == 'nb'}">Bokmål</option>
-                </select>
-                <i class="fa fa-chevron-down"></i>
-            </div>
-        </form>
-    </div>
-    <!-- Search -->
-    <div class="search-form">
-        <form th:action="@{/search}" method="get">
-            <div class="input-container">
-                <input type="search" id="query" name="query" th:value="${query}" autofocus
-                       aria-label="Enter search query" autocomplete="off" spellcheck="false"/>
-                <button type="submit" class="search-icon-button" aria-label="Submit search">
-                    <i class="fa fa-search"></i>
-                </button>
-            </div>
-        </form>
-    </div>
+    <header>
+        <!-- Language -->
+        <nav class="language-picker" th:aria-label="#{aria.language}">
+            <span th:if="${#locale.language == 'en'}">English</span>
+            <a th:if="${#locale.language != 'en'}" th:href="@{/change-language(lang='en')}">English</a>
+            <span> | </span>
+            <span th:if="${#locale.language == 'nb'}">Bokmål</span>
+            <a th:if="${#locale.language != 'nb'}" th:href="@{/change-language(lang='nb')}">Bokmål</a>
+        </nav>
+        <!-- Search -->
+        <div class="search-form">
+            <form th:action="@{/search}" method="get">
+                <div class="input-container">
+                    <input type="search" id="query" name="query" th:value="${query}" autofocus
+                           th:aria-label="#{aria.query}" autocomplete="off" spellcheck="false"/>
+                    <button type="submit" class="search-icon-button" th:aria-label="#{aria.search}">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </header>
     <!-- Results -->
-    <div class="results">
+    <main class="results">
         <div th:if="${#lists.size(results) > 0}">
-            <div th:each="book, iter : ${results}" class="result-item">
-                <p><a th:href="@{/similar(isbn=${book.isbn})}" class="invisible-link" aria-label="Find similar titles"
-                      title="Find similar titles">
+            <article th:each="book, iter : ${results}" class="result-item">
+                <p><a th:href="@{/similar(isbn=${book.isbn})}" class="invisible-link" th:title="#{aria.similar}">
                     <strong th:text="${book.title}"></strong>
                     <span th:if="${book.publishedYear != null}">
                         <strong th:text="${' (' + book.publishedYear + ')'}"></strong>
@@ -65,7 +62,7 @@
                     </span>
                 </p>
                 <img th:src="${book.thumbnailUrl != null ? book.thumbnailUrl : 'fallback.png'}"
-                     th:alt="${book.title}" loading="lazy"/>
+                     th:alt="#{cover} + ' ' + ${book.title}" loading="lazy"/>
                 <p th:if="${book.contributors != null and !book.contributors.isBlank()}">
                     <span th:text="${book.contributors}"></span>
                 </p>
@@ -79,34 +76,34 @@
                     <summary th:text="#{details}"></summary>
                     <table class="details-table">
                         <tr th:if="${book.isbn != null}">
-                            <td><strong th:text="#{isbn}"></strong></td>
+                            <th scope="row" th:text="#{isbn}"></th>
                             <td th:text="${book.isbn}"></td>
                         </tr>
                         <tr th:if="${book.languages != null and !book.languages.isBlank()}">
-                            <td><strong th:text="#{language}"></strong></td>
+                            <th scope="row" th:text="#{language}"></th>
                             <td th:text="${book.languages}"></td>
                         </tr>
                         <tr th:if="${book.publisher != null}">
-                            <td><strong th:text="#{publisher}"></strong></td>
+                            <th scope="row" th:text="#{publisher}"></th>
                             <td th:text="${book.publisher}"></td>
                         </tr>
                         <tr th:if="${book.about != null and !book.about.isBlank()}">
-                            <td><strong th:text="#{about}"></strong></td>
+                            <th scope="row" th:text="#{about}"></th>
                             <td th:text="${book.about}"></td>
                         </tr>
                         <tr th:if="${book.genreAndForm != null and !book.genreAndForm.isBlank()}">
-                            <td><strong th:text="#{genreAndForm}"></strong></td>
+                            <th scope="row" th:text="#{genreAndForm}"></th>
                             <td th:text="${book.genreAndForm}"></td>
                         </tr>
                     </table>
                 </details>
                 <hr th:if="${!iter.last}"/>
-            </div>
+            </article>
         </div>
         <div th:if="${#lists.size(results) == 0}">
             <p th:text="#{results}"></p>
         </div>
-    </div>
+    </main>
 </div>
 </body>
 </html>
