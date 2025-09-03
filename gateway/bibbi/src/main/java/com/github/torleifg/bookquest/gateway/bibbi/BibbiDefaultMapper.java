@@ -11,10 +11,12 @@ import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 class BibbiDefaultMapper implements BibbiMapper {
+    private static final String SOURCE = "bibbi";
 
     @Override
     public Book from(String id) {
         final Book book = new Book();
+        book.setSource(SOURCE);
         book.setExternalId(id);
         book.setDeleted(true);
 
@@ -24,6 +26,7 @@ class BibbiDefaultMapper implements BibbiMapper {
     @Override
     public Book from(GetV1PublicationsHarvest200ResponsePublicationsInner publication) {
         final Book book = new Book();
+        book.setSource(SOURCE);
         book.setExternalId(publication.getId());
         book.setDeleted(false);
 

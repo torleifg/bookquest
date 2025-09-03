@@ -9,12 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-class OaiPmhResponse {
-    private final OAIPMHtype oaipmHtype;
-
-    private OaiPmhResponse(OAIPMHtype oaipmHtype) {
-        this.oaipmHtype = oaipmHtype;
-    }
+record OaiPmhResponse(OAIPMHtype oaipmHtype) {
 
     static OaiPmhResponse from(OAIPMHtype oaipmHtype) {
         return new OaiPmhResponse(oaipmHtype);
@@ -44,15 +39,16 @@ class OaiPmhResponse {
         return Stream.ofNullable(oaipmHtype.getListRecords())
                 .map(ListRecordsType::getRecord)
                 .flatMap(Collection::stream)
-                .sorted(Comparator.comparing(this::getLastModified))
+                .sorted(Comparator.comparing(this::getLastModified, Comparator.nullsFirst(Comparator.reverseOrder())))
                 .toList();
     }
 
-    private Instant getLastModified(org.openarchives.oai._2.RecordType oaiPmhRecord) {
+    private Instant getLastModified(RecordType oaiPmhRecord) {
         return Optional.ofNullable(oaiPmhRecord.getHeader())
                 .map(HeaderType::getDatestamp)
+                .filter(datestamp -> !datestamp.isBlank())
                 .map(Instant::parse)
-                .orElseThrow();
+                .orElse(null);
     }
 
     Optional<String> getResumptionToken() {

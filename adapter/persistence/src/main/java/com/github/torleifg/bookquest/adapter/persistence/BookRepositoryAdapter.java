@@ -218,12 +218,13 @@ class BookRepositoryAdapter implements BookRepository {
 
     void save(Book book) {
         jdbcClient.sql("""
-                        insert into book(external_id, deleted, metadata) values (?, ?, ?)
+                        insert into book(external_id, source, deleted, metadata) values (?, ?, ?, ?)
                         on conflict (external_id)
                         do update set (modified, deleted, metadata) =
                         (now(), excluded.deleted, excluded.metadata)
                         """)
                 .param(book.getExternalId())
+                .param(book.getSource())
                 .param(book.isDeleted())
                 .param(toPGobject(book.getMetadata()))
                 .update();
@@ -231,12 +232,13 @@ class BookRepositoryAdapter implements BookRepository {
 
     void save(Book book, UUID vectorStoreId) {
         jdbcClient.sql("""
-                        insert into book(external_id, deleted, metadata, vector_store_id) values (?, ?, ?, ?)
+                        insert into book(external_id, source, deleted, metadata, vector_store_id) values (?, ?, ?, ?, ?)
                         on conflict (external_id)
                         do update set (modified, deleted, metadata, vector_store_id) =
                         (now(), excluded.deleted, excluded.metadata, excluded.vector_store_id)
                         """)
                 .param(book.getExternalId())
+                .param(book.getSource())
                 .param(book.isDeleted())
                 .param(toPGobject(book.getMetadata()))
                 .param(vectorStoreId)

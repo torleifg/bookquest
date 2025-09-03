@@ -13,10 +13,12 @@ import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 
 class OaiPmhDefaultMapper implements OaiPmhMapper {
+    private static final String SOURCE = "aja";
 
     @Override
     public Book from(String id) {
         final Book book = new Book();
+        book.setSource(SOURCE);
         book.setExternalId(id);
         book.setDeleted(true);
 
@@ -26,6 +28,7 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
     @Override
     public Book from(String id, Record record) {
         final Book book = new Book();
+        book.setSource(SOURCE);
         book.setExternalId(id);
         book.setDeleted(false);
 

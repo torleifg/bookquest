@@ -13,12 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-class BibbiResponse {
-    private final GetV1PublicationsHarvest200Response getV1PublicationsHarvest200Response;
-
-    private BibbiResponse(GetV1PublicationsHarvest200Response getV1PublicationsHarvest200Response) {
-        this.getV1PublicationsHarvest200Response = getV1PublicationsHarvest200Response;
-    }
+record BibbiResponse(GetV1PublicationsHarvest200Response getV1PublicationsHarvest200Response) {
 
     static BibbiResponse from(GetV1PublicationsHarvest200Response response) {
         return new BibbiResponse(response);
@@ -36,7 +31,7 @@ class BibbiResponse {
     List<GetV1PublicationsHarvest200ResponsePublicationsInner> getPublications() {
         return Stream.ofNullable(getV1PublicationsHarvest200Response.getPublications())
                 .flatMap(Collection::stream)
-                .sorted(Comparator.comparing(this::getLastModified))
+                .sorted(Comparator.comparing(this::getLastModified, Comparator.nullsFirst(Comparator.reverseOrder())))
                 .toList();
     }
 
@@ -44,6 +39,6 @@ class BibbiResponse {
         return Optional.ofNullable(publication.getBibliographicRecord())
                 .map(BibliographicRecordMetadata::getModified)
                 .map(OffsetDateTime::toInstant)
-                .orElse(Instant.MIN);
+                .orElse(null);
     }
 }

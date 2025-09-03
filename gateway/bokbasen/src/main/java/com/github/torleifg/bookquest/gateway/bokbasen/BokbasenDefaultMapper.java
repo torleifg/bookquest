@@ -14,10 +14,12 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 class BokbasenDefaultMapper implements BokbasenMapper {
+    private static final String SOURCE = "bokbasen";
 
     @Override
     public Book from(String id) {
         final Book book = new Book();
+        book.setSource(SOURCE);
         book.setExternalId(id);
         book.setDeleted(true);
 
@@ -27,6 +29,7 @@ class BokbasenDefaultMapper implements BokbasenMapper {
     @Override
     public Book from(Product product) {
         final Book book = new Book();
+        book.setSource(SOURCE);
         book.setExternalId(product.getRecordReference().getValue());
         book.setDeleted(false);
 

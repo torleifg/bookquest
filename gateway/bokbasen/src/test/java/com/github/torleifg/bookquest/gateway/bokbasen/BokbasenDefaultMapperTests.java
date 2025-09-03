@@ -185,6 +185,7 @@ class BokbasenDefaultMapperTests {
         product.setCollateralDetail(collateralDetail);
 
         var book = mapper.from(product);
+        assertEquals("bokbasen", book.getSource());
         assertEquals("id", book.getExternalId());
         assertFalse(book.isDeleted());
 
