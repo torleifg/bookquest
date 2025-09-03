@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class Book {
+    private String source;
     private String externalId;
     private String vectorStoreId;
 

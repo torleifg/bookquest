@@ -66,6 +66,7 @@ class BibbiDefaultMapperTests {
         publication.setImage(publicationImage);
 
         var book = mapper.from(publication);
+        assertEquals("bibbi", book.getSource());
         assertEquals("id", book.getExternalId());
         assertFalse(book.isDeleted());
 

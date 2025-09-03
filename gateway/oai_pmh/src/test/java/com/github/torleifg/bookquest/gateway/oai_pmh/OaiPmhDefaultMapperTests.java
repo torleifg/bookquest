@@ -77,6 +77,7 @@ class OaiPmhDefaultMapperTests {
         record.getDataFields().addAll(List.of(isbn, title, publisher, entry, publishedYear, description, language, aboutNob, aboutNno, genreNob, genreEng, thumbnailUrl));
 
         var book = mapper.from("id", record);
+        assertEquals("aja", book.getSource());
         assertEquals("id", book.getExternalId());
         assertFalse(book.isDeleted());
 
