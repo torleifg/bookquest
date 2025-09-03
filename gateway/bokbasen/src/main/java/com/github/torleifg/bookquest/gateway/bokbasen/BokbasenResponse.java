@@ -7,12 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
-class BokbasenResponse {
-    private final ONIXMessage onixMessage;
-
-    private BokbasenResponse(ONIXMessage onixMessage) {
-        this.onixMessage = onixMessage;
-    }
+record BokbasenResponse(ONIXMessage onixMessage) {
 
     static BokbasenResponse from(ONIXMessage onixMessage) {
         return new BokbasenResponse(onixMessage);
