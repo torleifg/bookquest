@@ -1,20 +1,16 @@
 plugins {
-    id 'java-common-conventions'
-    id 'org.openapi.generator'
-}
-
-bootJar {
-    enabled = false
+    id 'buildlogic.java-library-conventions'
+    alias libs.plugins.openapi.generator
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    implementation 'org.apache.commons:commons-lang3'
+    implementation libs.commons.lang
 
     implementation project(':core')
 
-    testImplementation 'org.wiremock.integrations:wiremock-spring-boot:3.10.6'
+    testImplementation libs.wiremock.spring.boot
 }
 
 openApiGenerate {

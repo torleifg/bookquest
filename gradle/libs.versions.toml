@@ -1,41 +1,35 @@
 [versions]
-kotlin = "2.2.20"
-kotlinx-coroutines = "1.10.2"
-kotlinx-datetime = "0.7.1"
-kotlinx-serialization-json = "1.9.0"
-ktor = "3.2.3"
-logback = "1.5.18"
-mockk = "1.14.5"
+boot = '3.5.6'
+dependency-management = '1.1.7'
+ai = '1.0.3'
+openapi = '7.6.0'
+xjc = '2.0.0'
 
-springBootVersion = '3.5.6'
-springDependencyManagementVersion = '1.1.7'
-springAiVersion = '1.0.3'
-marc4jVersion = '2.9.6'
-jaxbVersion = '4.0.2'
-wiremockVersion = '3.10.6'
-commonsLangVersion = '3.18.0'
-springdocVersion = '2.8.13'
-openapiGeneratorVersion = '7.6.0'
-unbrokenDomeVersion = '2.0.0'
+marc = '2.9.6'
+xml = '4.0.2'
+wiremock = '3.10.6'
+commons = '3.18.0'
+springdoc = '2.8.13'
+missing-css = '1.1.3'
+font-awesome = '4.7.0'
+jquery = '3.7.1'
+jquery-ui = '1.14.1'
 
 [libraries]
-
-
-
-kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
-kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
-kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime-jvm", version.ref = "kotlinx-datetime" }
-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
-
-ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
-ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
-ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
-ktor-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
-ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
-
-logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
-
-mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+wiremock-spring-boot = { module = 'org.wiremock.integrations:wiremock-spring-boot', version.ref = 'wiremock' }
+commons-lang = { module = 'org.apache.commons:commons-lang3', version.ref = 'commons' }
+jakarta-xml-bind-api = { module = 'jakarta.xml.bind:jakarta.xml.bind-api', version.ref = 'xml' }
+jaxb-impl = { module = 'com.sun.xml.bind:jaxb-impl', version.ref = 'xml' }
+marc4j = { module = 'org.marc4j:marc4j', version.ref = 'marc' }
+springdoc-openapi-starter-webmvc-ui = { module = 'org.springdoc:springdoc-openapi-starter-webmvc-ui', version.ref = 'springdoc' }
+webjars-missing-css = { module = 'org.webjars.npm:missing.css', version.ref = 'missing-css' }
+webjars-font-awesome = { module = 'org.webjars.npm:font-awesome', version.ref = 'font-awesome' }
+webjars-jquery = { module = 'org.webjars:jquery', version.ref = 'jquery' }
+webjars-jquery-ui = { module = 'org.webjars:jquery-ui', version.ref = 'jquery-ui' }
+spring-ai = { module = 'org.springframework.ai:spring-ai-bom', version.ref = 'ai' }
 
 [plugins]
-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+spring-boot = { id = 'org.springframework.boot', version.ref = 'boot' }
+spring-dependency-management = { id = 'io.spring.dependency-management', version.ref = 'dependency-management' }
+openapi-generator = { id = 'org.openapi.generator', version.ref = 'openapi' }
+xjc-generator = { id = 'org.unbroken-dome.xjc', version.ref = 'xjc' }
