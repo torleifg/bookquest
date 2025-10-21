@@ -1,5 +1,10 @@
 plugins {
+    id 'java-common-conventions'
     id 'org.unbroken-dome.xjc'
+}
+
+bootJar {
+    enabled = false
 }
 
 dependencies {
@@ -8,17 +13,14 @@ dependencies {
     implementation 'jakarta.xml.bind:jakarta.xml.bind-api'
     implementation 'com.sun.xml.bind:jaxb-impl'
 
-    implementation 'org.marc4j:marc4j'
-
-    implementation project(':core')
+    implementation 'org.marc4j:marc4j:2.9.6'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.wiremock.integrations:wiremock-spring-boot'
+    implementation project(':core')
 
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'org.wiremock.integrations:wiremock-spring-boot:3.10.6'
 }
 
 xjc {

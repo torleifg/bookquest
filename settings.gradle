@@ -1,17 +1,3 @@
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        mavenCentral()
-    }
-
-    plugins {
-        id 'org.springframework.boot' version "${springBootVersion}"
-        id 'io.spring.dependency-management' version "${springDependencyManagementVersion}"
-        id 'org.openapi.generator' version "${openapiGeneratorVersion}"
-        id 'org.unbroken-dome.xjc' version "${unbrokenDomeVersion}"
-    }
-}
-
 rootProject.name = 'bookquest'
 
 include 'gateway:bibbi'
