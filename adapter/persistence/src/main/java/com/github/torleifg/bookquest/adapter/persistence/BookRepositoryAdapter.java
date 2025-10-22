@@ -117,7 +117,7 @@ class BookRepositoryAdapter implements BookRepository {
         final Optional<Document> document = jdbcClient.sql("""
                         select * from vector_store order by random() limit 1
                         """)
-                .query((resultSet, _) -> new Document(resultSet.getString("content")))
+                .query((resultSet, it) -> new Document(resultSet.getString("content")))
                 .optional();
 
         return document
@@ -134,7 +134,7 @@ class BookRepositoryAdapter implements BookRepository {
                         limit 1
                         """)
                 .param(isbn)
-                .query((resultSet, _) -> new Document(resultSet.getString("content")))
+                .query((resultSet, it) -> new Document(resultSet.getString("content")))
                 .optional();
 
         return document

@@ -1,0 +1,33 @@
+plugins {
+    id 'java'
+    id 'io.spring.dependency-management'
+    id 'org.springframework.boot'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencyManagement {
+    imports {
+        mavenBom libs.spring.ai.get().toString()
+    }
+}
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(24)
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

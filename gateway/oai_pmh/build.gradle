@@ -1,24 +1,19 @@
 plugins {
-    id 'org.unbroken-dome.xjc'
+    id 'buildlogic.java-library-conventions'
+    alias libs.plugins.xjc.generator
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    implementation 'jakarta.xml.bind:jakarta.xml.bind-api'
-    implementation 'com.sun.xml.bind:jaxb-impl'
+    implementation libs.jakarta.xml.bind.api
+    implementation libs.jaxb.impl
 
-    implementation 'org.marc4j:marc4j'
+    implementation libs.marc4j
 
     implementation project(':core')
 
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.wiremock.integrations:wiremock-spring-boot'
-
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation libs.wiremock.spring.boot
 }
 
 xjc {

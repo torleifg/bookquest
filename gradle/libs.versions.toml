@@ -1,0 +1,35 @@
+[versions]
+boot = '3.5.6'
+dependency-management = '1.1.7'
+ai = '1.0.3'
+openapi = '7.6.0'
+xjc = '2.0.0'
+
+marc = '2.9.6'
+xml = '4.0.2'
+wiremock = '3.10.6'
+commons = '3.18.0'
+springdoc = '2.8.13'
+missing-css = '1.1.3'
+font-awesome = '4.7.0'
+jquery = '3.7.1'
+jquery-ui = '1.14.1'
+
+[libraries]
+wiremock-spring-boot = { module = 'org.wiremock.integrations:wiremock-spring-boot', version.ref = 'wiremock' }
+commons-lang = { module = 'org.apache.commons:commons-lang3', version.ref = 'commons' }
+jakarta-xml-bind-api = { module = 'jakarta.xml.bind:jakarta.xml.bind-api', version.ref = 'xml' }
+jaxb-impl = { module = 'com.sun.xml.bind:jaxb-impl', version.ref = 'xml' }
+marc4j = { module = 'org.marc4j:marc4j', version.ref = 'marc' }
+springdoc-openapi-starter-webmvc-ui = { module = 'org.springdoc:springdoc-openapi-starter-webmvc-ui', version.ref = 'springdoc' }
+webjars-missing-css = { module = 'org.webjars.npm:missing.css', version.ref = 'missing-css' }
+webjars-font-awesome = { module = 'org.webjars.npm:font-awesome', version.ref = 'font-awesome' }
+webjars-jquery = { module = 'org.webjars:jquery', version.ref = 'jquery' }
+webjars-jquery-ui = { module = 'org.webjars:jquery-ui', version.ref = 'jquery-ui' }
+spring-ai = { module = 'org.springframework.ai:spring-ai-bom', version.ref = 'ai' }
+
+[plugins]
+spring-boot = { id = 'org.springframework.boot', version.ref = 'boot' }
+spring-dependency-management = { id = 'io.spring.dependency-management', version.ref = 'dependency-management' }
+openapi-generator = { id = 'org.openapi.generator', version.ref = 'openapi' }
+xjc-generator = { id = 'org.unbroken-dome.xjc', version.ref = 'xjc' }

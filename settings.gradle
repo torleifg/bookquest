@@ -1,15 +1,6 @@
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        mavenCentral()
-    }
-
-    plugins {
-        id 'org.springframework.boot' version "${springBootVersion}"
-        id 'io.spring.dependency-management' version "${springDependencyManagementVersion}"
-        id 'org.openapi.generator' version "${openapiGeneratorVersion}"
-        id 'org.unbroken-dome.xjc' version "${unbrokenDomeVersion}"
-    }
+plugins {
+    // Apply the foojay-resolver plugin to allow automatic download of JDKs
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
 }
 
 rootProject.name = 'bookquest'

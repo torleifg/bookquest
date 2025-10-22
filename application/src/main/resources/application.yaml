@@ -66,7 +66,7 @@ harvesting:
 
   oai-pmh:
     gateways:
-      - enabled: false
+      - enabled: true
         service-uri: https://oai.aja.bs.no/mlnb
         ttl: 5
         mapper: default
