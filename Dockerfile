@@ -2,11 +2,12 @@ FROM bellsoft/liberica-runtime-container:jdk-24-glibc AS builder
 WORKDIR /opt/app
 
 COPY gradlew gradlew
-COPY gradle/wrapper gradle/wrapper
+COPY gradle/ gradle/
 COPY build.gradle settings.gradle gradle.properties ./
 
 RUN ./gradlew dependencies --no-daemon --stacktrace
 
+COPY buildSrc/ buildSrc/
 COPY adapter/ adapter/
 COPY gateway/ gateway/
 COPY core/ core/
