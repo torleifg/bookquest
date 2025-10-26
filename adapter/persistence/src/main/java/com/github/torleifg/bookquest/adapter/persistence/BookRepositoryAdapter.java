@@ -72,14 +72,36 @@ class BookRepositoryAdapter implements BookRepository {
     }
 
     @Override
-    public List<Book> lastModified(int limit) {
-        return jdbcClient.sql("""
-                        select * from book
-                        where metadata ->> 'description' is not null
-                        and metadata ->> 'thumbnailUrl' is not null
-                        order by modified desc, id limit ?
-                        """)
-                .param(limit)
+    public List<Book> latest(String genre, int limit) {
+        final StringBuilder query = new StringBuilder("""
+                select * from book
+                where metadata ->> 'publishedYear' ~ '^[0-9]+$'
+                and (metadata ->> 'publishedYear')::int <= extract(year from now())
+                """);
+
+        if (genre != null && !genre.isBlank()) {
+            query.append("""
+                    and exists (
+                        select 1
+                        from jsonb_array_elements(metadata -> 'genreAndForm') as element
+                        where element ->> 'term' ilike :genre
+                    )
+                    """);
+        }
+
+        query.append("""
+                and metadata ->> 'description' is not null
+                and metadata ->> 'thumbnailUrl' is not null
+                order by (metadata ->> 'publishedYear')::int desc, modified desc, id limit :limit
+                """);
+
+        final JdbcClient.StatementSpec sql = jdbcClient.sql(query.toString());
+
+        if (genre != null && !genre.isBlank()) {
+            sql.param("genre", genre);
+        }
+
+        return sql.param("limit", limit)
                 .query(new BookRowMapper())
                 .list();
     }
@@ -87,10 +109,10 @@ class BookRepositoryAdapter implements BookRepository {
     @Override
     public List<Book> fullTextSearch(String query, int limit) {
         return jdbcClient.sql("""
-                        select * from search_books(?, ?)
+                        select * from search_books(:query, :limit)
                         """)
-                .param(query)
-                .param(limit)
+                .param("query", query)
+                .param("limit", limit)
                 .query(new BookRowMapper())
                 .list();
     }
@@ -130,10 +152,10 @@ class BookRepositoryAdapter implements BookRepository {
         final Optional<Document> document = jdbcClient.sql("""
                         select * from vector_store
                         join book on book.vector_store_id = vector_store.id
-                        where book.metadata ->> 'isbn' = ?
+                        where book.metadata ->> 'isbn' = :isbn
                         limit 1
                         """)
-                .param(isbn)
+                .param("isbn", isbn)
                 .query((resultSet, it) -> new Document(resultSet.getString("content")))
                 .optional();
 
@@ -146,12 +168,12 @@ class BookRepositoryAdapter implements BookRepository {
     public List<String> autocomplete(String term, int limit) {
         return jdbcClient.sql("""
                         select suggestion from autocomplete
-                        where suggestion ilike '%' || ? || '%'
+                        where suggestion ilike '%' || :term || '%'
                         order by case suggestion_type when 'contributor' then 1 else 2 end, suggestion
-                        limit ?
+                        limit :limit
                         """)
-                .param(term)
-                .param(limit)
+                .param("term", term)
+                .param("limit", limit)
                 .query(String.class)
                 .list();
     }
@@ -185,18 +207,18 @@ class BookRepositoryAdapter implements BookRepository {
 
     Optional<Book> findByExternalId(String externalId) {
         return jdbcClient.sql("""
-                        select * from book where external_id = ?
+                        select * from book where external_id = :externalId
                         """)
-                .param(externalId)
+                .param("externalId", externalId)
                 .query(new BookRowMapper())
                 .optional();
     }
 
     Optional<UUID> findVectorStoreIdByExternalId(String externalId) {
         return jdbcClient.sql("""
-                        select vector_store_id from book where external_id = ?
+                        select vector_store_id from book where external_id = :externalId
                         """)
-                .param(externalId)
+                .param("externalId", externalId)
                 .query(UUID.class)
                 .optional();
     }
@@ -218,30 +240,32 @@ class BookRepositoryAdapter implements BookRepository {
 
     void save(Book book) {
         jdbcClient.sql("""
-                        insert into book(external_id, source, deleted, metadata) values (?, ?, ?, ?)
+                        insert into book(external_id, source, deleted, metadata)
+                        values (:externalid, :source, :deleted, :metadata)
                         on conflict (external_id)
                         do update set (modified, deleted, metadata) =
                         (now(), excluded.deleted, excluded.metadata)
                         """)
-                .param(book.getExternalId())
-                .param(book.getSource())
-                .param(book.isDeleted())
-                .param(toPGobject(book.getMetadata()))
+                .param("externalId", book.getExternalId())
+                .param("source", book.getSource())
+                .param("deleted", book.isDeleted())
+                .param("metadata", toPGobject(book.getMetadata()))
                 .update();
     }
 
     void save(Book book, UUID vectorStoreId) {
         jdbcClient.sql("""
-                        insert into book(external_id, source, deleted, metadata, vector_store_id) values (?, ?, ?, ?, ?)
+                        insert into book(external_id, source, deleted, metadata, vector_store_id)
+                        values (:externalId, :source, :deleted, :metadata, :vectorStoreId)
                         on conflict (external_id)
                         do update set (modified, deleted, metadata, vector_store_id) =
                         (now(), excluded.deleted, excluded.metadata, excluded.vector_store_id)
                         """)
-                .param(book.getExternalId())
-                .param(book.getSource())
-                .param(book.isDeleted())
-                .param(toPGobject(book.getMetadata()))
-                .param(vectorStoreId)
+                .param("externalId", book.getExternalId())
+                .param("source", book.getSource())
+                .param("deleted", book.isDeleted())
+                .param("metadata", toPGobject(book.getMetadata()))
+                .param("vectorStoreId", vectorStoreId)
                 .update();
     }
 

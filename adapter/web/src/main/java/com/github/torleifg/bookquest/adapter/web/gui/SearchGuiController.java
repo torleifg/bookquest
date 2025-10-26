@@ -21,12 +21,12 @@ class SearchGuiController {
     }
 
     @GetMapping
-    public String lastModified(Model model, Locale locale) {
-        final List<SearchView> dtos = bookService.lastModified().stream()
+    public String latest(Model model, Locale locale, @RequestParam(required = false) String genre) {
+        final List<SearchView> views = bookService.latest(genre).stream()
                 .map(book -> searchViewMapper.from(book, locale))
                 .toList();
 
-        model.addAttribute("results", dtos);
+        model.addAttribute("results", views);
 
         return "search";
     }
@@ -44,31 +44,31 @@ class SearchGuiController {
 
         final int wordCount = query.trim().split("\\s+").length;
 
-        final List<SearchView> dtos;
+        final List<SearchView> views;
 
         if (wordCount > 3) {
-            dtos = bookService.hybridSearch(query).stream()
+            views = bookService.hybridSearch(query).stream()
                     .map(book -> searchViewMapper.from(book, locale))
                     .toList();
         } else {
-            dtos = bookService.fullTextSearch(query).stream()
+            views = bookService.fullTextSearch(query).stream()
                     .map(book -> searchViewMapper.from(book, locale))
                     .toList();
         }
 
         model.addAttribute("query", query);
-        model.addAttribute("results", dtos);
+        model.addAttribute("results", views);
 
         return "search";
     }
 
     @GetMapping("/similar")
     public String similar(Model model, @RequestParam String isbn, Locale locale) {
-        final List<SearchView> dtos = bookService.semanticSimilarity(isbn).stream()
+        final List<SearchView> views = bookService.semanticSimilarity(isbn).stream()
                 .map(book -> searchViewMapper.from(book, locale))
                 .toList();
 
-        model.addAttribute("results", dtos);
+        model.addAttribute("results", views);
 
         return "search";
     }

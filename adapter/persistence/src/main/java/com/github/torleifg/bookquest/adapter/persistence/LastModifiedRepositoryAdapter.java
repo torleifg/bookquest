@@ -19,9 +19,9 @@ class LastModifiedRepositoryAdapter implements LastModifiedRepository {
     @Override
     public Optional<Instant> get(String serviceUri) {
         return jdbcClient.sql("""
-                        select value from last_modified where service = ?
+                        select value from last_modified where service = :serviceUrl
                         """)
-                .param(serviceUri)
+                .param("serviceUrl", serviceUri)
                 .query(Instant.class)
                 .optional();
     }
@@ -29,14 +29,15 @@ class LastModifiedRepositoryAdapter implements LastModifiedRepository {
     @Override
     public void save(String serviceUri, Instant lastModified) {
         jdbcClient.sql("""
-                        insert into last_modified(service, value) values (?, ?)
+                        insert into last_modified(service, value)
+                        values (:serviceUrl, :value)
                         on conflict (service)
                         do update set (modified, value) =
                         (now(), excluded.value)
                         where excluded.value > last_modified.value
                         """)
-                .param(serviceUri)
-                .param(Timestamp.from(lastModified))
+                .param("serviceUrl", serviceUri)
+                .param("value", Timestamp.from(lastModified))
                 .update();
     }
 }
