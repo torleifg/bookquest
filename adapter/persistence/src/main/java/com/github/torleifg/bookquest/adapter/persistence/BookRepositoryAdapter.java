@@ -72,7 +72,7 @@ class BookRepositoryAdapter implements BookRepository {
     }
 
     @Override
-    public List<Book> lastModified(String genre, int limit) {
+    public List<Book> latest(String genre, int limit) {
         final StringBuilder query = new StringBuilder("""
                 select * from book
                 where metadata ->> 'publishedYear' ~ '^[0-9]+$'

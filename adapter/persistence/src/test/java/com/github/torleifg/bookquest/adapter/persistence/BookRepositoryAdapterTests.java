@@ -194,7 +194,7 @@ class BookRepositoryAdapterTests {
     }
 
     @Test
-    void lastModifiedTest() {
+    void latestTest() {
         var validBook = createBook();
         validBook.setExternalId("validBook");
         validBook.getMetadata().setPublishedYear("2023");
@@ -238,7 +238,7 @@ class BookRepositoryAdapterTests {
                     .update();
         }
 
-        var books = adapter.lastModified("romaner", 10);
+        var books = adapter.latest("romaner", 10);
         assertEquals(1, books.size());
         assertEquals("validBook", books.getFirst().getExternalId());
     }

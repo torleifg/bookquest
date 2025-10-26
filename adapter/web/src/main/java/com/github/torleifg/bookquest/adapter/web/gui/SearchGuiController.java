@@ -21,8 +21,8 @@ class SearchGuiController {
     }
 
     @GetMapping
-    public String lastModified(Model model, Locale locale, @RequestParam(required = false) String genre) {
-        final List<SearchView> views = bookService.lastModified(genre).stream()
+    public String latest(Model model, Locale locale, @RequestParam(required = false) String genre) {
+        final List<SearchView> views = bookService.latest(genre).stream()
                 .map(book -> searchViewMapper.from(book, locale))
                 .toList();
 

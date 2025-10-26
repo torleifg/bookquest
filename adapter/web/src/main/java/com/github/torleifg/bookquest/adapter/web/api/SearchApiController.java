@@ -54,10 +54,10 @@ class SearchApiController {
     }
 
     @GetMapping("/latest")
-    public List<SearchDetail> lastModified(@RequestParam String language, @RequestParam(required = false) String genre) {
+    public List<SearchDetail> latest(@RequestParam String language, @RequestParam(required = false) String genre) {
         final Locale locale = Locale.forLanguageTag(language);
 
-        return bookService.lastModified(genre).stream()
+        return bookService.latest(genre).stream()
                 .map(book -> searchDetailMapper.from(book, locale))
                 .toList();
     }

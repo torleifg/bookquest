@@ -69,7 +69,7 @@ class SearchApiControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
 
-        verify(bookService).lastModified("genre string");
+        verify(bookService).latest("genre string");
     }
 
     @Test

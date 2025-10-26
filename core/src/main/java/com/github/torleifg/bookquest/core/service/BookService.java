@@ -20,8 +20,8 @@ public class BookService {
         bookRepository.save(books);
     }
 
-    public List<Book> lastModified(String genre) {
-        return bookRepository.lastModified(genre, LIMIT);
+    public List<Book> latest(String genre) {
+        return bookRepository.latest(genre, LIMIT);
     }
 
     public List<Book> fullTextSearch(String query) {

@@ -35,7 +35,7 @@ class SearchGuiControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("text/html;charset=UTF-8"));
 
-        verify(bookService).lastModified("genre string");
+        verify(bookService).latest("genre string");
     }
 
     @Test
