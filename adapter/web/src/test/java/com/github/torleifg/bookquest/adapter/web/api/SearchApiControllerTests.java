@@ -64,11 +64,12 @@ class SearchApiControllerTests {
     @Test
     void latestTest() throws Exception {
         mockMvc.perform(get("/api/search/latest").with(csrf())
-                        .param("language", "en"))
+                        .param("language", "en")
+                        .param("genre", "genre string"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
 
-        verify(bookService).lastModified();
+        verify(bookService).lastModified("genre string");
     }
 
     @Test

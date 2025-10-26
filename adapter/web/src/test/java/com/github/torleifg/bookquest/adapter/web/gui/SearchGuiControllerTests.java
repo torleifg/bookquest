@@ -30,11 +30,12 @@ class SearchGuiControllerTests {
 
     @Test
     void latestTest() throws Exception {
-        mockMvc.perform(get("/").with(csrf()))
+        mockMvc.perform(get("/").with(csrf())
+                        .param("genre", "genre string"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("text/html;charset=UTF-8"));
 
-        verify(bookService).lastModified();
+        verify(bookService).lastModified("genre string");
     }
 
     @Test

@@ -1,6 +1,7 @@
 package com.github.torleifg.bookquest.adapter.persistence;
 
 import com.github.torleifg.bookquest.core.domain.Book;
+import com.github.torleifg.bookquest.core.domain.Classification;
 import com.github.torleifg.bookquest.core.domain.Metadata;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.net.URI;
+import java.time.Year;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -193,23 +195,52 @@ class BookRepositoryAdapterTests {
 
     @Test
     void lastModifiedTest() {
-        var firstBook = createBook();
+        var validBook = createBook();
+        validBook.setExternalId("validBook");
+        validBook.getMetadata().setPublishedYear("2023");
+        validBook.getMetadata().setGenreAndForm(List.of(
+                new Classification(null, null, null, null, "Romaner")
+        ));
 
-        var secondBook = createBook();
-        secondBook.setExternalId("secondExternalId");
-        secondBook.getMetadata().setDescription(null);
+        var futureBook = createBook();
+        futureBook.setExternalId("futureBook");
+        futureBook.getMetadata().setPublishedYear(String.valueOf(Year.now().getValue() + 1));
+        futureBook.getMetadata().setGenreAndForm(List.of(
+                new Classification(null, null, null, null, "Romaner")
+        ));
 
-        for (final var book : List.of(firstBook, secondBook)) {
+        var wrongGenreBook = createBook();
+        wrongGenreBook.setExternalId("wrongGenreBook");
+        wrongGenreBook.getMetadata().setPublishedYear("2023");
+        wrongGenreBook.getMetadata().setGenreAndForm(List.of(
+                new Classification(null, null, null, null, "Dikt")
+        ));
+
+        var nonNumericYearBook = createBook();
+        nonNumericYearBook.setExternalId("nonNumericYearBook");
+        nonNumericYearBook.getMetadata().setPublishedYear("...");
+        nonNumericYearBook.getMetadata().setGenreAndForm(List.of(
+                new Classification(null, null, null, null, "Romaner")
+        ));
+
+        var bookWithNullDescription = createBook();
+        bookWithNullDescription.setExternalId("bookWithNullDescription");
+        bookWithNullDescription.getMetadata().setDescription(null);
+        bookWithNullDescription.getMetadata().setPublishedYear("2023");
+        bookWithNullDescription.getMetadata().setGenreAndForm(List.of(
+                new Classification(null, null, null, null, "Romaner")
+        ));
+
+        for (final var book : List.of(validBook, futureBook, wrongGenreBook, nonNumericYearBook, bookWithNullDescription)) {
             client.sql("insert into book (external_id, metadata) values (?, ?)")
                     .param(book.getExternalId())
                     .param(BookRepositoryAdapter.toPGobject(book.getMetadata()))
                     .update();
         }
 
-        var books = adapter.lastModified(10);
+        var books = adapter.lastModified("romaner", 10);
         assertEquals(1, books.size());
-        assertEquals(books.getFirst().getExternalId(), firstBook.getExternalId());
-        assertEquals(books.getFirst().getMetadata(), firstBook.getMetadata());
+        assertEquals("validBook", books.getFirst().getExternalId());
     }
 
     @Test

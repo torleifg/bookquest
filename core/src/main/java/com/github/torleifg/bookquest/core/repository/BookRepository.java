@@ -8,7 +8,7 @@ public interface BookRepository {
 
     void save(List<Book> books);
 
-    List<Book> lastModified(int limit);
+    List<Book> lastModified(String genre, int limit);
 
     List<Book> fullTextSearch(String query, int limit);
 

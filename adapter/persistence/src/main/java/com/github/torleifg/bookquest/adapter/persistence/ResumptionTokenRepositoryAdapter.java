@@ -18,9 +18,9 @@ class ResumptionTokenRepositoryAdapter implements ResumptionTokenRepository {
     @Override
     public Optional<ResumptionToken> get(String serviceUri) {
         return jdbcClient.sql("""
-                        select * from resumption_token where service = ?
+                        select * from resumption_token where service = :serviceUrl
                         """)
-                .param(serviceUri)
+                .param("serviceUrl", serviceUri)
                 .query(ResumptionToken.class)
                 .optional();
     }
@@ -28,22 +28,23 @@ class ResumptionTokenRepositoryAdapter implements ResumptionTokenRepository {
     @Override
     public void save(String serviceUri, String token) {
         jdbcClient.sql("""
-                        insert into resumption_token(service, value) values (?, ?)
+                        insert into resumption_token(service, value)
+                        values (:serviceUrl, :token)
                         on conflict (service)
                         do update set (modified, value) =
                         (now(), excluded.value)
                         """)
-                .param(serviceUri)
-                .param(token)
+                .param("serviceUrl", serviceUri)
+                .param("token", token)
                 .update();
     }
 
     @Override
     public void delete(String serviceUri) {
         jdbcClient.sql("""
-                        delete from resumption_token where service = ?
+                        delete from resumption_token where service = :serviceUrl
                         """)
-                .param(serviceUri)
+                .param("serviceUrl", serviceUri)
                 .update();
     }
 }
