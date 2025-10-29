@@ -1,6 +1,7 @@
 package com.github.torleifg.bookquest.core.repository;
 
 import com.github.torleifg.bookquest.core.domain.Book;
+import com.github.torleifg.bookquest.core.domain.Suggestion;
 
 import java.util.List;
 
@@ -18,5 +19,5 @@ public interface BookRepository {
 
     List<Book> semanticSimilarity(String isbn, int limit);
 
-    List<String> autocomplete(String term, int limit);
+    List<Suggestion> autocomplete(String term, int limit);
 }
