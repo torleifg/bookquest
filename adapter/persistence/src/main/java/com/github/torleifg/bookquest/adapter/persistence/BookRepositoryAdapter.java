@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.torleifg.bookquest.core.domain.Book;
 import com.github.torleifg.bookquest.core.domain.Metadata;
+import com.github.torleifg.bookquest.core.domain.Suggestion;
 import com.github.torleifg.bookquest.core.repository.BookRepository;
 import org.postgresql.util.PGobject;
 import org.springframework.ai.document.Document;
@@ -165,16 +166,16 @@ class BookRepositoryAdapter implements BookRepository {
     }
 
     @Override
-    public List<String> autocomplete(String term, int limit) {
+    public List<Suggestion> autocomplete(String term, int limit) {
         return jdbcClient.sql("""
-                        select suggestion from autocomplete
+                        select suggestion, suggestion_type from autocomplete
                         where suggestion ilike '%' || :term || '%'
                         order by case suggestion_type when 'contributor' then 1 else 2 end, suggestion
                         limit :limit
                         """)
                 .param("term", term)
                 .param("limit", limit)
-                .query(String.class)
+                .query(new SuggestionRowMapper())
                 .list();
     }
 
@@ -267,6 +268,15 @@ class BookRepositoryAdapter implements BookRepository {
                 .param("metadata", toPGobject(book.getMetadata()))
                 .param("vectorStoreId", vectorStoreId)
                 .update();
+    }
+
+    private static class SuggestionRowMapper implements RowMapper<Suggestion> {
+        public Suggestion mapRow(ResultSet rs, int i) throws SQLException {
+            return new Suggestion(
+                    rs.getString("suggestion"),
+                    rs.getString("suggestion_type")
+            );
+        }
     }
 
     private static class BookRowMapper implements RowMapper<Book> {

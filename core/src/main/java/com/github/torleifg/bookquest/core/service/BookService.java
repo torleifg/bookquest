@@ -1,6 +1,7 @@
 package com.github.torleifg.bookquest.core.service;
 
 import com.github.torleifg.bookquest.core.domain.Book;
+import com.github.torleifg.bookquest.core.domain.Suggestion;
 import com.github.torleifg.bookquest.core.repository.BookRepository;
 import org.springframework.stereotype.Service;
 
@@ -8,6 +9,7 @@ import java.util.List;
 
 @Service
 public class BookService {
+
     private static final int LIMIT = 50;
 
     private final BookRepository bookRepository;
@@ -36,8 +38,8 @@ public class BookService {
         return bookRepository.semanticSimilarity(isbn, LIMIT);
     }
 
-    public List<String> autocomplete(String term) {
-        return bookRepository.autocomplete(term, 15);
+    public List<Suggestion> autocomplete(String term) {
+        return bookRepository.autocomplete(term, LIMIT / 2);
     }
 
     public List<Book> hybridSearch(String query) {

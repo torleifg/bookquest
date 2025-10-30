@@ -1,5 +1,6 @@
 package com.github.torleifg.bookquest.adapter.web.api;
 
+import com.github.torleifg.bookquest.core.domain.Suggestion;
 import com.github.torleifg.bookquest.core.service.BookService;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.constraints.NotBlank;
@@ -73,7 +74,7 @@ class SearchApiController {
     }
 
     @GetMapping("/autocomplete")
-    public List<String> autocomplete(@RequestParam @NotBlank(message = "Required parameter 'term' is blank.") String term) {
+    public List<Suggestion> autocomplete(@RequestParam @NotBlank(message = "Required parameter 'term' is blank.") String term) {
         return bookService.autocomplete(term);
     }
 

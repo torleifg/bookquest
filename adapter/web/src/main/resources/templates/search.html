@@ -14,14 +14,12 @@
     <script th:src="@{/webjars/jquery/3.7.1/jquery.min.js}"></script>
     <script th:src="@{/webjars/jquery-ui/1.14.1/jquery-ui.min.js}"></script>
 
-    <script type="text/javascript">
-        $(function () {
-            $("#query").autocomplete({
-                source: "/autocomplete",
-                minLength: 3
-            });
-        });
+    <script th:inline="javascript">
+        var contributor = [[#{autocomplete.contributor}]];
+        var title = [[#{autocomplete.title}]];
     </script>
+
+    <script th:src="@{/autocomplete.js}"></script>
 </head>
 <body>
 <div class="container">

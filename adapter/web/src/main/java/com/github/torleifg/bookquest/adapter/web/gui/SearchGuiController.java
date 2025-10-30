@@ -1,5 +1,6 @@
 package com.github.torleifg.bookquest.adapter.web.gui;
 
+import com.github.torleifg.bookquest.core.domain.Suggestion;
 import com.github.torleifg.bookquest.core.service.BookService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -75,7 +76,7 @@ class SearchGuiController {
 
     @ResponseBody
     @GetMapping("/autocomplete")
-    public List<String> autocomplete(@RequestParam String term) {
+    public List<Suggestion> autocomplete(@RequestParam String term) {
         return bookService.autocomplete(term);
     }
 }
