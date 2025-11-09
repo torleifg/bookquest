@@ -271,6 +271,20 @@ class BookRepositoryAdapterTests {
         assertEquals(1, suggestions.size());
     }
 
+    @Test
+    void autocompleteUnaccentTest() {
+        var book = createBook();
+        book.getMetadata().setTitle("Bolaño");
+
+        client.sql("insert into book (external_id, metadata) values (?, ?)")
+                .param(book.getExternalId())
+                .param(BookRepositoryAdapter.toPGobject(book.getMetadata()))
+                .update();
+
+        var suggestions = adapter.autocomplete("bolano", 10);
+        assertEquals(1, suggestions.size());
+    }
+
     Book createBook() {
         var book = new Book();
         book.setExternalId("externalId");
