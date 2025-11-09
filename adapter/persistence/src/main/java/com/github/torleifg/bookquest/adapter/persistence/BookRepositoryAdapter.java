@@ -169,7 +169,7 @@ class BookRepositoryAdapter implements BookRepository {
     public List<Suggestion> autocomplete(String term, int limit) {
         return jdbcClient.sql("""
                         select suggestion, suggestion_type from autocomplete
-                        where suggestion ilike '%' || :term || '%'
+                        where suggestion_unaccented ilike '%' || unaccent(:term) || '%'
                         order by case suggestion_type when 'contributor' then 1 else 2 end, suggestion
                         limit :limit
                         """)
