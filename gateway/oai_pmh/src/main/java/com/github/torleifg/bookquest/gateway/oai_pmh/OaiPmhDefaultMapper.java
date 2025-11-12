@@ -147,18 +147,27 @@ class OaiPmhDefaultMapper implements OaiPmhMapper {
                     }
                 });
 
-        dataFieldsByTag.getOrDefault("347", List.of()).stream()
+        final Optional<String> contentType = dataFieldsByTag.getOrDefault("336", List.of()).stream()
                 .map(dataField -> dataField.getSubfield('0'))
                 .filter(Objects::nonNull)
                 .map(Subfield::getData)
-                .findFirst()
-                .ifPresent(fileType -> {
-                    if (fileType.equals("http://rdaregistry.info/termList/fileType/1001")) {
-                        metadata.setFormat(BookFormat.AUDIOBOOK);
-                    } else if (fileType.equals("http://rdaregistry.info/termList/fileType/1002")) {
-                        metadata.setFormat(BookFormat.EBOOK);
-                    }
-                });
+                .findFirst();
+
+        final Optional<String> carrierType = dataFieldsByTag.getOrDefault("338", List.of()).stream()
+                .map(dataField -> dataField.getSubfield('0'))
+                .filter(Objects::nonNull)
+                .map(Subfield::getData)
+                .findFirst();
+
+        if (contentType.isPresent() && carrierType.isPresent()) {
+            if (carrierType.get().equals("http://rdaregistry.info/termList/RDACarrierType/1018")) {
+                if (contentType.get().equals("http://rdaregistry.info/termList/RDAContentType/1020")) {
+                    metadata.setFormat(BookFormat.EBOOK);
+                } else if (contentType.get().equals("http://rdaregistry.info/termList/RDAContentType/1013")) {
+                    metadata.setFormat(BookFormat.AUDIOBOOK);
+                }
+            }
+        }
 
         if (metadata.getFormat() == null) {
             metadata.setFormat(BookFormat.UNKNOWN);
