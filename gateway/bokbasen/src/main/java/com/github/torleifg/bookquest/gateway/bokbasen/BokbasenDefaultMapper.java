@@ -164,14 +164,8 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                     final String text = subjectHeadingText.getValue();
 
                     if (subjectSchemeIdentifier != null) {
-                        if (isProprietary(subjectSchemeIdentifier)) {
-                            if (subjectSchemeName != null) {
-                                final String name = subjectSchemeName.getValue();
-
-                                if (name.equals("Bokbasen_Subject")) {
-                                    metadata.getAbout().add(new Classification(null, "Bokbasen_Subject", language, com.github.torleifg.bookquest.core.domain.Language.fromTag(language), text));
-                                }
-                            }
+                        if (isSubjects(subjectSchemeIdentifier)) {
+                            metadata.getAbout().add(new Classification(code, "neo", language, com.github.torleifg.bookquest.core.domain.Language.fromTag(language), text));
                         }
 
                         if (isGenreAndForm(subjectSchemeIdentifier)) {
@@ -251,8 +245,8 @@ class BokbasenDefaultMapper implements BokbasenMapper {
         return book;
     }
 
-    private static boolean isProprietary(SubjectSchemeIdentifier subjectSchemeIdentifier) {
-        return subjectSchemeIdentifier.getValue() == List27.fromValue("24");
+    private static boolean isSubjects(SubjectSchemeIdentifier subjectSchemeIdentifier) {
+        return subjectSchemeIdentifier.getValue() == List27.fromValue("D3");
     }
 
     private static boolean isGenreAndForm(SubjectSchemeIdentifier subjectSchemeIdentifier) {
