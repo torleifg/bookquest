@@ -91,14 +91,15 @@ class BokbasenDefaultMapperTests {
         var about = objectFactory.createSubject();
 
         var aboutSubjectSchemeIdentifier = objectFactory.createSubjectSchemeIdentifier();
-        aboutSubjectSchemeIdentifier.setValue(List27.fromValue("24"));
+        aboutSubjectSchemeIdentifier.setValue(List27.fromValue("D3"));
         about.getContent().add(aboutSubjectSchemeIdentifier);
 
-        var aboutSubjectSchemeName = objectFactory.createSubjectSchemeName();
-        aboutSubjectSchemeName.setValue("Bokbasen_Subject");
-        about.getContent().add(aboutSubjectSchemeName);
+        var aboutSubjectCode = objectFactory.createSubjectCode();
+        aboutSubjectCode.setValue("id");
+        about.getContent().add(aboutSubjectCode);
 
         var aboutSubjectHeadingText = objectFactory.createSubjectHeadingText();
+        aboutSubjectHeadingText.setLanguage(List74.NOB);
         aboutSubjectHeadingText.setValue("about");
         about.getContent().add(aboutSubjectHeadingText);
 
@@ -204,8 +205,8 @@ class BokbasenDefaultMapperTests {
         assertEquals(Language.ENG, metadata.getLanguages().getFirst());
         assertEquals(BookFormat.HARDCOVER, metadata.getFormat());
         assertEquals(1, metadata.getAbout().size());
-        assertNull(metadata.getAbout().getFirst().id());
-        assertEquals("Bokbasen_Subject", metadata.getAbout().getFirst().source());
+        assertEquals("id", metadata.getAbout().getFirst().id());
+        assertEquals("neo", metadata.getAbout().getFirst().source());
         assertEquals("nob", metadata.getAbout().getFirst().language());
         assertEquals("about", metadata.getAbout().getFirst().term());
         assertEquals(1, metadata.getGenreAndForm().size());
