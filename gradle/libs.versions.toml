@@ -1,10 +1,10 @@
 [versions]
-boot = '3.5.7'
+boot = '3.5.8'
 dependency-management = '1.1.7'
 openapi = '7.6.0'
 xjc = '2.0.0'
 
-ai = '1.0.3'
+ai = '1.1.0'
 marc = '2.9.6'
 jaxb-api = '4.0.4'
 jaxb-impl = '4.0.6'
