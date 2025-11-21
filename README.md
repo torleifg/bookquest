@@ -142,7 +142,7 @@ Additional documentation for OAI-PMH from Nasjonalbiblioteket (https://www.nb.no
 The Bokbasen gateway uses the ONIX format for metadata, commonly employed in the publishing industry. This is
 particularly useful for harvesting data from large-scale book vendors.
 
-- **[ONIX 3.0](https://www.editeur.org/93/Release-3.0-and-3.1-Downloads/)**
+- **[ONIX 3.1](https://www.editeur.org/93/Release-3.0-and-3.1-Downloads/)**
 
 Additional documentation for ONIX from Bokbasen (https://www.bokbasen.no/):
 
