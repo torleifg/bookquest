@@ -14,22 +14,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-class BokbasenGateway implements GatewayService {
-    private final BokbasenProperties.GatewayConfig gatewayConfig;
-
-    private final BokbasenClient bokbasenClient;
-    private final BokbasenMapper bokbasenMapper;
-
-    private final ResumptionTokenRepository resumptionTokenRepository;
-
-    BokbasenGateway(BokbasenProperties.GatewayConfig gatewayConfig, BokbasenClient bokbasenClient, BokbasenMapper bokbasenMapper, ResumptionTokenRepository resumptionTokenRepository) {
-        this.gatewayConfig = gatewayConfig;
-
-        this.bokbasenClient = bokbasenClient;
-        this.bokbasenMapper = bokbasenMapper;
-
-        this.resumptionTokenRepository = resumptionTokenRepository;
-    }
+record BokbasenGateway(BokbasenProperties.GatewayConfig gatewayConfig, BokbasenClient bokbasenClient,
+                       BokbasenMapper bokbasenMapper,
+                       ResumptionTokenRepository resumptionTokenRepository) implements GatewayService {
 
     @Override
     public GatewayResponse find() {

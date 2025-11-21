@@ -143,7 +143,6 @@ class BokbasenDefaultMapper implements BokbasenMapper {
                     for (final Object object : content) {
                         switch (object) {
                             case SubjectSchemeIdentifier identifier -> subjectSchemeIdentifier = identifier;
-                            case SubjectSchemeName name -> subjectSchemeName = name;
                             case SubjectCode code -> subjectCode = code;
                             case SubjectHeadingText text -> subjectHeadingText = text;
                             default -> {
