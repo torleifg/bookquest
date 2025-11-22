@@ -9,6 +9,7 @@ import com.github.torleifg.bookquest.core.service.GatewayService;
 import org.marc4j.MarcXmlReader;
 import org.marc4j.marc.Record;
 import org.openarchives.oai._2.HeaderType;
+import org.openarchives.oai._2.RecordType;
 import org.openarchives.oai._2.StatusType;
 import org.w3c.dom.Element;
 
@@ -24,15 +25,9 @@ import java.util.Optional;
 
 import static java.time.format.DateTimeFormatter.ISO_INSTANT;
 
-class OaiPmhGateway implements GatewayService {
-    private final OaiPmhProperties.GatewayConfig gatewayConfig;
-
-    private final OaiPmhClient oaiPmhClient;
-    private final OaiPmhMapper oaiPmhMapper;
-
-    private final ResumptionTokenRepository resumptionTokenRepository;
-    private final LastModifiedRepository lastModifiedRepository;
-
+record OaiPmhGateway(OaiPmhProperties.GatewayConfig gatewayConfig, OaiPmhClient oaiPmhClient, OaiPmhMapper oaiPmhMapper,
+                     ResumptionTokenRepository resumptionTokenRepository,
+                     LastModifiedRepository lastModifiedRepository) implements GatewayService {
     private static final TransformerFactory TRANSFORMER_FACTORY;
 
     static {
@@ -41,16 +36,6 @@ class OaiPmhGateway implements GatewayService {
         } catch (TransformerFactoryConfigurationError e) {
             throw new OaiPmhException(e);
         }
-    }
-
-    OaiPmhGateway(OaiPmhProperties.GatewayConfig gatewayConfig, OaiPmhClient oaiPmhClient, OaiPmhMapper oaiPmhMapper, ResumptionTokenRepository resumptionTokenRepository, LastModifiedRepository lastModifiedRepository) {
-        this.gatewayConfig = gatewayConfig;
-
-        this.oaiPmhClient = oaiPmhClient;
-        this.oaiPmhMapper = oaiPmhMapper;
-
-        this.resumptionTokenRepository = resumptionTokenRepository;
-        this.lastModifiedRepository = lastModifiedRepository;
     }
 
     @Override
@@ -125,7 +110,7 @@ class OaiPmhGateway implements GatewayService {
         }
 
         Optional.of(oaiPmhRecords.getLast())
-                .map(org.openarchives.oai._2.RecordType::getHeader)
+                .map(RecordType::getHeader)
                 .map(HeaderType::getDatestamp)
                 .map(Instant::parse)
                 .ifPresent(lastModified -> lastModifiedRepository.save(serviceUri, lastModified.plusSeconds(1L)));

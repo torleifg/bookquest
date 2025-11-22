@@ -6,7 +6,6 @@ plugins {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
-    implementation libs.jakarta.xml.bind.api
     implementation libs.jaxb.impl
 
     implementation project(':core')
@@ -15,6 +14,5 @@ dependencies {
 }
 
 xjc {
-    xjcVersion = '3.0'
-    srcDirName = 'resources/onix'
+    xsdDir.set(layout.projectDirectory.dir("src/main/resources/onix"))
 }

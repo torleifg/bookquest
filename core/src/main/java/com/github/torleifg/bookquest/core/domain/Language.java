@@ -1,7 +1,6 @@
 package com.github.torleifg.bookquest.core.domain;
 
 import java.util.Locale;
-import java.util.MissingResourceException;
 
 public enum Language {
     AAR,

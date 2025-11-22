@@ -6,7 +6,6 @@ plugins {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    implementation libs.jakarta.xml.bind.api
     implementation libs.jaxb.impl
 
     implementation libs.marc4j
@@ -17,6 +16,5 @@ dependencies {
 }
 
 xjc {
-    xjcVersion = '3.0'
-    srcDirName = 'resources/oai_pmh'
+    xsdDir.set(layout.projectDirectory.dir("src/main/resources/oai_pmh"))
 }
