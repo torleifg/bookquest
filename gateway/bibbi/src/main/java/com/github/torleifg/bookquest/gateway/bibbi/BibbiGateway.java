@@ -18,24 +18,9 @@ import java.util.Optional;
 import static java.time.format.DateTimeFormatter.ISO_INSTANT;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
-class BibbiGateway implements GatewayService {
-    private final BibbiProperties.GatewayConfig gatewayConfig;
-
-    private final BibbiClient bibbiClient;
-    private final BibbiMapper bibbiMapper;
-
-    private final ResumptionTokenRepository resumptionTokenRepository;
-    private final LastModifiedRepository lastModifiedRepository;
-
-    BibbiGateway(BibbiProperties.GatewayConfig gatewayConfig, BibbiClient bibbiClient, BibbiMapper bibbiMapper, ResumptionTokenRepository resumptionTokenRepository, LastModifiedRepository lastModifiedRepository) {
-        this.gatewayConfig = gatewayConfig;
-
-        this.bibbiClient = bibbiClient;
-        this.bibbiMapper = bibbiMapper;
-
-        this.resumptionTokenRepository = resumptionTokenRepository;
-        this.lastModifiedRepository = lastModifiedRepository;
-    }
+record BibbiGateway(BibbiProperties.GatewayConfig gatewayConfig, BibbiClient bibbiClient, BibbiMapper bibbiMapper,
+                    ResumptionTokenRepository resumptionTokenRepository,
+                    LastModifiedRepository lastModifiedRepository) implements GatewayService {
 
     @Override
     public GatewayResponse find() {

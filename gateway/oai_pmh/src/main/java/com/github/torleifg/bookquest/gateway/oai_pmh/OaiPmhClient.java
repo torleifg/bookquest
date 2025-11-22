@@ -3,12 +3,7 @@ package com.github.torleifg.bookquest.gateway.oai_pmh;
 import org.openarchives.oai._2.OAIPMHtype;
 import org.springframework.web.client.RestClient;
 
-class OaiPmhClient {
-    private final RestClient restClient;
-
-    OaiPmhClient(RestClient restClient) {
-        this.restClient = restClient;
-    }
+record OaiPmhClient(RestClient restClient) {
 
     OAIPMHtype get(String uri) {
         return restClient

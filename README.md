@@ -13,6 +13,11 @@ like MARC21 and ONIX 3.
 - **[pgvector](https://github.com/pgvector/pgvector)**: A PostgreSQL extension for storing and querying vectors, used as
   the vector store in the search engine.
 
+## Prerequisites
+
+- Java 25
+- Docker
+
 ## Getting Started
 
 Follow [Run as Docker Compose](#run-as-docker-compose) *or* [Run as Spring Boot](#run-as-spring-boot) to configure and
@@ -118,8 +123,9 @@ Visit http://localhost:8080/swagger-ui.html in the browser to read and/or downlo
 ## Gateway
 
 The gateway abstracts away the details of the external services and transforms metadata from the external services into
-a common model. The application supports three gateways: OAI-PMH (MARC21), Bokbasen (ONIX) and Bibbi. Custom mappers can
-be implemented as needed.
+a common model. The application supports three gateways: OAI-PMH (MARC21), Bokbasen (ONIX) and Bibbi. 
+
+**Custom mappers can be implemented as needed.** Look into the Config class of the relevant gateway. 
 
 ### OAI-PMH
 
