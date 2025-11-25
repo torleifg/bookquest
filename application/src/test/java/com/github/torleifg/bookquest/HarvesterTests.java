@@ -37,7 +37,7 @@ class HarvesterTests {
 
         book.setMetadata(metadata);
 
-        when(gateway.find()).thenReturn(new GatewayResponse("requestUri", List.of(book)));
+        when(gateway.find()).thenReturn(new GatewayResponse("requestUri", List.of(book), null, null));
 
         harvester.poll(gateway);
 
