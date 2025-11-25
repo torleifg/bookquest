@@ -48,6 +48,10 @@ springdoc:
   paths-to-match: /api/**
 
 default-locale: nb
+default-limit: 30
+reciprocal-rank-fusion:
+  semantic-search-weight: 0.5
+  full-text-search-weight: 0.5
 
 scheduler:
   enabled: true
@@ -83,4 +87,3 @@ harvesting:
         after: 19700101090000
         mapper: default
         pagesize: 100
-
