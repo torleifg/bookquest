@@ -1,14 +1,11 @@
 package com.github.torleifg.bookquest;
 
-import com.github.torleifg.bookquest.core.domain.Book;
 import com.github.torleifg.bookquest.core.service.BookService;
 import com.github.torleifg.bookquest.core.service.GatewayResponse;
 import com.github.torleifg.bookquest.core.service.GatewayService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Slf4j
 @Component
@@ -19,20 +16,26 @@ class Harvester {
         this.bookService = bookService;
     }
 
-    @Transactional
     boolean poll(GatewayService gatewayService) {
-        final GatewayResponse response = gatewayService.find();
+        final GatewayResponse gatewayResponse = gatewayService.find();
 
-        final List<Book> books = response.books();
+        final int size = gatewayResponse.books().size();
 
-        log.info("Received {} books polling {}", books.size(), response.requestUri());
+        log.info("Received {} books polling {}", size, gatewayResponse.requestUri());
 
-        if (books.isEmpty()) {
+        if (size == 0) {
             return false;
         }
 
-        bookService.save(books);
+        saveAll(gatewayResponse, gatewayService);
 
         return true;
+    }
+
+    @Transactional
+    private void saveAll(GatewayResponse gatewayResponse, GatewayService gatewayService) {
+        bookService.save(gatewayResponse.books());
+
+        gatewayService.updateHarvestState(gatewayResponse);
     }
 }

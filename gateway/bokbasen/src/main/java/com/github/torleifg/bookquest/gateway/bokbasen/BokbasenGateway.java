@@ -1,7 +1,6 @@
 package com.github.torleifg.bookquest.gateway.bokbasen;
 
 import com.github.torleifg.bookquest.core.domain.Book;
-import com.github.torleifg.bookquest.core.repository.ResumptionToken;
 import com.github.torleifg.bookquest.core.repository.ResumptionTokenRepository;
 import com.github.torleifg.bookquest.core.service.GatewayResponse;
 import com.github.torleifg.bookquest.core.service.GatewayService;
@@ -24,16 +23,17 @@ record BokbasenGateway(BokbasenProperties.GatewayConfig gatewayConfig, BokbasenC
         final String requestUri = createRequestUri(serviceUri);
 
         final ResponseEntity<ONIXMessage> entity = bokbasenClient.get(requestUri);
+
         final BokbasenResponse response = BokbasenResponse.from(entity.getBody());
 
-        Optional.of(entity.getHeaders())
+        final String resumptionToken = Optional.of(entity.getHeaders())
                 .map(headers -> headers.get("Next"))
                 .map(Collection::stream)
                 .flatMap(Stream::findFirst)
-                .ifPresent(token -> resumptionTokenRepository.save(serviceUri, token));
+                .orElse(null);
 
         if (!response.hasProducts()) {
-            return new GatewayResponse(requestUri, List.of());
+            return new GatewayResponse(requestUri, List.of(), resumptionToken, null);
         }
 
         final var products = response.getProducts();
@@ -49,12 +49,25 @@ record BokbasenGateway(BokbasenProperties.GatewayConfig gatewayConfig, BokbasenC
 
             if (isDeleted(product.getNotificationType())) {
                 books.add(bokbasenMapper.from(product.getRecordReference().getValue()));
+            } else {
+                books.add(bokbasenMapper.from(product));
             }
-
-            books.add(bokbasenMapper.from(product));
         }
 
-        return new GatewayResponse(requestUri, books);
+        return new GatewayResponse(requestUri, books, resumptionToken, null);
+    }
+
+    @Override
+    public void updateHarvestState(GatewayResponse response) {
+        final String serviceUri = gatewayConfig.getServiceUri();
+
+        final String token = response.resumptionToken();
+
+        if (token != null && !token.isBlank()) {
+            resumptionTokenRepository.save(serviceUri, token);
+        } else {
+            resumptionTokenRepository.delete(serviceUri);
+        }
     }
 
     private String createRequestUri(String serviceUri) {
@@ -64,17 +77,12 @@ record BokbasenGateway(BokbasenProperties.GatewayConfig gatewayConfig, BokbasenC
                 .append("&pagesize=")
                 .append(gatewayConfig.getPagesize());
 
-        final Optional<ResumptionToken> resumptionToken = resumptionTokenRepository.get(serviceUri);
-
-        if (resumptionToken.isPresent()) {
-            return requestUri.append("&next=")
-                    .append(resumptionToken.get().value())
-                    .toString();
-        }
-
-        return requestUri.append("&after=")
-                .append(gatewayConfig.getAfter())
-                .toString();
+        return resumptionTokenRepository.get(serviceUri)
+                .map(token -> requestUri.append("&next=")
+                        .append(token.value())
+                        .toString()).orElseGet(() -> requestUri.append("&after=")
+                        .append(gatewayConfig.getAfter())
+                        .toString());
     }
 
     private static boolean isBook(DescriptiveDetail descriptiveDetail) {

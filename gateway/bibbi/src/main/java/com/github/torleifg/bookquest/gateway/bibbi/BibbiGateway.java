@@ -12,6 +12,7 @@ import no.bs.bibliografisk.model.GetV1PublicationsHarvest200ResponsePublications
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,18 +30,10 @@ record BibbiGateway(BibbiProperties.GatewayConfig gatewayConfig, BibbiClient bib
 
         final BibbiResponse response = BibbiResponse.from(bibbiClient.get(requestUri));
 
-        final Optional<String> resumptionToken = response.getResumptionToken();
-
-        if (resumptionToken.isPresent()) {
-            resumptionTokenRepository.save(serviceUri, resumptionToken.get());
-        } else {
-            resumptionTokenRepository.get(serviceUri)
-                    .filter(token -> !token.isExpired(gatewayConfig.getTtl()))
-                    .ifPresent(token -> resumptionTokenRepository.save(serviceUri, token.value()));
-        }
+        final String resumptionToken = response.getResumptionToken();
 
         if (!response.hasPublications()) {
-            return new GatewayResponse(requestUri, List.of());
+            return new GatewayResponse(requestUri, List.of(), resumptionToken, null);
         }
 
         final var publications = response.getPublications();
@@ -59,13 +52,32 @@ record BibbiGateway(BibbiProperties.GatewayConfig gatewayConfig, BibbiClient bib
             }
         }
 
-        Optional.of(publications.getLast())
+        final Instant lastModified = publications.stream()
                 .map(GetV1PublicationsHarvest200ResponsePublicationsInner::getBibliographicRecord)
                 .map(BibliographicRecordMetadata::getModified)
                 .map(OffsetDateTime::toInstant)
-                .ifPresent(lastModified -> lastModifiedRepository.save(serviceUri, lastModified.plusSeconds(1L)));
+                .max(Comparator.naturalOrder())
+                .map(instant -> instant.plusSeconds(1L))
+                .orElse(null);
 
-        return new GatewayResponse(requestUri, books);
+        return new GatewayResponse(requestUri, books, resumptionToken, lastModified);
+    }
+
+    @Override
+    public void updateHarvestState(GatewayResponse response) {
+        final String serviceUri = gatewayConfig.getServiceUri();
+
+        final String token = response.resumptionToken();
+
+        if (token != null && !token.isBlank()) {
+            resumptionTokenRepository.save(serviceUri, token);
+        } else {
+            resumptionTokenRepository.delete(serviceUri);
+        }
+
+        if (response.lastModified() != null) {
+            lastModifiedRepository.save(serviceUri, response.lastModified());
+        }
     }
 
     private String createRequestUri(String serviceUri) {
@@ -81,17 +93,12 @@ record BibbiGateway(BibbiProperties.GatewayConfig gatewayConfig, BibbiClient bib
                     .toString();
         }
 
-        final Optional<Instant> lastModified = lastModifiedRepository.get(serviceUri);
-
-        if (lastModified.isPresent()) {
-            return requestUri.append("&query=")
-                    .append(gatewayConfig.getQuery())
-                    .append(String.format(" AND modified:[%s TO *]", ISO_INSTANT.format(lastModified.get())))
-                    .toString();
-        }
-
-        return requestUri.append("&query=")
-                .append(gatewayConfig.getQuery())
-                .toString();
+        return lastModifiedRepository.get(serviceUri)
+                .map(instant -> requestUri.append("&query=")
+                        .append(gatewayConfig.getQuery())
+                        .append(String.format(" AND modified:[%s TO *]", ISO_INSTANT.format(instant)))
+                        .toString()).orElseGet(() -> requestUri.append("&query=")
+                        .append(gatewayConfig.getQuery())
+                        .toString());
     }
 }

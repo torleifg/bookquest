@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,31 +46,14 @@ record OaiPmhGateway(OaiPmhProperties.GatewayConfig gatewayConfig, OaiPmhClient 
 
         final OaiPmhResponse response = OaiPmhResponse.from(oaiPmhClient.get(requestUri));
 
-        if (response.hasErrors()) {
-
-            if (response.hasBadResumptionTokenError()) {
-                resumptionTokenRepository.delete(serviceUri);
-            }
-
-            if (response.hasNoRecordsMatchError()) {
-                return new GatewayResponse(requestUri, List.of());
-            }
-
+        if (response.hasUnrecoverableErrors()) {
             throw new OaiPmhException(response.errorsToString());
         }
 
-        final Optional<String> resumptionToken = response.getResumptionToken();
-
-        if (resumptionToken.isPresent()) {
-            resumptionTokenRepository.save(serviceUri, resumptionToken.get());
-        } else {
-            resumptionTokenRepository.get(serviceUri)
-                    .filter(token -> !token.isExpired(gatewayConfig.getTtl()))
-                    .ifPresent(token -> resumptionTokenRepository.save(serviceUri, token.value()));
-        }
+        final String resumptionToken = response.getResumptionToken();
 
         if (!response.hasRecords()) {
-            return new GatewayResponse(requestUri, List.of());
+            return new GatewayResponse(requestUri, List.of(), resumptionToken, null);
         }
 
         final var oaiPmhRecords = response.getRecords();
@@ -109,13 +93,33 @@ record OaiPmhGateway(OaiPmhProperties.GatewayConfig gatewayConfig, OaiPmhClient 
             }
         }
 
-        Optional.of(oaiPmhRecords.getLast())
+        final Instant lastModified = oaiPmhRecords.stream()
                 .map(RecordType::getHeader)
                 .map(HeaderType::getDatestamp)
+                .filter(datestamp -> datestamp != null && !datestamp.isBlank())
                 .map(Instant::parse)
-                .ifPresent(lastModified -> lastModifiedRepository.save(serviceUri, lastModified.plusSeconds(1L)));
+                .max(Comparator.naturalOrder())
+                .map(instant -> instant.plusSeconds(1L))
+                .orElse(null);
 
-        return new GatewayResponse(requestUri, books);
+        return new GatewayResponse(requestUri, books, resumptionToken, lastModified);
+    }
+
+    @Override
+    public void updateHarvestState(GatewayResponse response) {
+        final String serviceUri = gatewayConfig.getServiceUri();
+
+        final String token = response.resumptionToken();
+
+        if (token != null && !token.isBlank()) {
+            resumptionTokenRepository.save(serviceUri, token);
+        } else {
+            resumptionTokenRepository.delete(serviceUri);
+        }
+
+        if (response.lastModified() != null) {
+            lastModifiedRepository.save(serviceUri, response.lastModified());
+        }
     }
 
     private String createRequestUri(String serviceUri) {
@@ -138,14 +142,9 @@ record OaiPmhGateway(OaiPmhProperties.GatewayConfig gatewayConfig, OaiPmhClient 
             requestUri.append("&set=").append(gatewayConfig.getSet());
         }
 
-        final Optional<Instant> lastModified = lastModifiedRepository.get(serviceUri);
-
-        if (lastModified.isPresent()) {
-            return requestUri.append("&from=")
-                    .append(ISO_INSTANT.format(lastModified.get()))
-                    .toString();
-        }
-
-        return requestUri.toString();
+        return lastModifiedRepository.get(serviceUri)
+                .map(instant -> requestUri.append("&from=")
+                        .append(ISO_INSTANT.format(instant))
+                        .toString()).orElseGet(requestUri::toString);
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.web.client.RestClient;
 
+import java.time.Duration;
 import java.util.List;
 
 @Configuration
@@ -36,8 +37,11 @@ class BibbiConfig {
 
     @Bean
     BibbiClient bibbiClient(RestClient.Builder builder) {
+        final JdkClientHttpRequestFactory requestFactory = new JdkClientHttpRequestFactory();
+        requestFactory.setReadTimeout(Duration.ofSeconds(30L));
+
         final RestClient restClient = builder
-                .requestFactory(new JdkClientHttpRequestFactory())
+                .requestFactory(requestFactory)
                 .build();
 
         return new BibbiClient(restClient);

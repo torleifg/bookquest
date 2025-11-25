@@ -14,6 +14,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
 
+import java.time.Duration;
 import java.util.List;
 
 @Configuration
@@ -45,8 +46,11 @@ class BokbasenConfig {
         final OAuth2ClientHttpRequestInterceptor requestInterceptor = new OAuth2ClientHttpRequestInterceptor(authorizedClientManager);
         requestInterceptor.setClientRegistrationIdResolver(it -> bokbasenProperties.getClient());
 
+        final JdkClientHttpRequestFactory requestFactory = new JdkClientHttpRequestFactory();
+        requestFactory.setReadTimeout(Duration.ofSeconds(30L));
+
         final RestClient restClient = builder
-                .requestFactory(new JdkClientHttpRequestFactory())
+                .requestFactory(requestFactory)
                 .requestInterceptor(requestInterceptor)
                 .build();
 
