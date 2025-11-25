@@ -4,6 +4,7 @@ import com.github.torleifg.bookquest.core.domain.Book;
 import com.github.torleifg.bookquest.core.repository.LastModifiedRepository;
 import com.github.torleifg.bookquest.core.repository.ResumptionToken;
 import com.github.torleifg.bookquest.core.repository.ResumptionTokenRepository;
+import com.github.torleifg.bookquest.core.service.GatewayException;
 import com.github.torleifg.bookquest.core.service.GatewayResponse;
 import com.github.torleifg.bookquest.core.service.GatewayService;
 import org.marc4j.MarcXmlReader;
@@ -35,7 +36,7 @@ record OaiPmhGateway(OaiPmhProperties.GatewayConfig gatewayConfig, OaiPmhClient 
         try {
             TRANSFORMER_FACTORY = TransformerFactory.newInstance();
         } catch (TransformerFactoryConfigurationError e) {
-            throw new OaiPmhException(e);
+            throw new GatewayException(e);
         }
     }
 
@@ -47,7 +48,7 @@ record OaiPmhGateway(OaiPmhProperties.GatewayConfig gatewayConfig, OaiPmhClient 
         final OaiPmhResponse response = OaiPmhResponse.from(oaiPmhClient.get(requestUri));
 
         if (response.hasUnrecoverableErrors()) {
-            throw new OaiPmhException(response.errorsToString());
+            throw new GatewayException(response.errorsToString());
         }
 
         final String resumptionToken = response.getResumptionToken();
