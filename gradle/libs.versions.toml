@@ -1,15 +1,14 @@
 [versions]
-boot = '3.5.8'
+boot = '3.5.9'
 dependency-management = '1.1.7'
 openapi = '7.6.0'
 xjc = '1.9.0'
 
-ai = '1.1.0'
+ai = '1.1.2'
 marc = '2.9.6'
 jaxb-impl = '4.0.6'
-wiremock = '4.0.6'
-commons = '3.19.0'
-springdoc = '2.8.14'
+wiremock = '4.0.8'
+springdoc = '2.8.15'
 missing-css = '1.1.3'
 font-awesome = '4.7.0'
 jquery = '3.7.1'
@@ -17,7 +16,7 @@ jquery-ui = '1.14.1'
 
 [libraries]
 wiremock-spring-boot = { module = 'org.wiremock.integrations:wiremock-spring-boot', version.ref = 'wiremock' }
-commons-lang = { module = 'org.apache.commons:commons-lang3', version.ref = 'commons' }
+commons-lang = { module = 'org.apache.commons:commons-lang3' }
 jaxb-impl = { module = 'com.sun.xml.bind:jaxb-impl', version.ref = 'jaxb-impl' }
 marc4j = { module = 'org.marc4j:marc4j', version.ref = 'marc' }
 springdoc-openapi-starter-webmvc-ui = { module = 'org.springdoc:springdoc-openapi-starter-webmvc-ui', version.ref = 'springdoc' }
