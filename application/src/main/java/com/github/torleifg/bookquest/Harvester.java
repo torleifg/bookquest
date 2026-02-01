@@ -5,15 +5,18 @@ import com.github.torleifg.bookquest.core.service.GatewayResponse;
 import com.github.torleifg.bookquest.core.service.GatewayService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 
 @Slf4j
 @Component
 class Harvester {
     private final BookService bookService;
 
-    Harvester(BookService bookService) {
+    private final TransactionTemplate transactionTemplate;
+
+    Harvester(BookService bookService, TransactionTemplate transactionTemplate) {
         this.bookService = bookService;
+        this.transactionTemplate = transactionTemplate;
     }
 
     boolean poll(GatewayService gatewayService) {
@@ -27,15 +30,11 @@ class Harvester {
             return false;
         }
 
-        saveAll(gatewayResponse, gatewayService);
+        transactionTemplate.executeWithoutResult(_ -> {
+            bookService.save(gatewayResponse.books());
+            gatewayService.updateHarvestState(gatewayResponse);
+        });
 
         return true;
-    }
-
-    @Transactional
-    private void saveAll(GatewayResponse gatewayResponse, GatewayService gatewayService) {
-        bookService.save(gatewayResponse.books());
-
-        gatewayService.updateHarvestState(gatewayResponse);
     }
 }
