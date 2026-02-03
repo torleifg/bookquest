@@ -13,10 +13,9 @@ class HarvesterConfig {
     ThreadPoolTaskScheduler taskScheduler() {
         final ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
         scheduler.setPoolSize(1);
-        scheduler.setThreadNamePrefix("gateway-scheduler-");
+        scheduler.setThreadNamePrefix("harvester-");
         scheduler.setWaitForTasksToCompleteOnShutdown(true);
         scheduler.setAwaitTerminationSeconds(10);
-        scheduler.setRemoveOnCancelPolicy(true);
 
         return scheduler;
     }

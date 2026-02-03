@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class HarvesterTests {
+class HarvesterTests {
 
     @Mock
     GatewayService firstGateway;
@@ -44,7 +44,7 @@ public class HarvesterTests {
         var response = new GatewayResponse(null, List.of(new Book()), null, null);
         var emptyResponse = new GatewayResponse(null, List.of(), null, null);
 
-        when(firstGateway.find()).thenReturn(response, emptyResponse);
+        when(firstGateway.find()).thenReturn(response);
         when(secondGateway.find()).thenReturn(emptyResponse);
 
         doAnswer(invocation -> {
@@ -58,9 +58,8 @@ public class HarvesterTests {
         var inOrder = inOrder(firstGateway, secondGateway);
         inOrder.verify(firstGateway).find();
         inOrder.verify(secondGateway).find();
-        inOrder.verify(firstGateway).find();
 
-        verify(firstGateway, times(2)).find();
+        verify(firstGateway, times(1)).find();
         verify(secondGateway, times(1)).find();
 
         verify(bookService, times(1)).save(anyList());

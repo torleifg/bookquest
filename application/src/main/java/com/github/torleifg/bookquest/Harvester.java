@@ -9,9 +9,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import java.util.ArrayDeque;
 import java.util.List;
-import java.util.Queue;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -43,10 +41,7 @@ class Harvester {
             return;
         }
 
-        final Queue<GatewayService> queue = new ArrayDeque<>(gateways);
-
-        while (!queue.isEmpty()) {
-            final GatewayService gateway = queue.poll();
+        for (final GatewayService gateway : gateways) {
             final String name = gateway.getClass().getSimpleName();
 
             log.info("Polling {}...", name);
@@ -65,8 +60,6 @@ class Harvester {
                     bookService.save(response.books());
                     gateway.updateHarvestState(response);
                 });
-
-                queue.add(gateway);
 
             } catch (Exception e) {
                 log.error("Error while processing gateway {}", name, e);
