@@ -29,7 +29,7 @@ class Harvester {
         this.enabled = enabled;
     }
 
-    @Scheduled(initialDelayString = "${scheduler.initial-delay}", fixedDelayString = "${scheduler.fixed-delay}", timeUnit = TimeUnit.SECONDS)
+    @Scheduled(initialDelayString = "${scheduler.initial-delay}", fixedDelayString = "${scheduler.fixed-delay}", timeUnit = TimeUnit.MILLISECONDS)
     void run() {
         if (!enabled) {
             log.warn("Scheduler is disabled.");
