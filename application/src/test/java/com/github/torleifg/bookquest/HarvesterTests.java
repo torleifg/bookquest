@@ -40,11 +40,13 @@ class HarvesterTests {
 
     @BeforeEach
     void setUp() {
-        harvester = new Harvester(List.of(firstGateway, secondGateway), bookService, stateService, transactionTemplate, 60);
+        harvester = new Harvester(List.of(firstGateway), bookService, stateService, transactionTemplate, 60);
     }
 
     @Test
     void runTest() {
+        var harvester = new Harvester(List.of(firstGateway, secondGateway), bookService, stateService, transactionTemplate, 60);
+
         var response = new GatewayResponse(null, List.of(new Book()), null, null);
         when(firstGateway.find(any())).thenReturn(response);
 
@@ -66,6 +68,7 @@ class HarvesterTests {
         verify(firstGateway, times(1)).find(any());
         verify(secondGateway, times(1)).find(any());
 
+        verify(stateService, times(2)).get(any());
         verify(bookService, times(1)).save(anyList());
         verify(stateService, times(1)).update(any(), any());
     }
@@ -73,35 +76,33 @@ class HarvesterTests {
     @Test
     void runBackoffEmptyResponseTest() {
         var emptyResponse = new GatewayResponse(null, List.of(), null, null);
-
         when(firstGateway.find(any())).thenReturn(emptyResponse);
-        when(secondGateway.find(any())).thenReturn(emptyResponse);
 
         harvester.run();
         harvester.run();
 
         verify(firstGateway, times(1)).find(any());
-        verify(secondGateway, times(1)).find(any());
 
+        verify(stateService, times(1)).get(any());
         verifyNoInteractions(bookService);
     }
 
     @Test
     void runBackoffExceptionTest() {
         when(firstGateway.find(any())).thenThrow(new RuntimeException("..."));
-        when(secondGateway.find(any())).thenThrow(new RuntimeException("..."));
 
         harvester.run();
         harvester.run();
 
         verify(firstGateway, times(1)).find(any());
-        verify(secondGateway, times(1)).find(any());
+
+        verify(stateService, times(1)).get(any());
         verifyNoInteractions(bookService);
     }
 
     @Test
     void runResumeAfterBackoffTest() {
-        var harvester = new Harvester(List.of(firstGateway), bookService, stateService, transactionTemplate, 0);
+        harvester = new Harvester(List.of(firstGateway), bookService, stateService, transactionTemplate, 0);
 
         var emptyResponse = new GatewayResponse(null, List.of(), null, null);
         when(firstGateway.find(any())).thenReturn(emptyResponse);
@@ -110,6 +111,8 @@ class HarvesterTests {
         harvester.run();
 
         verify(firstGateway, times(2)).find(any());
+
+        verify(stateService, times(2)).get(any());
         verifyNoInteractions(bookService);
     }
 }
