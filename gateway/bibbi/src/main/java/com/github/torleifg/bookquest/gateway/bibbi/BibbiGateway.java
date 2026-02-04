@@ -96,8 +96,11 @@ record BibbiGateway(BibbiProperties.GatewayConfig gatewayConfig, BibbiClient bib
         return lastModifiedRepository.get(serviceUri)
                 .map(instant -> requestUri.append("&query=")
                         .append(gatewayConfig.getQuery())
-                        .append(String.format(" AND modified:[%s TO *]", ISO_INSTANT.format(instant)))
-                        .toString()).orElseGet(() -> requestUri.append("&query=")
+                        .append(" AND modified:[")
+                        .append(ISO_INSTANT.format(instant))
+                        .append(" TO *]")
+                        .toString())
+                .orElseGet(() -> requestUri.append("&query=")
                         .append(gatewayConfig.getQuery())
                         .toString());
     }

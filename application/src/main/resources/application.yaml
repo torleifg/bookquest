@@ -55,8 +55,9 @@ reciprocal-rank-fusion:
 
 scheduler:
   enabled: true
-  initial-delay: 5
-  fixed-delay: 3600
+  initial-delay-millis: 5000
+  fixed-delay-millis: 500
+  backoff-seconds: 20
 
 harvesting:
   bibbi:
