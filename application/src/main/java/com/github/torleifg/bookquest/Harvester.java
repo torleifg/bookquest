@@ -6,51 +6,58 @@ import com.github.torleifg.bookquest.core.service.GatewayService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.util.ClassUtils;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-@Component
 class Harvester {
     private final List<GatewayService> gateways;
 
     private final BookService bookService;
     private final TransactionTemplate transactionTemplate;
+    private final int backoffSeconds;
 
-    private final boolean enabled;
+    private final Map<GatewayService, Instant> backoffRegistry = new ConcurrentHashMap<>();
 
-    Harvester(List<GatewayService> gateways, BookService bookService, TransactionTemplate transactionTemplate, @Value("${scheduler.enabled}") boolean enabled) {
+    Harvester(List<GatewayService> gateways, BookService bookService, TransactionTemplate transactionTemplate, int backoffSeconds) {
         this.gateways = gateways;
         this.bookService = bookService;
         this.transactionTemplate = transactionTemplate;
-        this.enabled = enabled;
+        this.backoffSeconds = backoffSeconds;
     }
 
-    @Scheduled(initialDelayString = "${scheduler.initial-delay}", fixedDelayString = "${scheduler.fixed-delay}", timeUnit = TimeUnit.MILLISECONDS)
+    @Scheduled(initialDelayString = "${scheduler.initial-delay-millis}", fixedDelayString = "${scheduler.fixed-delay-millis}", timeUnit = TimeUnit.MILLISECONDS)
     void run() {
-        if (!enabled) {
-            log.warn("Scheduler is disabled.");
-            return;
-        }
-
-        if (gateways.isEmpty()) {
-            log.warn("No gateways available.");
-            return;
-        }
+        final Instant now = Instant.now();
 
         for (final GatewayService gateway : gateways) {
-            final String name = gateway.getClass().getSimpleName();
+            final String name = ClassUtils.getUserClass(gateway).getSimpleName();
 
-            log.info("Polling {}...", name);
+            final Instant backoff = backoffRegistry.get(gateway);
+
+            if (backoff != null) {
+                if (now.isBefore(backoff)) {
+                    log.debug("Skipping polling {}. Backoff until {}", name, backoff);
+                    continue;
+                }
+
+                backoffRegistry.remove(gateway);
+            }
 
             try {
+                log.info("Polling {}...", name);
+
                 final GatewayResponse response = gateway.find();
 
                 if (response.books().isEmpty()) {
-                    log.info("Finished polling {}", name);
+                    log.info("No books found polling {}. Backing off for {} seconds", name, backoffSeconds);
+                    backoffRegistry.put(gateway, now.plusSeconds(backoffSeconds));
                     continue;
                 }
 
@@ -62,7 +69,9 @@ class Harvester {
                 });
 
             } catch (Exception e) {
-                log.error("Error while processing gateway {}", name, e);
+                log.error("Error while polling {}. Backing off for {} seconds.", name, backoffSeconds, e);
+
+                backoffRegistry.put(gateway, now.plusSeconds(backoffSeconds));
             }
         }
     }

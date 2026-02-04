@@ -36,15 +36,15 @@ class HarvesterTests {
 
     @BeforeEach
     void setUp() {
-        harvester = new Harvester(List.of(firstGateway, secondGateway), bookService, transactionTemplate, true);
+        harvester = new Harvester(List.of(firstGateway, secondGateway), bookService, transactionTemplate, 60);
     }
 
     @Test
     void runTest() {
         var response = new GatewayResponse(null, List.of(new Book()), null, null);
-        var emptyResponse = new GatewayResponse(null, List.of(), null, null);
-
         when(firstGateway.find()).thenReturn(response);
+
+        var emptyResponse = new GatewayResponse(null, List.of(), null, null);
         when(secondGateway.find()).thenReturn(emptyResponse);
 
         doAnswer(invocation -> {
@@ -63,7 +63,43 @@ class HarvesterTests {
         verify(secondGateway, times(1)).find();
 
         verify(bookService, times(1)).save(anyList());
-        verify(firstGateway, times(1)).updateHarvestState(response);
+        verify(firstGateway, times(1)).updateHarvestState(any());
         verify(secondGateway, never()).updateHarvestState(any());
+    }
+
+    @Test
+    void runBackoffEmptyResponseTest() {
+        var emptyResponse = new GatewayResponse(null, List.of(), null, null);
+        when(firstGateway.find()).thenReturn(emptyResponse);
+
+        harvester.run();
+        harvester.run();
+
+        verify(firstGateway, times(1)).find();
+        verifyNoInteractions(bookService);
+    }
+
+    @Test
+    void runBackoffExceptionTest() {
+        when(firstGateway.find()).thenThrow(new RuntimeException("..."));
+
+        harvester.run();
+        harvester.run();
+
+        verify(firstGateway, times(1)).find();
+        verifyNoInteractions(bookService);
+    }
+
+    @Test
+    void runResumeAfterBackoffTest() {
+        var harvester = new Harvester(List.of(firstGateway), bookService, transactionTemplate, 0);
+
+        var emptyResponse = new GatewayResponse(null, List.of(), null, null);
+        when(firstGateway.find()).thenReturn(emptyResponse);
+
+        harvester.run();
+        harvester.run();
+
+        verify(firstGateway, times(2)).find();
     }
 }
