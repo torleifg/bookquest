@@ -4,6 +4,7 @@ import com.github.torleifg.bookquest.core.domain.Book;
 import com.github.torleifg.bookquest.core.service.BookService;
 import com.github.torleifg.bookquest.core.service.GatewayResponse;
 import com.github.torleifg.bookquest.core.service.GatewayService;
+import com.github.torleifg.bookquest.core.service.StateService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,22 +31,25 @@ class HarvesterTests {
     BookService bookService;
 
     @Mock
+    StateService stateService;
+
+    @Mock
     TransactionTemplate transactionTemplate;
 
     Harvester harvester;
 
     @BeforeEach
     void setUp() {
-        harvester = new Harvester(List.of(firstGateway, secondGateway), bookService, transactionTemplate, 60);
+        harvester = new Harvester(List.of(firstGateway, secondGateway), bookService, stateService, transactionTemplate, 60);
     }
 
     @Test
     void runTest() {
         var response = new GatewayResponse(null, List.of(new Book()), null, null);
-        when(firstGateway.find()).thenReturn(response);
+        when(firstGateway.find(any())).thenReturn(response);
 
         var emptyResponse = new GatewayResponse(null, List.of(), null, null);
-        when(secondGateway.find()).thenReturn(emptyResponse);
+        when(secondGateway.find(any())).thenReturn(emptyResponse);
 
         doAnswer(invocation -> {
             Consumer<TransactionStatus> callback = invocation.getArgument(0);
@@ -56,50 +60,56 @@ class HarvesterTests {
         harvester.run();
 
         var inOrder = inOrder(firstGateway, secondGateway);
-        inOrder.verify(firstGateway).find();
-        inOrder.verify(secondGateway).find();
+        inOrder.verify(firstGateway).find(any());
+        inOrder.verify(secondGateway).find(any());
 
-        verify(firstGateway, times(1)).find();
-        verify(secondGateway, times(1)).find();
+        verify(firstGateway, times(1)).find(any());
+        verify(secondGateway, times(1)).find(any());
 
         verify(bookService, times(1)).save(anyList());
-        verify(firstGateway, times(1)).updateHarvestState(any());
-        verify(secondGateway, never()).updateHarvestState(any());
+        verify(stateService, times(1)).update(any(), any());
     }
 
     @Test
     void runBackoffEmptyResponseTest() {
         var emptyResponse = new GatewayResponse(null, List.of(), null, null);
-        when(firstGateway.find()).thenReturn(emptyResponse);
+
+        when(firstGateway.find(any())).thenReturn(emptyResponse);
+        when(secondGateway.find(any())).thenReturn(emptyResponse);
 
         harvester.run();
         harvester.run();
 
-        verify(firstGateway, times(1)).find();
+        verify(firstGateway, times(1)).find(any());
+        verify(secondGateway, times(1)).find(any());
+
         verifyNoInteractions(bookService);
     }
 
     @Test
     void runBackoffExceptionTest() {
-        when(firstGateway.find()).thenThrow(new RuntimeException("..."));
+        when(firstGateway.find(any())).thenThrow(new RuntimeException("..."));
+        when(secondGateway.find(any())).thenThrow(new RuntimeException("..."));
 
         harvester.run();
         harvester.run();
 
-        verify(firstGateway, times(1)).find();
+        verify(firstGateway, times(1)).find(any());
+        verify(secondGateway, times(1)).find(any());
         verifyNoInteractions(bookService);
     }
 
     @Test
     void runResumeAfterBackoffTest() {
-        var harvester = new Harvester(List.of(firstGateway), bookService, transactionTemplate, 0);
+        var harvester = new Harvester(List.of(firstGateway), bookService, stateService, transactionTemplate, 0);
 
         var emptyResponse = new GatewayResponse(null, List.of(), null, null);
-        when(firstGateway.find()).thenReturn(emptyResponse);
+        when(firstGateway.find(any())).thenReturn(emptyResponse);
 
         harvester.run();
         harvester.run();
 
-        verify(firstGateway, times(2)).find();
+        verify(firstGateway, times(2)).find(any());
+        verifyNoInteractions(bookService);
     }
 }
