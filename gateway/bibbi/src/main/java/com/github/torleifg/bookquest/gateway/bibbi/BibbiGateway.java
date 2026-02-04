@@ -1,11 +1,10 @@
 package com.github.torleifg.bookquest.gateway.bibbi;
 
 import com.github.torleifg.bookquest.core.domain.Book;
-import com.github.torleifg.bookquest.core.repository.LastModifiedRepository;
 import com.github.torleifg.bookquest.core.repository.ResumptionToken;
-import com.github.torleifg.bookquest.core.repository.ResumptionTokenRepository;
 import com.github.torleifg.bookquest.core.service.GatewayResponse;
 import com.github.torleifg.bookquest.core.service.GatewayService;
+import com.github.torleifg.bookquest.core.service.HarvestState;
 import no.bs.bibliografisk.model.BibliographicRecordMetadata;
 import no.bs.bibliografisk.model.GetV1PublicationsHarvest200ResponsePublicationsInner;
 
@@ -19,14 +18,13 @@ import java.util.Optional;
 import static java.time.format.DateTimeFormatter.ISO_INSTANT;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
-record BibbiGateway(BibbiProperties.GatewayConfig gatewayConfig, BibbiClient bibbiClient, BibbiMapper bibbiMapper,
-                    ResumptionTokenRepository resumptionTokenRepository,
-                    LastModifiedRepository lastModifiedRepository) implements GatewayService {
+record BibbiGateway(BibbiProperties.GatewayConfig gatewayConfig, BibbiClient bibbiClient,
+                    BibbiMapper bibbiMapper) implements GatewayService {
 
     @Override
-    public GatewayResponse find() {
+    public GatewayResponse find(HarvestState state) {
         final String serviceUri = gatewayConfig.getServiceUri();
-        final String requestUri = createRequestUri(serviceUri);
+        final String requestUri = createRequestUri(serviceUri, state);
 
         final BibbiResponse response = BibbiResponse.from(bibbiClient.get(requestUri));
 
@@ -64,28 +62,16 @@ record BibbiGateway(BibbiProperties.GatewayConfig gatewayConfig, BibbiClient bib
     }
 
     @Override
-    public void updateHarvestState(GatewayResponse response) {
-        final String serviceUri = gatewayConfig.getServiceUri();
-
-        final String token = response.resumptionToken();
-
-        if (token != null && !token.isBlank()) {
-            resumptionTokenRepository.save(serviceUri, token);
-        } else {
-            resumptionTokenRepository.delete(serviceUri);
-        }
-
-        if (response.lastModified() != null) {
-            lastModifiedRepository.save(serviceUri, response.lastModified());
-        }
+    public String getServiceUri() {
+        return gatewayConfig.getServiceUri();
     }
 
-    private String createRequestUri(String serviceUri) {
+    private String createRequestUri(String serviceUri, HarvestState state) {
         final StringBuilder requestUri = new StringBuilder(serviceUri)
                 .append("?limit=")
                 .append(gatewayConfig.getLimit());
 
-        final Optional<ResumptionToken> resumptionToken = resumptionTokenRepository.get(serviceUri);
+        final Optional<ResumptionToken> resumptionToken = state.resumptionToken();
 
         if (resumptionToken.isPresent() && !resumptionToken.get().isExpired(gatewayConfig.getTtl())) {
             return requestUri.append("&resumption_token=")
@@ -93,7 +79,7 @@ record BibbiGateway(BibbiProperties.GatewayConfig gatewayConfig, BibbiClient bib
                     .toString();
         }
 
-        return lastModifiedRepository.get(serviceUri)
+        return state.lastModified()
                 .map(instant -> requestUri.append("&query=")
                         .append(gatewayConfig.getQuery())
                         .append(" AND modified:[")

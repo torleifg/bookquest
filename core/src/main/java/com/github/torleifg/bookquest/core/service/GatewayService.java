@@ -2,7 +2,7 @@ package com.github.torleifg.bookquest.core.service;
 
 public interface GatewayService {
 
-    GatewayResponse find();
+    GatewayResponse find(HarvestState state);
 
-    void updateHarvestState(GatewayResponse response);
+    String getServiceUri();
 }

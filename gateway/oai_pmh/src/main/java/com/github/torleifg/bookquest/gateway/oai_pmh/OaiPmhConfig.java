@@ -1,7 +1,5 @@
 package com.github.torleifg.bookquest.gateway.oai_pmh;
 
-import com.github.torleifg.bookquest.core.repository.LastModifiedRepository;
-import com.github.torleifg.bookquest.core.repository.ResumptionTokenRepository;
 import com.github.torleifg.bookquest.core.service.GatewayService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,15 +13,15 @@ import java.util.List;
 class OaiPmhConfig {
 
     @Bean
-    List<GatewayService> oaiPmhGateways(OaiPmhClient oaiPmhClient, OaiPmhProperties oaiPmhProperties, ResumptionTokenRepository resumptionTokenRepository, LastModifiedRepository lastModifiedRepository) {
+    List<GatewayService> oaiPmhGateways(OaiPmhClient oaiPmhClient, OaiPmhProperties oaiPmhProperties) {
         return oaiPmhProperties.getGateways().stream()
                 .filter(OaiPmhProperties.GatewayConfig::isEnabled)
-                .map(config -> createGateway(config, oaiPmhClient, resumptionTokenRepository, lastModifiedRepository))
+                .map(config -> createGateway(config, oaiPmhClient))
                 .map(GatewayService.class::cast)
                 .toList();
     }
 
-    private OaiPmhGateway createGateway(OaiPmhProperties.GatewayConfig gatewayConfig, OaiPmhClient oaiPmhClient, ResumptionTokenRepository resumptionTokenRepository, LastModifiedRepository lastModifiedRepository) {
+    private OaiPmhGateway createGateway(OaiPmhProperties.GatewayConfig gatewayConfig, OaiPmhClient oaiPmhClient) {
         final String mapper = gatewayConfig.getMapper();
 
         /*
@@ -32,7 +30,7 @@ class OaiPmhConfig {
 
         final OaiPmhMapper oaiPmhMapper = new OaiPmhDefaultMapper();
 
-        return new OaiPmhGateway(gatewayConfig, oaiPmhClient, oaiPmhMapper, resumptionTokenRepository, lastModifiedRepository);
+        return new OaiPmhGateway(gatewayConfig, oaiPmhClient, oaiPmhMapper);
     }
 
     @Bean
