@@ -2,6 +2,7 @@ package com.github.torleifg.bookquest;
 
 import com.github.torleifg.bookquest.core.service.BookService;
 import com.github.torleifg.bookquest.core.service.GatewayService;
+import com.github.torleifg.bookquest.core.service.StateService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -32,11 +33,11 @@ class HarvesterConfig {
 
     @Bean
     @ConditionalOnProperty(value = "scheduler.enabled", havingValue = "true")
-    public Harvester harvester(List<GatewayService> gateways, BookService bookService, TransactionTemplate transactionTemplate) {
+    public Harvester harvester(List<GatewayService> gateways, BookService bookService, StateService stateService, TransactionTemplate transactionTemplate) {
         if (gateways.isEmpty()) {
             return null;
         }
 
-        return new Harvester(gateways, bookService, transactionTemplate, backoffSeconds);
+        return new Harvester(gateways, bookService, stateService, transactionTemplate, backoffSeconds);
     }
 }
