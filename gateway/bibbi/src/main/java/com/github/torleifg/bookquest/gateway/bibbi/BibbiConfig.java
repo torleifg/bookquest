@@ -1,7 +1,5 @@
 package com.github.torleifg.bookquest.gateway.bibbi;
 
-import com.github.torleifg.bookquest.core.repository.LastModifiedRepository;
-import com.github.torleifg.bookquest.core.repository.ResumptionTokenRepository;
 import com.github.torleifg.bookquest.core.service.GatewayService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,15 +13,15 @@ import java.util.List;
 class BibbiConfig {
 
     @Bean
-    List<GatewayService> bibbiGateways(BibbiProperties bibbiProperties, BibbiClient bibbiClient, ResumptionTokenRepository resumptionTokenRepository, LastModifiedRepository lastModifiedRepository) {
+    List<GatewayService> bibbiGateways(BibbiProperties bibbiProperties, BibbiClient bibbiClient) {
         return bibbiProperties.getGateways().stream()
                 .filter(BibbiProperties.GatewayConfig::isEnabled)
-                .map(config -> createGateway(config, bibbiClient, resumptionTokenRepository, lastModifiedRepository))
+                .map(config -> createGateway(config, bibbiClient))
                 .map(GatewayService.class::cast)
                 .toList();
     }
 
-    private BibbiGateway createGateway(BibbiProperties.GatewayConfig gatewayConfig, BibbiClient bibbiClient, ResumptionTokenRepository resumptionTokenRepository, LastModifiedRepository lastModifiedRepository) {
+    private BibbiGateway createGateway(BibbiProperties.GatewayConfig gatewayConfig, BibbiClient bibbiClient) {
         final String mapper = gatewayConfig.getMapper();
 
         /*
@@ -32,7 +30,7 @@ class BibbiConfig {
 
         final BibbiMapper bibbiMapper = new BibbiDefaultMapper();
 
-        return new BibbiGateway(gatewayConfig, bibbiClient, bibbiMapper, resumptionTokenRepository, lastModifiedRepository);
+        return new BibbiGateway(gatewayConfig, bibbiClient, bibbiMapper);
     }
 
     @Bean

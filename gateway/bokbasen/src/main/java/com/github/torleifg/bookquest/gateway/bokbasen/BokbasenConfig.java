@@ -1,6 +1,5 @@
 package com.github.torleifg.bookquest.gateway.bokbasen;
 
-import com.github.torleifg.bookquest.core.repository.ResumptionTokenRepository;
 import com.github.torleifg.bookquest.core.service.GatewayService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,15 +20,15 @@ import java.util.List;
 class BokbasenConfig {
 
     @Bean
-    List<GatewayService> bokbasenGateways(BokbasenClient bokbasenClient, BokbasenProperties bokbasenProperties, ResumptionTokenRepository resumptionTokenRepository) {
+    List<GatewayService> bokbasenGateways(BokbasenClient bokbasenClient, BokbasenProperties bokbasenProperties) {
         return bokbasenProperties.getGateways().stream()
                 .filter(BokbasenProperties.GatewayConfig::isEnabled)
-                .map(config -> createGateway(config, bokbasenClient, resumptionTokenRepository))
+                .map(config -> createGateway(config, bokbasenClient))
                 .map(GatewayService.class::cast)
                 .toList();
     }
 
-    private BokbasenGateway createGateway(BokbasenProperties.GatewayConfig gatewayConfig, BokbasenClient bokbasenClient, ResumptionTokenRepository resumptionTokenRepository) {
+    private BokbasenGateway createGateway(BokbasenProperties.GatewayConfig gatewayConfig, BokbasenClient bokbasenClient) {
         final String mapper = gatewayConfig.getMapper();
 
         /*
@@ -38,7 +37,7 @@ class BokbasenConfig {
 
         final BokbasenMapper bokbasenMapper = new BokbasenDefaultMapper();
 
-        return new BokbasenGateway(gatewayConfig, bokbasenClient, bokbasenMapper, resumptionTokenRepository);
+        return new BokbasenGateway(gatewayConfig, bokbasenClient, bokbasenMapper);
     }
 
     @Bean

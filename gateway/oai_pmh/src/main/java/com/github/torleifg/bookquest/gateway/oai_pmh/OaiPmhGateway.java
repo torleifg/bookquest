@@ -1,12 +1,11 @@
 package com.github.torleifg.bookquest.gateway.oai_pmh;
 
 import com.github.torleifg.bookquest.core.domain.Book;
-import com.github.torleifg.bookquest.core.repository.LastModifiedRepository;
 import com.github.torleifg.bookquest.core.repository.ResumptionToken;
-import com.github.torleifg.bookquest.core.repository.ResumptionTokenRepository;
 import com.github.torleifg.bookquest.core.service.GatewayException;
 import com.github.torleifg.bookquest.core.service.GatewayResponse;
 import com.github.torleifg.bookquest.core.service.GatewayService;
+import com.github.torleifg.bookquest.core.service.HarvestState;
 import org.marc4j.MarcXmlReader;
 import org.marc4j.marc.Record;
 import org.openarchives.oai._2.HeaderType;
@@ -27,9 +26,8 @@ import java.util.Optional;
 
 import static java.time.format.DateTimeFormatter.ISO_INSTANT;
 
-record OaiPmhGateway(OaiPmhProperties.GatewayConfig gatewayConfig, OaiPmhClient oaiPmhClient, OaiPmhMapper oaiPmhMapper,
-                     ResumptionTokenRepository resumptionTokenRepository,
-                     LastModifiedRepository lastModifiedRepository) implements GatewayService {
+record OaiPmhGateway(OaiPmhProperties.GatewayConfig gatewayConfig, OaiPmhClient oaiPmhClient,
+                     OaiPmhMapper oaiPmhMapper) implements GatewayService {
     private static final TransformerFactory TRANSFORMER_FACTORY;
 
     static {
@@ -41,9 +39,9 @@ record OaiPmhGateway(OaiPmhProperties.GatewayConfig gatewayConfig, OaiPmhClient 
     }
 
     @Override
-    public GatewayResponse find() {
+    public GatewayResponse find(HarvestState state) {
         final String serviceUri = gatewayConfig.getServiceUri();
-        final String requestUri = createRequestUri(serviceUri);
+        final String requestUri = createRequestUri(serviceUri, state);
 
         final OaiPmhResponse response = OaiPmhResponse.from(oaiPmhClient.get(requestUri));
 
@@ -107,28 +105,16 @@ record OaiPmhGateway(OaiPmhProperties.GatewayConfig gatewayConfig, OaiPmhClient 
     }
 
     @Override
-    public void updateHarvestState(GatewayResponse response) {
-        final String serviceUri = gatewayConfig.getServiceUri();
-
-        final String token = response.resumptionToken();
-
-        if (token != null && !token.isBlank()) {
-            resumptionTokenRepository.save(serviceUri, token);
-        } else {
-            resumptionTokenRepository.delete(serviceUri);
-        }
-
-        if (response.lastModified() != null) {
-            lastModifiedRepository.save(serviceUri, response.lastModified());
-        }
+    public String getServiceUri() {
+        return gatewayConfig.getServiceUri();
     }
 
-    private String createRequestUri(String serviceUri) {
+    private String createRequestUri(String serviceUri, HarvestState state) {
         final StringBuilder requestUri = new StringBuilder(serviceUri)
                 .append("?verb=")
                 .append(gatewayConfig.getVerb());
 
-        final Optional<ResumptionToken> resumptionToken = resumptionTokenRepository.get(serviceUri);
+        final Optional<ResumptionToken> resumptionToken = state.resumptionToken();
 
         if (resumptionToken.isPresent() && !resumptionToken.get().isExpired(gatewayConfig.getTtl())) {
             return requestUri.append("&resumptionToken=")
@@ -143,7 +129,7 @@ record OaiPmhGateway(OaiPmhProperties.GatewayConfig gatewayConfig, OaiPmhClient 
             requestUri.append("&set=").append(gatewayConfig.getSet());
         }
 
-        return lastModifiedRepository.get(serviceUri)
+        return state.lastModified()
                 .map(instant -> requestUri.append("&from=")
                         .append(ISO_INSTANT.format(instant))
                         .toString()).orElseGet(requestUri::toString);

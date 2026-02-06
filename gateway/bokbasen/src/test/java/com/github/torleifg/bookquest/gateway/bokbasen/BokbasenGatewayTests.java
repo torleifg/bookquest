@@ -1,7 +1,7 @@
 package com.github.torleifg.bookquest.gateway.bokbasen;
 
 import com.github.torleifg.bookquest.core.repository.ResumptionToken;
-import com.github.torleifg.bookquest.core.repository.ResumptionTokenRepository;
+import com.github.torleifg.bookquest.core.service.HarvestState;
 import org.editeur.ns.onix._3_1.reference.ONIXMessage;
 import org.editeur.ns.onix._3_1.reference.ObjectFactory;
 import org.junit.jupiter.api.Test;
@@ -29,9 +29,6 @@ class BokbasenGatewayTests {
     @Mock
     BokbasenProperties.GatewayConfig gatewayConfig;
 
-    @Mock
-    ResumptionTokenRepository resumptionTokenRepository;
-
     @InjectMocks
     BokbasenGateway bokbasenGateway;
 
@@ -48,7 +45,8 @@ class BokbasenGatewayTests {
 
         when(bokbasenClient.get("/harvest?subscription=extended&pagesize=100&after=19700101090000")).thenReturn(ResponseEntity.ok(bokbasenResponse));
 
-        var gatewayResponse = bokbasenGateway.find();
+        var state = new HarvestState(Optional.empty(), Optional.empty());
+        var gatewayResponse = bokbasenGateway.find(state);
         assertEquals(0, gatewayResponse.books().size());
     }
 
@@ -59,13 +57,14 @@ class BokbasenGatewayTests {
         when(gatewayConfig.getPagesize()).thenReturn(100);
 
         var resumptionToken = "token";
-        when(resumptionTokenRepository.get("/harvest")).thenReturn(Optional.of(new ResumptionToken(resumptionToken, Instant.now())));
+        var tokenObj = new ResumptionToken(resumptionToken, Instant.now());
 
         var bokbasenResponse = createResponse();
 
         when(bokbasenClient.get("/harvest?subscription=extended&pagesize=100&next=token")).thenReturn(ResponseEntity.ok(bokbasenResponse));
 
-        var gatewayResponse = bokbasenGateway.find();
+        var state = new HarvestState(Optional.of(tokenObj), Optional.empty());
+        var gatewayResponse = bokbasenGateway.find(state);
         assertEquals(0, gatewayResponse.books().size());
     }
 

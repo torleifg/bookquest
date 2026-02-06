@@ -1,8 +1,7 @@
 package com.github.torleifg.bookquest.gateway.oai_pmh;
 
-import com.github.torleifg.bookquest.core.repository.LastModifiedRepository;
 import com.github.torleifg.bookquest.core.repository.ResumptionToken;
-import com.github.torleifg.bookquest.core.repository.ResumptionTokenRepository;
+import com.github.torleifg.bookquest.core.service.HarvestState;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,12 +30,6 @@ class OaiPmhGatewayTests {
     @Mock
     OaiPmhProperties.GatewayConfig gatewayConfig;
 
-    @Mock
-    ResumptionTokenRepository resumptionTokenRepository;
-
-    @Mock
-    LastModifiedRepository lastModifiedRepository;
-
     @InjectMocks
     OaiPmhGateway oaiPmhGateway;
 
@@ -51,7 +44,8 @@ class OaiPmhGatewayTests {
         var oaiPmhResponse = createResponse();
         when(oaiPmhClient.get("/harvest?verb=ListRecords&metadataPrefix=marc21")).thenReturn(oaiPmhResponse);
 
-        var gatewayResponse = oaiPmhGateway.find();
+        var state = new HarvestState(Optional.empty(), Optional.empty());
+        var gatewayResponse = oaiPmhGateway.find(state);
 
         assertEquals(0, gatewayResponse.books().size());
     }
@@ -63,12 +57,13 @@ class OaiPmhGatewayTests {
         when(gatewayConfig.getTtl()).thenReturn(5L);
 
         var resumptionToken = "token";
-        when(resumptionTokenRepository.get("/harvest")).thenReturn(Optional.of(new ResumptionToken(resumptionToken, Instant.now().minus(2, ChronoUnit.MINUTES))));
+        var tokenObj = new ResumptionToken(resumptionToken, Instant.now().minus(2, ChronoUnit.MINUTES));
 
         var oaiPmhResponse = createResponse();
         when(oaiPmhClient.get("/harvest?verb=ListRecords&resumptionToken=" + resumptionToken)).thenReturn(oaiPmhResponse);
 
-        var gatewayResponse = oaiPmhGateway.find();
+        var state = new HarvestState(Optional.of(tokenObj), Optional.empty());
+        var gatewayResponse = oaiPmhGateway.find(state);
         assertEquals(0, gatewayResponse.books().size());
     }
 
@@ -80,15 +75,14 @@ class OaiPmhGatewayTests {
         when(gatewayConfig.getTtl()).thenReturn(5L);
 
         var resumptionToken = "token";
-        when(resumptionTokenRepository.get("/harvest")).thenReturn(Optional.of(new ResumptionToken(resumptionToken, Instant.now().minus(6, ChronoUnit.MINUTES))));
-
+        var tokenObj = new ResumptionToken(resumptionToken, Instant.now().minus(6, ChronoUnit.MINUTES));
         var lastModified = Instant.now();
-        when(lastModifiedRepository.get("/harvest")).thenReturn(Optional.of(lastModified));
 
         var oaiPmhResponse = createResponse();
         when(oaiPmhClient.get("/harvest?verb=ListRecords&metadataPrefix=marc21&from=" + ISO_INSTANT.format(lastModified))).thenReturn(oaiPmhResponse);
 
-        var gatewayResponse = oaiPmhGateway.find();
+        var state = new HarvestState(Optional.of(tokenObj), Optional.of(lastModified));
+        var gatewayResponse = oaiPmhGateway.find(state);
         assertEquals(0, gatewayResponse.books().size());
     }
 
@@ -98,15 +92,13 @@ class OaiPmhGatewayTests {
         when(gatewayConfig.getVerb()).thenReturn("ListRecords");
         when(gatewayConfig.getMetadataPrefix()).thenReturn("marc21");
 
-        when(resumptionTokenRepository.get("/harvest")).thenReturn(Optional.empty());
-
         var lastModified = Instant.now();
-        when(lastModifiedRepository.get("/harvest")).thenReturn(Optional.of(lastModified));
 
         var oaiPmhResponse = createResponse();
         when(oaiPmhClient.get("/harvest?verb=ListRecords&metadataPrefix=marc21&from=" + ISO_INSTANT.format(lastModified))).thenReturn(oaiPmhResponse);
 
-        var gatewayResponse = oaiPmhGateway.find();
+        var state = new HarvestState(Optional.empty(), Optional.of(lastModified));
+        var gatewayResponse = oaiPmhGateway.find(state);
         assertEquals(0, gatewayResponse.books().size());
     }
 

@@ -1,10 +1,7 @@
 package com.github.torleifg.bookquest;
 
-import com.github.torleifg.bookquest.core.service.BookService;
-import com.github.torleifg.bookquest.core.service.GatewayResponse;
-import com.github.torleifg.bookquest.core.service.GatewayService;
+import com.github.torleifg.bookquest.core.service.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.ClassUtils;
@@ -20,14 +17,17 @@ class Harvester {
     private final List<GatewayService> gateways;
 
     private final BookService bookService;
+    private final StateService stateService;
+
     private final TransactionTemplate transactionTemplate;
     private final int backoffSeconds;
 
     private final Map<GatewayService, Instant> backoffRegistry = new ConcurrentHashMap<>();
 
-    Harvester(List<GatewayService> gateways, BookService bookService, TransactionTemplate transactionTemplate, int backoffSeconds) {
+    Harvester(List<GatewayService> gateways, BookService bookService, StateService stateService, TransactionTemplate transactionTemplate, int backoffSeconds) {
         this.gateways = gateways;
         this.bookService = bookService;
+        this.stateService = stateService;
         this.transactionTemplate = transactionTemplate;
         this.backoffSeconds = backoffSeconds;
     }
@@ -51,9 +51,12 @@ class Harvester {
             }
 
             try {
+                final String serviceUri = gateway.getServiceUri();
+                final HarvestState state = stateService.get(serviceUri);
+
                 log.info("Polling {}...", name);
 
-                final GatewayResponse response = gateway.find();
+                final GatewayResponse response = gateway.find(state);
 
                 if (response.books().isEmpty()) {
                     log.info("No books found polling {}. Backing off for {} seconds", name, backoffSeconds);
@@ -65,7 +68,7 @@ class Harvester {
 
                 transactionTemplate.executeWithoutResult(_ -> {
                     bookService.save(response.books());
-                    gateway.updateHarvestState(response);
+                    stateService.update(serviceUri, response);
                 });
 
             } catch (Exception e) {
