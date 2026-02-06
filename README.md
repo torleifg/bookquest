@@ -38,8 +38,9 @@ Available options:
 
 ```
 SCHEDULER_ENABLED: true
-SCHEDULER_INITIAL_DELAY: 5
-SCHEDULER_FIXED_DELAY: 3600
+SCHEDULER_INITIAL_DELAY_MILLIS: 5000
+SCHEDULER_FIXED_DELAY_MILLIS: 500
+SCHEDULER_BACKOFF_SECONDS: 60
 HARVESTING_OAI_PMH_GATEWAYS_0_ENABLED: true
 HARVESTING_OAI_PMH_GATEWAYS_0_SERVICE_URI: https://oai.aja.bs.no/mlnb
 HARVESTING_OAI_PMH_GATEWAYS_0_TTL: 5
@@ -74,8 +75,9 @@ Available options:
 ```yaml
 scheduler:
   enabled: true
-  initial-delay: 5
-  fixed-delay: 3600
+  initial-delay-millis: 5000
+  fixed-delay-millis: 500
+  backoff-seconds: 60
 
 harvesting:
   oai-pmh:
