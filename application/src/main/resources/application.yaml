@@ -57,7 +57,7 @@ scheduler:
   enabled: true
   initial-delay-millis: 5000
   fixed-delay-millis: 500
-  backoff-seconds: 20
+  backoff-seconds: 60
 
 harvesting:
   bibbi:
