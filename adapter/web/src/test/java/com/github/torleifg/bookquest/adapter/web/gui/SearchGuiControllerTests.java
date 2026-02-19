@@ -17,6 +17,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(value = SearchGuiController.class)
 @ContextConfiguration(classes = {SearchGuiController.class, SecurityConfig.class})
+@org.springframework.test.context.TestPropertySource(properties = {
+        "reciprocal-rank-fusion.keyword-full-text-search-weight=0.7",
+        "reciprocal-rank-fusion.keyword-semantic-search-weight=0.3"
+})
 class SearchGuiControllerTests {
 
     @Autowired
@@ -39,13 +43,13 @@ class SearchGuiControllerTests {
     }
 
     @Test
-    void fullTextSearchTest() throws Exception {
+    void keywordSearchTest() throws Exception {
         mockMvc.perform(get("/search").with(csrf())
                         .param("query", "query string"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("text/html;charset=UTF-8"));
 
-        verify(bookService).fullTextSearch("query string");
+        verify(bookService).hybridSearch("query string", 0.7, 0.3);
     }
 
     @Test

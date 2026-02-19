@@ -51,6 +51,10 @@ public class BookService {
     }
 
     public List<Book> hybridSearch(String query) {
+        return hybridSearch(query, fullTextSearchWeight, semanticSearchWeight);
+    }
+
+    public List<Book> hybridSearch(String query, double fullTextSearchWeight, double semanticSearchWeight) {
         final List<RankedSearchHit> rankedSearchHits = List.of(
                 RankedSearchHit.from(bookRepository.fullTextSearch(query, limit), fullTextSearchWeight),
                 RankedSearchHit.from(bookRepository.semanticSearch(query, limit), semanticSearchWeight)

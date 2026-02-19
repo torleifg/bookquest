@@ -2,6 +2,7 @@ package com.github.torleifg.bookquest.adapter.web.gui;
 
 import com.github.torleifg.bookquest.core.domain.Suggestion;
 import com.github.torleifg.bookquest.core.service.BookService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,12 @@ import java.util.Locale;
 
 @Controller
 class SearchGuiController {
+    @Value("${reciprocal-rank-fusion.keyword-full-text-search-weight}")
+    private double keywordFullTextSearchWeight;
+
+    @Value("${reciprocal-rank-fusion.keyword-semantic-search-weight}")
+    private double keywordSemanticSearchWeight;
+
     private final BookService bookService;
     private final SearchViewMapper searchViewMapper;
 
@@ -43,16 +50,14 @@ class SearchGuiController {
             return "redirect:/";
         }
 
-        final int wordCount = query.trim().split("\\s+").length;
-
         final List<SearchView> views;
 
-        if (wordCount > 3) {
-            views = bookService.hybridSearch(query).stream()
+        if (isKeywordQuery(query)) {
+            views = bookService.hybridSearch(query, keywordFullTextSearchWeight, keywordSemanticSearchWeight).stream()
                     .map(book -> searchViewMapper.from(book, locale))
                     .toList();
         } else {
-            views = bookService.fullTextSearch(query).stream()
+            views = bookService.hybridSearch(query).stream()
                     .map(book -> searchViewMapper.from(book, locale))
                     .toList();
         }
@@ -78,5 +83,9 @@ class SearchGuiController {
     @GetMapping("/autocomplete")
     public List<Suggestion> autocomplete(@RequestParam String term) {
         return bookService.autocomplete(term);
+    }
+
+    private boolean isKeywordQuery(String query) {
+        return query.trim().split("\\s+").length <= 3;
     }
 }

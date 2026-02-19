@@ -52,6 +52,8 @@ default-limit: 30
 reciprocal-rank-fusion:
   semantic-search-weight: 0.5
   full-text-search-weight: 0.5
+  keyword-full-text-search-weight: 0.7
+  keyword-semantic-search-weight: 0.3
 
 scheduler:
   enabled: true
