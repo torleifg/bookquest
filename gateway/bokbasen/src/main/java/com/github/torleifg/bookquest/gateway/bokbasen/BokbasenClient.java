@@ -4,7 +4,12 @@ import org.editeur.ns.onix._3_1.reference.ONIXMessage;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClient;
 
-record BokbasenClient(RestClient restClient) {
+class BokbasenClient {
+    private final RestClient restClient;
+
+    public BokbasenClient(RestClient restClient) {
+        this.restClient = restClient;
+    }
 
     ResponseEntity<ONIXMessage> get(String uri) {
         return restClient

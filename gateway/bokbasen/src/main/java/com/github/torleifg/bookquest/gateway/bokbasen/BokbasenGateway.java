@@ -13,15 +13,23 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-record BokbasenGateway(BokbasenProperties.GatewayConfig gatewayConfig, BokbasenClient bokbasenClient,
-                       BokbasenMapper bokbasenMapper) implements GatewayService {
+class BokbasenGateway implements GatewayService {
+    private final BokbasenProperties.GatewayConfig config;
+    private final BokbasenClient client;
+    private final BokbasenMapper mapper;
+
+    BokbasenGateway(BokbasenProperties.GatewayConfig config, BokbasenClient client, BokbasenMapper mapper) {
+        this.config = config;
+        this.client = client;
+        this.mapper = mapper;
+    }
 
     @Override
     public GatewayResponse find(HarvestState state) {
-        final String serviceUri = gatewayConfig.getServiceUri();
+        final String serviceUri = config.getServiceUri();
         final String requestUri = createRequestUri(serviceUri, state);
 
-        final ResponseEntity<ONIXMessage> entity = bokbasenClient.get(requestUri);
+        final ResponseEntity<ONIXMessage> entity = client.get(requestUri);
 
         final BokbasenResponse response = BokbasenResponse.from(entity.getBody());
 
@@ -47,9 +55,9 @@ record BokbasenGateway(BokbasenProperties.GatewayConfig gatewayConfig, BokbasenC
             }
 
             if (isDeleted(product.getNotificationType())) {
-                books.add(bokbasenMapper.from(product.getRecordReference().getValue()));
+                books.add(mapper.from(product.getRecordReference().getValue()));
             } else {
-                books.add(bokbasenMapper.from(product));
+                books.add(mapper.from(product));
             }
         }
 
@@ -58,21 +66,21 @@ record BokbasenGateway(BokbasenProperties.GatewayConfig gatewayConfig, BokbasenC
 
     @Override
     public String getServiceUri() {
-        return gatewayConfig.getServiceUri();
+        return config.getServiceUri();
     }
 
     private String createRequestUri(String serviceUri, HarvestState state) {
         final StringBuilder requestUri = new StringBuilder(serviceUri)
                 .append("?subscription=")
-                .append(gatewayConfig.getSubscription())
+                .append(config.getSubscription())
                 .append("&pagesize=")
-                .append(gatewayConfig.getPagesize());
+                .append(config.getPagesize());
 
         return state.resumptionToken()
                 .map(token -> requestUri.append("&next=")
                         .append(token.value())
                         .toString()).orElseGet(() -> requestUri.append("&after=")
-                        .append(gatewayConfig.getAfter())
+                        .append(config.getAfter())
                         .toString());
     }
 

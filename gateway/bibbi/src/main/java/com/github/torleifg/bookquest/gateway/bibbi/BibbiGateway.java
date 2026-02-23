@@ -18,15 +18,23 @@ import java.util.Optional;
 import static java.time.format.DateTimeFormatter.ISO_INSTANT;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
-record BibbiGateway(BibbiProperties.GatewayConfig gatewayConfig, BibbiClient bibbiClient,
-                    BibbiMapper bibbiMapper) implements GatewayService {
+class BibbiGateway implements GatewayService {
+    private final BibbiProperties.GatewayConfig config;
+    private final BibbiClient client;
+    private final BibbiMapper mapper;
+
+    public BibbiGateway(BibbiProperties.GatewayConfig config, BibbiClient client, BibbiMapper mapper) {
+        this.config = config;
+        this.client = client;
+        this.mapper = mapper;
+    }
 
     @Override
     public GatewayResponse find(HarvestState state) {
-        final String serviceUri = gatewayConfig.getServiceUri();
+        final String serviceUri = config.getServiceUri();
         final String requestUri = createRequestUri(serviceUri, state);
 
-        final BibbiResponse response = BibbiResponse.from(bibbiClient.get(requestUri));
+        final BibbiResponse response = BibbiResponse.from(client.get(requestUri));
 
         final String resumptionToken = response.getResumptionToken();
 
@@ -44,9 +52,9 @@ record BibbiGateway(BibbiProperties.GatewayConfig gatewayConfig, BibbiClient bib
             }
 
             if (publication.getDeleted() != null) {
-                books.add(bibbiMapper.from(publication.getId()));
+                books.add(mapper.from(publication.getId()));
             } else {
-                books.add(bibbiMapper.from(publication));
+                books.add(mapper.from(publication));
             }
         }
 
@@ -63,17 +71,17 @@ record BibbiGateway(BibbiProperties.GatewayConfig gatewayConfig, BibbiClient bib
 
     @Override
     public String getServiceUri() {
-        return gatewayConfig.getServiceUri();
+        return config.getServiceUri();
     }
 
     private String createRequestUri(String serviceUri, HarvestState state) {
         final StringBuilder requestUri = new StringBuilder(serviceUri)
                 .append("?limit=")
-                .append(gatewayConfig.getLimit());
+                .append(config.getLimit());
 
         final Optional<ResumptionToken> resumptionToken = state.resumptionToken();
 
-        if (resumptionToken.isPresent() && !resumptionToken.get().isExpired(gatewayConfig.getTtl())) {
+        if (resumptionToken.isPresent() && !resumptionToken.get().isExpired(config.getTtl())) {
             return requestUri.append("&resumption_token=")
                     .append(resumptionToken.get().value())
                     .toString();
@@ -81,13 +89,13 @@ record BibbiGateway(BibbiProperties.GatewayConfig gatewayConfig, BibbiClient bib
 
         return state.lastModified()
                 .map(instant -> requestUri.append("&query=")
-                        .append(gatewayConfig.getQuery())
+                        .append(config.getQuery())
                         .append(" AND modified:[")
                         .append(ISO_INSTANT.format(instant))
                         .append(" TO *]")
                         .toString())
                 .orElseGet(() -> requestUri.append("&query=")
-                        .append(gatewayConfig.getQuery())
+                        .append(config.getQuery())
                         .toString());
     }
 }
