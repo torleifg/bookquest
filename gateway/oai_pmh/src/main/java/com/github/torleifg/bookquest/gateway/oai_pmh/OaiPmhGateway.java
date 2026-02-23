@@ -26,8 +26,17 @@ import java.util.Optional;
 
 import static java.time.format.DateTimeFormatter.ISO_INSTANT;
 
-record OaiPmhGateway(OaiPmhProperties.GatewayConfig gatewayConfig, OaiPmhClient oaiPmhClient,
-                     OaiPmhMapper oaiPmhMapper) implements GatewayService {
+class OaiPmhGateway implements GatewayService {
+    private final OaiPmhProperties.GatewayConfig config;
+    private final OaiPmhClient client;
+    private final OaiPmhMapper mapper;
+
+    public OaiPmhGateway(OaiPmhProperties.GatewayConfig config, OaiPmhClient client, OaiPmhMapper mapper) {
+        this.config = config;
+        this.client = client;
+        this.mapper = mapper;
+    }
+
     private static final TransformerFactory TRANSFORMER_FACTORY;
 
     static {
@@ -40,10 +49,10 @@ record OaiPmhGateway(OaiPmhProperties.GatewayConfig gatewayConfig, OaiPmhClient 
 
     @Override
     public GatewayResponse find(HarvestState state) {
-        final String serviceUri = gatewayConfig.getServiceUri();
+        final String serviceUri = config.getServiceUri();
         final String requestUri = createRequestUri(serviceUri, state);
 
-        final OaiPmhResponse response = OaiPmhResponse.from(oaiPmhClient.get(requestUri));
+        final OaiPmhResponse response = OaiPmhResponse.from(client.get(requestUri));
 
         if (response.hasUnrecoverableErrors()) {
             throw new GatewayException(response.errorsToString());
@@ -63,7 +72,7 @@ record OaiPmhGateway(OaiPmhProperties.GatewayConfig gatewayConfig, OaiPmhClient 
             final String identifier = oaiPmhRecord.getHeader().getIdentifier();
 
             if (oaiPmhRecord.getHeader().getStatus() == StatusType.DELETED) {
-                books.add(oaiPmhMapper.from(identifier));
+                books.add(mapper.from(identifier));
 
                 continue;
             }
@@ -88,7 +97,7 @@ record OaiPmhGateway(OaiPmhProperties.GatewayConfig gatewayConfig, OaiPmhClient 
             while (marcXmlReader.hasNext()) {
                 final Record record = marcXmlReader.next();
 
-                books.add(oaiPmhMapper.from(identifier, record));
+                books.add(mapper.from(identifier, record));
             }
         }
 
@@ -106,27 +115,27 @@ record OaiPmhGateway(OaiPmhProperties.GatewayConfig gatewayConfig, OaiPmhClient 
 
     @Override
     public String getServiceUri() {
-        return gatewayConfig.getServiceUri();
+        return config.getServiceUri();
     }
 
     private String createRequestUri(String serviceUri, HarvestState state) {
         final StringBuilder requestUri = new StringBuilder(serviceUri)
                 .append("?verb=")
-                .append(gatewayConfig.getVerb());
+                .append(config.getVerb());
 
         final Optional<ResumptionToken> resumptionToken = state.resumptionToken();
 
-        if (resumptionToken.isPresent() && !resumptionToken.get().isExpired(gatewayConfig.getTtl())) {
+        if (resumptionToken.isPresent() && !resumptionToken.get().isExpired(config.getTtl())) {
             return requestUri.append("&resumptionToken=")
                     .append(resumptionToken.get().value())
                     .toString();
         }
 
         requestUri.append("&metadataPrefix=")
-                .append(gatewayConfig.getMetadataPrefix());
+                .append(config.getMetadataPrefix());
 
-        if (gatewayConfig.getSet() != null && !gatewayConfig.getSet().isBlank()) {
-            requestUri.append("&set=").append(gatewayConfig.getSet());
+        if (config.getSet() != null && !config.getSet().isBlank()) {
+            requestUri.append("&set=").append(config.getSet());
         }
 
         return state.lastModified()

@@ -59,12 +59,12 @@ class Harvester {
                 final GatewayResponse response = gateway.find(state);
 
                 if (response.books().isEmpty()) {
-                    log.info("No books found polling {}. Backing off for {} seconds", name, backoffSeconds);
+                    log.info("No books found polling {}. Backing off for {} seconds", response.requestUri(), backoffSeconds);
                     backoffRegistry.put(gateway, now.plusSeconds(backoffSeconds));
                     continue;
                 }
 
-                log.info("Received {} books polling {}", response.books().size(), response.requestUri());
+                log.info("Found {} book(s) polling {}", response.books().size(), response.requestUri());
 
                 transactionTemplate.executeWithoutResult(_ -> {
                     bookService.save(response.books());
