@@ -1,30 +1,18 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="nb">
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>BookQuest</title>
+    <title th:text="${query != null ? 'BookQuest — ' + query : 'BookQuest'}">BookQuest</title>
 
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/missing.css/1.1.3/dist/missing.min.css}"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/webjars/jquery-ui/1.14.1//jquery-ui.min.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/bookquest.css}">
-
-    <script th:src="@{/webjars/jquery/3.7.1/jquery.min.js}"></script>
-    <script th:src="@{/webjars/jquery-ui/1.14.1/jquery-ui.min.js}"></script>
-
-    <script th:inline="javascript">
-        var contributor = [[#{autocomplete.contributor}]];
-        var title = [[#{autocomplete.title}]];
-    </script>
-
-    <script th:src="@{/autocomplete.js}"></script>
 </head>
 <body>
 <div class="container">
     <header>
-        <!-- Language -->
+        <h1 class="visually-hidden">BookQuest</h1>
         <nav class="language-picker" th:aria-label="#{aria.language}">
             <span th:if="${#locale.language == 'en'}">English</span>
             <a th:if="${#locale.language != 'en'}" th:href="@{/change-language(lang='en')}">English</a>
@@ -32,35 +20,39 @@
             <span th:if="${#locale.language == 'nb'}">Bokmål</span>
             <a th:if="${#locale.language != 'nb'}" th:href="@{/change-language(lang='nb')}">Bokmål</a>
         </nav>
-        <!-- Search -->
         <div class="search-form">
-            <form th:action="@{/search}" method="get">
+            <form th:action="@{/search}" method="get" role="search">
                 <div class="input-container">
+                    <label for="query" class="visually-hidden" th:text="#{aria.query}">Enter search query</label>
                     <input type="search" id="query" name="query" th:value="${query}" autofocus
-                           th:aria-label="#{aria.query}" autocomplete="off" spellcheck="false"/>
+                           autocomplete="off" spellcheck="false"/>
                     <button type="submit" class="search-icon-button" th:aria-label="#{aria.search}">
-                        <i class="fa fa-search" aria-hidden="true"></i>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                             stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
                     </button>
                 </div>
             </form>
         </div>
     </header>
-    <!-- Results -->
     <main class="results">
-        <div th:if="${#lists.size(results) > 0}">
+        <div th:if="${not #lists.isEmpty(results)}">
             <article th:each="book, iter : ${results}" class="result-item">
-                <p><a th:href="@{/similar(isbn=${book.isbn})}" class="invisible-link" th:title="#{aria.similar}">
-                    <strong th:text="${book.title}"></strong>
-                    <span th:if="${book.publishedYear != null}">
-                        <strong th:text="${' (' + book.publishedYear + ')'}"></strong>
-                    </span>
-                </a>
+                <h2>
+                    <a th:href="@{/similar(isbn=${book.isbn})}" class="invisible-link" th:title="#{aria.similar}">
+                        <span th:text="${book.title}"></span>
+                        <span th:if="${book.publishedYear != null}"
+                              th:text="${' (' + book.publishedYear + ')'}"></span>
+                    </a>
                     <span th:if="${book.bookFormat != null}" class="format-label">
                         <span th:text="${book.bookFormat}"></span>
                     </span>
-                </p>
+                </h2>
                 <img th:src="${book.thumbnailUrl != null ? book.thumbnailUrl : 'fallback.png'}"
-                     th:alt="#{cover} + ' ' + ${book.title}" loading="lazy"/>
+                     th:alt="#{cover} + ' ' + ${book.title}" width="150" height="225" loading="lazy"/>
                 <p th:if="${book.contributors != null and !book.contributors.isBlank()}">
                     <span th:text="${book.contributors}"></span>
                 </p>
@@ -98,10 +90,16 @@
                 <hr th:if="${!iter.last}"/>
             </article>
         </div>
-        <div th:if="${#lists.size(results) == 0}">
+        <div th:if="${#lists.isEmpty(results)}">
             <p th:text="#{results}"></p>
         </div>
     </main>
 </div>
+
+<script th:inline="javascript">
+    const contributorLabel = [[#{autocomplete.contributor}]];
+    const titleLabel = [[#{autocomplete.title}]];
+</script>
+<script th:src="@{/autocomplete.js}"></script>
 </body>
 </html>
