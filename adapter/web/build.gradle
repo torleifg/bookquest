@@ -11,9 +11,6 @@ dependencies {
     implementation libs.springdoc.openapi.starter.webmvc.ui
 
     implementation libs.webjars.missing.css
-    implementation libs.webjars.font.awesome
-    implementation libs.webjars.jquery
-    implementation libs.webjars.jquery.ui
 
     implementation project(':core')
 
