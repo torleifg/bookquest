@@ -8,7 +8,6 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 class BibbiDefaultMapper implements BibbiMapper {
     private static final String SOURCE = "bibbi";
@@ -136,5 +135,9 @@ class BibbiDefaultMapper implements BibbiMapper {
         book.setMetadata(metadata);
 
         return book;
+    }
+
+    private boolean isNotBlank(String value) {
+        return value != null && !value.isEmpty();
     }
 }

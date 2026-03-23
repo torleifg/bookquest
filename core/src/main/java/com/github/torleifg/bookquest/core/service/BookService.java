@@ -47,7 +47,7 @@ public class BookService {
     }
 
     public List<Suggestion> autocomplete(String term) {
-        return bookRepository.autocomplete(term, limit / 2);
+        return bookRepository.autocomplete(term, limit);
     }
 
     public List<Book> hybridSearch(String query) {
