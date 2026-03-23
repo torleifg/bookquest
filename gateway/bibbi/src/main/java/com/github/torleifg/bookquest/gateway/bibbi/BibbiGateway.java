@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.time.format.DateTimeFormatter.ISO_INSTANT;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 
 class BibbiGateway implements GatewayService {
     private final BibbiProperties.GatewayConfig config;
@@ -47,7 +46,7 @@ class BibbiGateway implements GatewayService {
         final List<Book> books = new ArrayList<>();
 
         for (final var publication : publications) {
-            if (isBlank(publication.getId())) {
+            if (publication.getId().isEmpty()) {
                 continue;
             }
 
