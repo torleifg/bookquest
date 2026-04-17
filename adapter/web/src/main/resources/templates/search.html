@@ -53,10 +53,14 @@
                 </h2>
                 <img th:src="${book.thumbnailUrl != null ? book.thumbnailUrl : 'fallback.png'}"
                      th:alt="#{cover} + ' ' + ${book.title}" width="150" height="225" loading="lazy"/>
-                <p th:if="${book.contributors != null and !book.contributors.isBlank()}">
-                    <span th:text="${book.contributors}"></span>
+                <p th:if="${book.contributors != null and !book.contributors.isEmpty()}">
+                    <th:block th:each="c, it : ${book.contributors}">
+                        <a th:href="@{/search(query=${c.name})}" class="invisible-link" th:text="${c.name}"></a>
+                        <span th:text="${' (' + c.roles + ')'}"></span>
+                        <span th:if="${!it.last}" th:text="${' ; '}"></span>
+                    </th:block>
                 </p>
-                <p th:if="${book.contributors == null or book.contributors.isBlank()}">
+                <p th:if="${book.contributors == null or book.contributors.isEmpty()}">
                     <span th:text="#{contributors}"></span>
                 </p>
                 <p th:if="${book.description != null}">

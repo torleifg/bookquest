@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Locale;
 
 import static java.util.stream.Collectors.joining;
@@ -31,9 +32,9 @@ public class SearchViewMapper {
         searchView.setTitle(metadata.getTitle());
         searchView.setPublisher(metadata.getPublisher());
 
-        final String contributors = metadata.getContributors().stream()
-                .map(contributor -> toString(contributor, locale))
-                .collect(joining(" ; "));
+        final List<ContributorView> contributors = metadata.getContributors().stream()
+                .map(contributor -> toContributorView(contributor, locale))
+                .toList();
 
         searchView.setContributors(contributors);
 
@@ -74,11 +75,11 @@ public class SearchViewMapper {
         return searchView;
     }
 
-    private String toString(Contributor contributor, Locale locale) {
+    private ContributorView toContributorView(Contributor contributor, Locale locale) {
         final String roles = contributor.roles().stream()
                 .map(role -> contributorSource.getMessage(role.name(), null, locale))
                 .collect(joining(", "));
 
-        return contributor.name() + " (" + roles + ")";
+        return new ContributorView(contributor.name(), roles);
     }
 }
