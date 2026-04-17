@@ -64,7 +64,9 @@ class SearchViewMapperTests {
         assertEquals("isbn", searchView.getIsbn());
         assertEquals("title", searchView.getTitle());
         assertEquals("publisher", searchView.getPublisher());
-        assertEquals("contributor (author)", searchView.getContributors());
+        assertEquals(1, searchView.getContributors().size());
+        assertEquals("contributor", searchView.getContributors().getFirst().name());
+        assertEquals("author", searchView.getContributors().getFirst().roles());
         assertEquals("2025", searchView.getPublishedYear());
         assertEquals("description", searchView.getDescription());
         assertEquals("bokmål", searchView.getLanguages());
