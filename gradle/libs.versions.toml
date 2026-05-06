@@ -1,5 +1,5 @@
 [versions]
-boot = '3.5.13'
+boot = '3.5.14'
 dependency-management = '1.1.7'
 openapi = '7.6.0'
 xjc = '1.9.0'
@@ -7,9 +7,9 @@ xjc = '1.9.0'
 marc = '2.9.6'
 jaxb-impl = '4.0.7'
 wiremock = '4.2.1'
-springdoc = '2.8.16'
+springdoc = '2.8.17'
 missing-css = '1.2.0'
-springai = '1.1.4'
+springai = '1.1.5'
 
 [libraries]
 wiremock-spring-boot = { module = 'org.wiremock.integrations:wiremock-spring-boot', version.ref = 'wiremock' }
