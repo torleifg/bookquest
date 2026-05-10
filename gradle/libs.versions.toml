@@ -9,7 +9,7 @@ jaxb-impl = '4.0.7'
 wiremock = '4.2.1'
 springdoc = '2.8.17'
 missing-css = '1.2.0'
-springai = '1.1.5'
+springai = '1.1.6'
 
 [libraries]
 wiremock-spring-boot = { module = 'org.wiremock.integrations:wiremock-spring-boot', version.ref = 'wiremock' }

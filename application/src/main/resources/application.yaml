@@ -11,6 +11,9 @@ spring:
         dimensions: 384
     embedding:
       transformer:
+        cache:
+          enabled: true
+          directory: "cache/spring-ai-onnx-generative"
         metadata-mode: NONE
         onnx:
           modelUri: https://huggingface.co/intfloat/multilingual-e5-small/resolve/main/onnx/model.onnx

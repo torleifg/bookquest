@@ -9,6 +9,9 @@ build/
 
 application-*
 
+# Remote resources, such as the ONNX models
+cache
+
 ### IntelliJ IDEA ###
 .idea
 *.iws
