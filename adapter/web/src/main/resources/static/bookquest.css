@@ -106,12 +106,15 @@ details[open] > summary {
     border: none;
 }
 
-.details-table tbody {
-    border: none;
+details dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 2px 10px;
+    margin: 5px;
 }
 
-.details-table td {
-    padding: 2px 10px;
+details dd {
+    margin: 0;
 }
 
 .language-picker {

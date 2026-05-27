@@ -68,28 +68,28 @@
                 </p>
                 <details>
                     <summary th:text="#{details}"></summary>
-                    <table class="details-table">
-                        <tr th:if="${book.isbn != null}">
-                            <th scope="row" th:text="#{isbn}"></th>
-                            <td th:text="${book.isbn}"></td>
-                        </tr>
-                        <tr th:if="${book.languages != null and !book.languages.isBlank()}">
-                            <th scope="row" th:text="#{language}"></th>
-                            <td th:text="${book.languages}"></td>
-                        </tr>
-                        <tr th:if="${book.publisher != null}">
-                            <th scope="row" th:text="#{publisher}"></th>
-                            <td th:text="${book.publisher}"></td>
-                        </tr>
-                        <tr th:if="${book.about != null and !book.about.isBlank()}">
-                            <th scope="row" th:text="#{about}"></th>
-                            <td th:text="${book.about}"></td>
-                        </tr>
-                        <tr th:if="${book.genreAndForm != null and !book.genreAndForm.isBlank()}">
-                            <th scope="row" th:text="#{genreAndForm}"></th>
-                            <td th:text="${book.genreAndForm}"></td>
-                        </tr>
-                    </table>
+                    <dl>
+                        <th:block th:if="${book.isbn != null}">
+                            <dt th:text="#{isbn}"></dt>
+                            <dd th:text="${book.isbn}"></dd>
+                        </th:block>
+                        <th:block th:if="${book.languages != null and !book.languages.isBlank()}">
+                            <dt th:text="#{language}"></dt>
+                            <dd th:text="${book.languages}"></dd>
+                        </th:block>
+                        <th:block th:if="${book.publisher != null}">
+                            <dt th:text="#{publisher}"></dt>
+                            <dd th:text="${book.publisher}"></dd>
+                        </th:block>
+                        <th:block th:if="${book.about != null and !book.about.isBlank()}">
+                            <dt th:text="#{about}"></dt>
+                            <dd th:text="${book.about}"></dd>
+                        </th:block>
+                        <th:block th:if="${book.genreAndForm != null and !book.genreAndForm.isBlank()}">
+                            <dt th:text="#{genreAndForm}"></dt>
+                            <dd th:text="${book.genreAndForm}"></dd>
+                        </th:block>
+                    </dl>
                 </details>
                 <hr th:if="${!iter.last}"/>
             </article>
