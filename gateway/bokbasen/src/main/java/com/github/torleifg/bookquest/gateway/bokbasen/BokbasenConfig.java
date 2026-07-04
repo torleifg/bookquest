@@ -60,7 +60,7 @@ class BokbasenConfig {
     OAuth2AuthorizedClientManager authorizedClientManager(ClientRegistrationRepository clientRegistrationRepository, OAuth2AuthorizedClientService clientService, BokbasenProperties bokbasenProperties) {
         final RestClientClientCredentialsTokenResponseClient tokenResponseClient = new RestClientClientCredentialsTokenResponseClient();
 
-        tokenResponseClient.addParametersConverter(grantRequest -> {
+        tokenResponseClient.addParametersConverter(_ -> {
             final MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
             parameters.set(OAuth2ParameterNames.AUDIENCE, bokbasenProperties.getAudience());
 

@@ -1,8 +1,5 @@
 package com.github.torleifg.bookquest.adapter.persistence;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.torleifg.bookquest.core.domain.Book;
 import com.github.torleifg.bookquest.core.domain.Metadata;
 import com.github.torleifg.bookquest.core.domain.Suggestion;
@@ -15,8 +12,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import tools.jackson.databind.json.JsonMapper;
 
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -31,10 +28,7 @@ class BookRepositoryAdapter implements BookRepository {
     private final VectorStore vectorStore;
 
     private final DocumentMapper documentMapper;
-
-    private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper()
-            .registerModule(new JavaTimeModule())
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    private final static JsonMapper JSON_MAPPER = new JsonMapper();
 
     BookRepositoryAdapter(JdbcClient jdbcClient, VectorStore vectorStore, DocumentMapper documentMapper) {
         this.jdbcClient = jdbcClient;
@@ -296,8 +290,8 @@ class BookRepositoryAdapter implements BookRepository {
         pGobject.setType("jsonb");
 
         try {
-            pGobject.setValue(OBJECT_MAPPER.writeValueAsString(metadata));
-        } catch (SQLException | IOException e) {
+            pGobject.setValue(JSON_MAPPER.writeValueAsString(metadata));
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
@@ -305,10 +299,6 @@ class BookRepositoryAdapter implements BookRepository {
     }
 
     static Metadata fromPGobject(byte[] bytes) {
-        try {
-            return OBJECT_MAPPER.readValue(bytes, Metadata.class);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return JSON_MAPPER.readValue(bytes, Metadata.class);
     }
 }

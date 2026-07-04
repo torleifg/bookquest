@@ -10,7 +10,7 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom libs.spring.ai.get().toString()
+        mavenBom libs.spring.ai.bom.get().toString()
     }
 }
 
@@ -18,7 +18,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation libs.spring.boot.starter.test
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
