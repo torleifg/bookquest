@@ -1,5 +1,5 @@
 [versions]
-boot = '3.5.16'
+boot = '4.1.0'
 dependency-management = '1.1.7'
 openapi = '7.6.0'
 xjc = '1.9.0'
@@ -7,17 +7,48 @@ xjc = '1.9.0'
 marc = '2.9.6'
 jaxb-impl = '4.0.9'
 wiremock = '4.2.1'
-springdoc = '2.8.17'
+springdoc = '3.0.3'
 missing-css = '1.2.0'
-springai = '1.1.8'
+springai = '2.0.0'
 
 [libraries]
+
+# Spring
+spring-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools" }
+spring-boot-starter = { module = "org.springframework.boot:spring-boot-starter" }
+spring-boot-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
+spring-boot-starter-validation = { module = "org.springframework.boot:spring-boot-starter-validation" }
+spring-boot-starter-thymeleaf = {  module = "org.springframework.boot:spring-boot-starter-thymeleaf" }
+spring-boot-starter-webmvc = { module = "org.springframework.boot:spring-boot-starter-webmvc" }
+spring-boot-starter-restclient = { module = "org.springframework.boot:spring-boot-starter-restclient" }
+spring-boot-starter-jdbc = { module = "org.springframework.boot:spring-boot-starter-jdbc" }
+spring-boot-starter-flyway = { module = "org.springframework.boot:spring-boot-starter-flyway" }
+spring-boot-starter-security = { module = "org.springframework.boot:spring-boot-starter-security" }
+spring-boot-starter-security-oauth2-client = { module = "org.springframework.boot:spring-boot-starter-security-oauth2-client" }
+spring-ai-starter-vector-store-pgvector = { module = "org.springframework.ai:spring-ai-starter-vector-store-pgvector" }
+spring-ai-starter-model-transformers = { module = "org.springframework.ai:spring-ai-starter-model-transformers" }
+
+spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
+spring-boot-starter-security-test = { module = "org.springframework.boot:spring-boot-starter-security-test" }
+spring-boot-starter-webmvc-test = { module = "org.springframework.boot:spring-boot-starter-webmvc-test" }
+spring-boot-starter-restclient-test = { module = "org.springframework.boot:spring-boot-starter-restclient-test" }
+spring-boot-starter-jdbc-test = { module = "org.springframework.boot:spring-boot-starter-jdbc-test" }
+spring-boot-testcontainers = { module = "org.springframework.boot:spring-boot-testcontainers" }
+
+# Spring managed dependencies
+flyway-database-postgresql = { module = "org.flywaydb:flyway-database-postgresql" }
+testcontainers-junit = { module = "org.testcontainers:testcontainers-junit-jupiter" }
+testcontainers-postgresql = { module = "org.testcontainers:testcontainers-postgresql" }
+lombok = { module = "org.projectlombok:lombok" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+
 wiremock-spring-boot = { module = 'org.wiremock.integrations:wiremock-spring-boot', version.ref = 'wiremock' }
 jaxb-impl = { module = 'com.sun.xml.bind:jaxb-impl', version.ref = 'jaxb-impl' }
 marc4j = { module = 'org.marc4j:marc4j', version.ref = 'marc' }
 springdoc-openapi-starter-webmvc-ui = { module = 'org.springdoc:springdoc-openapi-starter-webmvc-ui', version.ref = 'springdoc' }
 webjars-missing-css = { module = 'org.webjars.npm:missing.css', version.ref = 'missing-css' }
-spring-ai = { module = 'org.springframework.ai:spring-ai-bom', version.ref = 'springai' }
+
+spring-ai-bom = { module = 'org.springframework.ai:spring-ai-bom', version.ref = 'springai' }
 
 [plugins]
 spring-boot = { id = 'org.springframework.boot', version.ref = 'boot' }

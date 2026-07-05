@@ -3,10 +3,10 @@ plugins {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation libs.spring.boot.starter.jdbc
+    implementation libs.spring.boot.starter.actuator
 
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    developmentOnly libs.spring.boot.devtools
 
     implementation project(':core')
     implementation project(':gateway:bibbi')
