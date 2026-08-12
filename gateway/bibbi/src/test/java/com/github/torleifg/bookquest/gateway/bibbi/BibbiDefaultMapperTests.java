@@ -35,7 +35,7 @@ class BibbiDefaultMapperTests {
         publication.setDatePublished("1970");
         publication.setDescription("description");
         publication.setInLanguage("eng");
-        publication.setBookFormat(GetV1PublicationsHarvest200ResponsePublicationsInner.BookFormatEnum.EBOOK);
+        publication.setBookFormat(GetV1PublicationsHarvest200ResponsePublicationsInner.BookFormatEnum.E_BOOK);
 
         var aboutName = new SubjectName();
         aboutName.setNob("about");
@@ -60,7 +60,7 @@ class BibbiDefaultMapperTests {
 
         publication.setGenre(List.of(genre));
 
-        var publicationImage = new PublicationImage();
+        var publicationImage = new Image();
         publicationImage.setThumbnailUrl(URI.create("http://thumbnailUrl"));
 
         publication.setImage(publicationImage);
