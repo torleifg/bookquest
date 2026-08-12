@@ -7,7 +7,7 @@ xjc = '1.9.1'
 marc = '2.9.6'
 jaxb-impl = '4.0.9'
 wiremock = '4.2.2'
-springdoc = '3.0.3'
+springdoc = '3.1.0'
 missing-css = '1.2.0'
 springai = '2.0.0'
 
