@@ -1,7 +1,7 @@
 [versions]
 boot = '4.1.0'
 dependency-management = '1.1.7'
-openapi = '7.6.0'
+openapi = '7.24.0'
 xjc = '1.9.1'
 
 marc = '2.9.6'

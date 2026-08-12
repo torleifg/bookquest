@@ -86,8 +86,8 @@ class BibbiDefaultMapper implements BibbiMapper {
 
         if (publication.getBookFormat() != null) {
             switch (publication.getBookFormat()) {
-                case EBOOK -> metadata.setFormat(BookFormat.EBOOK);
-                case AUDIOBOOKFORMAT -> metadata.setFormat(BookFormat.AUDIOBOOK);
+                case E_BOOK -> metadata.setFormat(BookFormat.EBOOK);
+                case AUDIOBOOK_FORMAT -> metadata.setFormat(BookFormat.AUDIOBOOK);
                 case HARDCOVER -> metadata.setFormat(BookFormat.HARDCOVER);
                 case PAPERBACK -> metadata.setFormat(BookFormat.PAPERBACK);
                 default -> metadata.setFormat(BookFormat.UNKNOWN);
@@ -129,7 +129,7 @@ class BibbiDefaultMapper implements BibbiMapper {
         }
 
         Optional.ofNullable(publication.getImage())
-                .map(PublicationImage::getThumbnailUrl)
+                .map(Image::getThumbnailUrl)
                 .ifPresent(metadata::setThumbnailUrl);
 
         book.setMetadata(metadata);
