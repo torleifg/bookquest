@@ -10,7 +10,7 @@ dependencies {
 
     implementation project(':core')
 
-    implementation libs.spring.boot.starter.restclient.test
+    testImplementation libs.spring.boot.starter.restclient.test
     testImplementation libs.wiremock.spring.boot
 }
 
