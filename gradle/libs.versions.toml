@@ -1,5 +1,5 @@
 [versions]
-boot = '4.1.0'
+boot = '4.1.1'
 dependency-management = '1.1.7'
 openapi = '7.24.0'
 xjc = '1.9.1'
@@ -9,7 +9,7 @@ jaxb-impl = '4.0.9'
 wiremock = '4.2.2'
 springdoc = '3.1.0'
 missing-css = '1.2.0'
-springai = '2.0.0'
+springai = '2.0.1'
 
 [libraries]
 
