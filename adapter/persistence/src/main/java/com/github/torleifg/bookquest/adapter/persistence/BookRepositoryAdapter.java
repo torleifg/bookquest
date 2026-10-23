@@ -236,7 +236,7 @@ class BookRepositoryAdapter implements BookRepository {
     void save(Book book) {
         jdbcClient.sql("""
                         insert into book(external_id, source, deleted, metadata)
-                        values (:externalid, :source, :deleted, :metadata)
+                        values (:externalId, :source, :deleted, :metadata)
                         on conflict (external_id)
                         do update set (modified, deleted, metadata) =
                         (now(), excluded.deleted, excluded.metadata)
