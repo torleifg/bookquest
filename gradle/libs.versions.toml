@@ -9,7 +9,7 @@ jaxb-impl = '4.0.9'
 wiremock = '4.4.3'
 springdoc = '3.1.1'
 missing-css = '1.2.0'
-springai = '2.0.1'
+springai = '2.0.2'
 
 [libraries]
 
